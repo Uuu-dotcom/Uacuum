@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟手机界面布局</title>
+    <style>
+        :root {
+            --bubble-bg: rgba(173, 216, 230, 0.4); /* 淡蓝色透明感 */
+            --text-color: #ffffff;
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: "Microsoft YaHei", sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #222;
+        }
+
+        /* 手机容器预览 */
+        .phone-container {
+            width: 375px; /* 模拟 iPhone 尺寸 */
+            height: 812px;
+            background-image: url('https://files.catbox.moe/q1t6rm.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            border-radius: 40px;
+            border: 8px solid #333;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 隐藏的上传控件 */
+        #bg-upload, .icon-upload { display: none; }
+
+        /* 左侧气泡区域 */
+        .sidebar {
+            position: absolute;
+            left: 20px;
+            bottom: 120px; /* 给底部留出空间 */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .menu-item:hover { transform: translateX(5px); }
+
+        /* 气泡样式 */
+        .bubble-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--bubble-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .label-text {
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* 底部导航区域 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .bottom-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .bottom-item .label-text {
+            font-size: 12px;
+        }
+
+        /* 背景切换按钮（隐藏在角落，或点击背景触发） */
+        .bg-config {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-container" id="phone-bg">
+    <div class="bg-config" onclick="changeBackground()">更换背景</div>
+
+    <div class="sidebar">
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">聊天</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">写信</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">约会</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">日记</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">通讯录</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">外观</span>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="bottom-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">设定</span>
+        </div>
+        <div class="bottom-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">世界书</span>
+        </div>
+        <div class="bottom-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">预设</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 更换背景逻辑
+    function changeBackground() {
+        const choice = confirm("点击确定上传本地图片，点击取消输入图片URL");
+        if (choice) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    document.getElementById('phone-bg').style.backgroundImage = `url('${event.target.result}')`;
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        } else {
+            const url = prompt("请输入图片URL地址：");
+            if (url) {
+                document.getElementById('phone-bg').style.backgroundImage = `url('${url}')`;
+            }
+        }
+    }
+
+    // 更换Icon逻辑
+    function uploadIcon(element) {
+        const bubble = element.querySelector('.bubble-icon');
+        const choice = confirm("更换该气泡图标：确定上传本地，取消输入URL");
+        if (choice) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    bubble.style.backgroundImage = `url('${event.target.result}')`;
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        } else {
+            const url = prompt("请输入图标图片URL：");
+            if (url) {
+                bubble.style.backgroundImage = `url('${url}')`;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
