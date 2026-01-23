@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>手機全屏佈局</title>
+    <style>
+        :root {
+            --bubble-bg: rgba(173, 216, 230, 0.4); /* 透明淡藍色 */
+            --text-color: #ffffff;
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* 防止滾動 */
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background-color: #000;
+        }
+
+        /* 全屏背景容器 */
+        .full-screen-container {
+            width: 100%;
+            height: 100vh;
+            background-image: url('https://files.catbox.moe/q1t6rm.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 更換背景按鈕（位於頂部不可見區域，點擊頂部中央觸發） */
+        .bg-trigger {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 10;
+        }
+
+        /* 左側氣泡選單 */
+        .sidebar {
+            position: absolute;
+            left: 20px;
+            bottom: 140px; /* 避開底部導航欄 */
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        /* 氣泡圖標 */
+        .bubble-icon {
+            width: 55px;
+            height: 55px;
+            background: var(--bubble-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .label-text {
+            color: var(--text-color);
+            font-size: 18px;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+
+        /* 底部導航欄 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around; /* 均勻分佈 */
+            padding: 0 30px;
+        }
+
+        .bottom-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .bottom-item .label-text {
+            font-size: 14px;
+        }
+
+        /* 點擊時的縮放效果 */
+        .menu-item:active, .bottom-item:active {
+            transform: scale(0.9);
+            transition: transform 0.1s;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="full-screen-container" id="main-bg">
+    <div class="bg-trigger" onclick="changeBackground()"></div>
+
+    <div class="sidebar">
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">聊天</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">寫信</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">約會</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">日記</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">通訊錄</span>
+        </div>
+        <div class="menu-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">外觀</span>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="bottom-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">設定</span>
+        </div>
+        <div class="bottom-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">世界書</span>
+        </div>
+        <div class="bottom-item" onclick="uploadIcon(this)">
+            <div class="bubble-icon"></div>
+            <span class="label-text">預設</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 更換背景
+    function changeBackground() {
+        const choice = confirm("更換全屏背景圖：\n確定：上傳本地圖片\n取消：輸入網址(URL)");
+        if (choice) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    document.getElementById('main-bg').style.backgroundImage = `url('${event.target.result}')`;
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        } else {
+            const url = prompt("請輸入背景圖片 URL：");
+            if (url) {
+                document.getElementById('main-bg').style.backgroundImage = `url('${url}')`;
+            }
+        }
+    }
+
+    // 更換圖標
+    function uploadIcon(element) {
+        const bubble = element.querySelector('.bubble-icon');
+        const choice = confirm("更換氣泡圖標：\n確定：上傳本地圖片\n取消：輸入網址(URL)");
+        if (choice) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    bubble.style.backgroundImage = `url('${event.target.result}')`;
+                    bubble.style.backgroundSize = 'cover';
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        } else {
+            const url = prompt("請輸入圖標 URL：");
+            if (url) {
+                bubble.style.backgroundImage = `url('${url}')`;
+                bubble.style.backgroundSize = 'cover';
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
