@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>通讯录</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --bg-glass: rgba(30,30,30,0.85);
+    --accent: #00d2ff;
+    --text-main: #fff;
+    --text-sub: #aaa;
+    --card-bg: rgba(255,255,255,0.1);
+}
+*{box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;}
+body{
+    margin:0;padding:0;width:100vw;height:100dvh;
+    background: url('https://files.catbox.moe/q1t6rm.jpg') no-repeat center center;
+    background-size: cover;font-family:"Microsoft YaHei",sans-serif;color:var(--text-main);overflow:hidden;
+}
+/* 顶部 */
+.header{
+    height:60px;padding:0 20px;
+    background: var(--bg-glass);backdrop-filter: blur(10px);
+    display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    position:absolute;top:0;width:100%;z-index:10;
+}
+.header-title{font-size:18px;font-weight:bold;}
+.back-btn{font-size:20px;cursor:pointer;color:white;}
+.add-btn{font-size:20px;cursor:pointer;color:var(--accent);}
+.list-container{padding:80px 20px 100px 20px;height:100%;overflow-y:auto;}
+.contact-item{
+    background:var(--card-bg);border-radius:12px;
+    padding:15px;margin-bottom:15px;
+    display:flex;align-items:center;gap:15px;
+    border:1px solid rgba(255,255,255,0.05);
+    transition:background 0.2s;position:relative;
+}
+.contact-item:active{background:rgba(255,255,255,0.2);}
+.avatar{width:50px;height:50px;border-radius:50%;object-fit:cover;background:#333;border:2px solid rgba(255,255,255,0.2);}
+.info{flex:1;overflow:hidden;cursor:pointer;}
+.name{font-size:16px;font-weight:bold;margin-bottom:4px;}
+.nickname{font-size:12px;color:var(--text-sub);}
+.card-actions{display:flex;gap:10px;}
+.action-icon{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.3);display:flex;justify-content:center;align-items:center;font-size:14px;cursor:pointer;color:#ddd;}
+.action-icon.feelings{color:#ff6b6b;}
+.action-icon.edit{color:var(--accent);}
+
+/* 模态框 */
+.modal{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:#121212;z-index:100;
+    display:none;flex-direction:column;animation:slideUp 0.3s;
+}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-header{padding:15px 20px;background:#1e1e1e;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center;font-size:18px;}
+.modal-body{flex:1;overflow-y:auto;padding:20px;}
+.form-group{margin-bottom:20px;}
+label{display:block;font-size:12px;color:var(--text-sub);margin-bottom:8px;}
+input[type="text"],textarea{width:100%;background:#2c2c2c;border:1px solid #444;color:white;padding:12px;border-radius:8px;font-size:14px;}
+textarea{height:120px;resize:none;line-height:1.5;}
+.avatar-upload{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;}
+.preview-img{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #444;margin-bottom:10px;background:#333;}
+.upload-btns{display:flex;gap:10px;}
+.mini-btn{padding:6px 12px;background:#333;border:1px solid #555;color:white;border-radius:4px;font-size:12px;cursor:pointer;}
+.multi-select-box{background:#2c2c2c;border:1px solid #444;border-radius:8px;padding:10px;max-height:150px;overflow-y:auto;}
+.checkbox-item{display:flex;align-items:center;margin-bottom:8px;font-size:14px;}
+.checkbox-item input{margin-right:10px;transform:scale(1.2);}
+.modal-footer{padding:15px;background:#1e1e1e;border-top:1px solid #333;display:flex;gap:10px;}
+.btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:16px;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:5px;}
+.btn-primary{background:var(--accent);color:#000;font-weight:bold;}
+.btn-secondary{background:#333;color:white;}
+.btn-danger{background:#ff4444;color:white;}
+.feelings-grid{display:grid;grid-template-columns:1fr;gap:15px;}
+.feeling-card{background:rgba(255,255,255,0.05);padding:15px;border-radius:8px;border-left:3px solid;}
+.f-title{font-size:12px;color:#aaa;margin-bottom:5px;text-transform:uppercase;}
+.f-content{font-size:14px;line-height:1.4;color:#e0e0e0;min-height:20px;}
+.bd-blue{border-color:#4da6ff;}
+.bd-green{border-color:#4dff88;}
+.bd-purple{border-color:#d24dff;}
+.bd-orange{border-color:#ffaa4d;}
+.bd-red{border-color:#ff4d4d;}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <i class="fa-solid fa-chevron-left back-btn" onclick="window.location.href='./index.html'"></i>
+    <div class="header-title">通讯录</div>
+    <i class="fa-solid fa-user-plus add-btn" onclick="openEditModal()"></i>
+</div>
+
+<div class="list-container" id="contacts-list"></div>
+
+<!-- 编辑/新增模态框 -->
+<div class="modal" id="edit-modal">
+    <div class="modal-header">
+        <span id="modal-title">新增联络人</span>
+        <i class="fa-solid fa-xmark" onclick="closeModal('edit-modal')"></i>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" id="char-id">
+        <div class="avatar-upload">
+            <img src="" id="preview-avatar" class="preview-img">
+            <div class="upload-btns">
+                <button class="mini-btn" onclick="triggerFileUpload()">本地上传</button>
+                <button class="mini-btn" onclick="promptUrlUpload()">URL 链接</button>
+                <input type="file" id="file-input" style="display:none" accept="image/*" onchange="handleFileSelect(event)">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>角色名称 (AI识别用)</label>
+            <input type="text" id="char-name" placeholder="例如: Alice">
+        </div>
+        <div class="form-group">
+            <label>昵称 (聊天显示)</label>
+            <input type="text" id="char-nickname" placeholder="例如: 亲爱的">
+        </div>
+        <div class="form-group">
+            <label>核心指令 (System Prompt)</label>
+            <textarea id="char-prompt" placeholder="你是一个..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>关联世界书 (多选)</label>
+            <div class="multi-select-box" id="worldbook-select"><div style="color:#666;text-align:center;font-size:12px;">暂无内容</div></div>
+        </div>
+        <div class="form-group">
+            <label>关联预设 (多选)</label>
+            <div class="multi-select-box" id="preset-select"><div style="color:#666;text-align:center;font-size:12px;">暂无内容</div></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="exportCharJSON()"><i class="fa-solid fa-file-export"></i> 导出</button>
+        <button class="btn btn-secondary" onclick="importCharJSON()"><i class="fa-solid fa-file-import"></i> 导入</button>
+        <button class="btn btn-primary" onclick="saveContact()"><i class="fa-solid fa-save"></i> 保存</button>
+    </div>
+</div>
+
+<!-- 感受模态框 -->
+<div class="modal" id="feelings-modal">
+    <div class="modal-header">
+        <span><i class="fa-solid fa-heart-pulse" style="color:#ff6b6b;margin-right:5px;"></i> AI 核心感受</span>
+        <i class="fa-solid fa-xmark" onclick="closeModal('feelings-modal')"></i>
+    </div>
+    <div class="modal-body">
+        <div style="margin-bottom:20px;font-size:13px;color:#888;text-align:center;">基于当前对话历史与互动生成</div>
+        <div class="feelings-grid">
+            <div class="feeling-card bd-blue"><div class="f-title">核心感受</div><div class="f-content" id="f-core"></div></div>
+            <div class="feeling-card bd-green"><div class="f-title">观察</div><div class="f-content" id="f-observation"></div></div>
+            <div class="feeling-card bd-purple"><div class="f-title">思考</div><div class="f-content" id="f-thinking"></div></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="resetFeelings()">重置</button>
+        <button class="btn btn-primary" onclick="generateFeelings()">刷新感受</button>
+    </div>
+</div>
+
+<input type="file" id="import-input" style="display:none" accept=".json" onchange="handleImportFile(event)">
+
+<script>
+const DEFAULT_AVATAR = "https://files.catbox.moe/8jamai.jpg";
+let contacts = [];
+let currentEditId = null;
+
+document.addEventListener('DOMContentLoaded',()=>{
+    loadContacts();
+    renderList();
+});
+
+function loadContacts(){
+    const data = localStorage.getItem('gcli_contacts');
+    contacts = data ? JSON.parse(data) : [];
+    if(contacts.length===0){
+        contacts.push({id:Date.now(),name:"My AI",nickname:"AI 助手",avatar:DEFAULT_AVATAR,prompt:"你是一个乐于助人的AI助手。",worldbooks:[],presets:[],feelings:{}});
+        saveToStorage();
+    }
+}
+function saveToStorage(){localStorage.setItem('gcli_contacts',JSON.stringify(contacts));}
+function renderList(){
+    const list = document.getElementById('contacts-list');list.innerHTML='';
+    contacts.forEach(char=>{
+        const item=document.createElement('div');item.className='contact-item';
+        item.innerHTML=`
+            <img src="${char.avatar}" class="avatar" onerror="this.src='${DEFAULT_AVATAR}'">
+            <div class="info" onclick="selectContact(${char.id})">
+                <div class="name">${char.name}</div>
+                <div class="nickname">${char.nickname}</div>
+            </div>
+            <div class="card-actions">
+                <div class="action-icon feelings" onclick="openFeelings(${char.id})"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="action-icon edit" onclick="openEditModal(${char.id})"><i class="fa-solid fa-pen"></i></div>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+function selectContact(id){
+    const char = contacts.find(c=>c.id==id);
+    if(char){
+        localStorage.setItem('current_chat_partner',char.nickname);
+        localStorage.setItem('current_chat_avatar',char.avatar);
+        alert(`已切换到角色：${char.nickname}`);
+    }
+}
+function openEditModal(id=null){
+    currentEditId=id;
+    const modal=document.getElementById('edit-modal');
+    const avatar=document.getElementById('preview-avatar');
+    const nameInput=document.getElementById('char-name');
+    const nicknameInput=document.getElementById('char-nickname');
+    const promptInput=document.getElementById('char-prompt');
+    modal.style.display='flex';
+    if(!id){
+        avatar.src=DEFAULT_AVATAR;
+        nameInput.value='';
+        nicknameInput.value='';
+        promptInput.value='';
+        document.querySelectorAll('.multi-select-box input[type="checkbox"]').forEach(cb=>cb.checked=false);
+        document.getElementById('modal-title').innerText='新增联络人';
+    }else{
+        const char = contacts.find(c=>c.id==id);
+        if(char){
+            avatar.src=char.avatar||DEFAULT_AVATAR;
+            nameInput.value=char.name;
+            nicknameInput.value=char.nickname;
+            promptInput.value=char.prompt;
+            document.getElementById('modal-title').innerText='编辑联络人';
+        }
+    }
+}
+function closeModal(id){document.getElementById(id).style.display='none';}
+function saveContact(){
+    const name=document.getElementById('char-name').value.trim();
+    if(!name){alert("请填写角色名称");return;}
+    const newChar={
+        id:currentEditId?currentEditId:Date.now(),
+        name:name,
+        nickname:document.getElementById('char-nickname').value.trim()||name,
+        prompt:document.getElementById('char-prompt').value,
+        avatar:document.getElementById('preview-avatar').src,
+        worldbooks:[],
+        presets:[],
+        feelings:{}
+    };
+    if(currentEditId){
+        const index=contacts.findIndex(c=>c.id==currentEditId);
+        if(index!==-1) contacts[index]=newChar;
+    }else contacts.push(newChar);
+    saveToStorage();renderList();closeModal('edit-modal');
+}
+function triggerFileUpload(){document.getElementById('file-input').click();}
+function handleFileSelect(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{document.getElementById('preview-avatar').src=e.target.result;};reader.readAsDataURL(file);}
+function promptUrlUpload(){const url=prompt("请输入图片 URL:");if(url)document.getElementById('preview-avatar').src=url;}
+function openFeelings(id){
+    const char=contacts.find(c=>c.id==id);
+    if(!char)return;
+    document.getElementById('f-core').innerText=char.feelings.core||'暂无';
+    document.getElementById('f-observation').innerText=char.feelings.observation||'暂无';
+    document.getElementById('f-thinking').innerText=char.feelings.thinking||'暂无';
+    document.getElementById('feelings-modal').style.display='flex';
+}
+function resetFeelings(){document.getElementById('f-core').innerText='';document.getElementById('f-observation').innerText='';document.getElementById('f-thinking').innerText='';}
+function generateFeelings(){document.getElementById('f-core').innerText='平静';document.getElementById('f-observation').innerText='用户活跃';document.getElementById('f-thinking').innerText='思考中...';}
+function exportCharJSON(){if(!currentEditId)return alert('请选择角色');const char=contacts.find(c=>c.id==currentEditId);if(!char)return;const dataStr=JSON.stringify(char,null,2);const blob=new Blob([dataStr],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=char.name+'.json';a.click();}
+function importCharJSON(){document.getElementById('import-input').click();}
+function handleImportFile(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(ev){try{const obj=JSON.parse(ev.target.result);contacts.push(obj);saveToStorage();renderList();alert('导入成功');}catch(err){alert('导入失败')}};reader.readAsText(file);}
+</script>
+</body>
+</html>
