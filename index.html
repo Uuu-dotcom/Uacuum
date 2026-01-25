@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === 全局基础设定 === */
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0; width: 100vw; height: 100dvh;
+            min-height: -webkit-fill-available;
+            background: url('https://files.catbox.moe/q1t6rm.jpg') no-repeat center center;
+            background-size: cover;
+            font-family: "Microsoft YaHei", sans-serif;
+            overflow: hidden; position: relative; color: white;
+        }
+
+        /* === 图标气泡样式 === */
+        .bubble-btn { display: flex; align-items: center; margin-bottom: 20px; cursor: pointer; transition: transform 0.2s; }
+        .bubble-btn:active { transform: scale(0.95); }
+        .bubble-icon {
+            width: 50px; height: 50px; background-color: rgba(173, 216, 230, 0.6);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 24px; backdrop-filter: blur(2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .bubble-label { color: white; font-size: 14px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+
+        /* === 布局定位 === */
+        .top-right-menu { position: absolute; top: max(40px, env(safe-area-inset-top) + 20px); right: 20px; display: flex; flex-direction: column; align-items: flex-end; z-index: 10; }
+        .top-right-menu .bubble-btn { flex-direction: row; }
+        .top-right-menu .bubble-label { margin-right: 10px; }
+
+        .clock-container { position: absolute; top: max(60px, env(safe-area-inset-top) + 40px); left: 30px; display: flex; flex-direction: column; align-items: center; }
+        .clock { width: 120px; height: 120px; border-radius: 50%; position: relative; }
+        .marker { position: absolute; background: white; width: 4px; height: 10px; left: 50%; transform: translateX(-50%); border-radius: 2px; box-shadow: 0 0 4px rgba(0,0,0,0.3); }
+        .marker-12 { top: 0; } .marker-6 { bottom: 0; }
+        .marker-9 { top: 50%; left: 0; transform: translateY(-50%) rotate(90deg); }
+        .marker-3 { top: 50%; right: 0; left: auto; transform: translateY(-50%) rotate(90deg); }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; background: white; border-radius: 4px; box-shadow: 1px 1px 3px rgba(0,0,0,0.3); z-index: 2; }
+        .hour-hand { width: 6px; height: 35px; transform: translateX(-50%); }
+        .minute-hand { width: 4px; height: 50px; transform: translateX(-50%); }
+        .second-hand { width: 2px; height: 55px; background: rgba(255, 255, 255, 0.8); transform: translateX(-50%); }
+        .center-dot { position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
+        .date-display { margin-top: 15px; font-size: 12px; text-align: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); line-height: 1.5; }
+
+        .bottom-left-menu { position: absolute; bottom: calc(160px + env(safe-area-inset-bottom)); left: 20px; display: flex; flex-direction: column; z-index: 5; }
+        .bottom-left-menu .bubble-btn { flex-direction: row; }
+        .bottom-left-menu .bubble-label { margin-left: 10px; }
+
+        .polaroid-container { position: absolute; bottom: calc(180px + env(safe-area-inset-bottom)); right: 30px; transform: rotate(15deg); z-index: 1; transition: transform 0.3s; }
+        .polaroid-container:hover { transform: rotate(5deg) scale(1.05); }
+        .polaroid { background-color: white; padding: 10px 10px 30px 10px; box-shadow: 5px 5px 15px rgba(0,0,0,0.4); width: 130px; }
+        .polaroid img { width: 100%; height: auto; display: block; filter: contrast(1.1); }
+
+        /* === 底部 Dock === */
+        .dock-container {
+            position: absolute; bottom: calc(30px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
+            background-color: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 10px 20px;
+            display: flex; justify-content: space-around; align-items: center;
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); z-index: 10;
+        }
+        .dock-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 5px; }
+        .dock-item:active { opacity: 0.7; }
+        .dock-icon { width: 45px; height: 45px; background-color: rgba(173, 216, 230, 0.6); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; margin-bottom: 5px; }
+        .dock-label { font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+    </style>
+</head>
+<body>
+    <!-- 时钟 -->
+    <div class="clock-container">
+        <div class="clock">
+            <div class="marker marker-12"></div><div class="marker marker-3"></div><div class="marker marker-6"></div><div class="marker marker-9"></div><div class="center-dot"></div>
+            <div class="hand hour-hand" id="hourHand"></div><div class="hand minute-hand" id="minuteHand"></div><div class="hand second-hand" id="secondHand"></div>
+        </div>
+        <div class="date-display" id="dateDisplay"></div>
+    </div>
+
+    <!-- 图标组 -->
+    <div class="top-right-menu">
+        <div class="bubble-btn"><span class="bubble-label">聊天</span><div class="bubble-icon"><i class="fa-solid fa-comments"></i></div></div>
+        <button onclick="goChat()">聊天</button>
+
+<script>
+function goChat() {
+  window.location.href = './chat.html';
+}
+</script>
+        <div class="bubble-btn"><span class="bubble-label">写信</span><div class="bubble-icon"><i class="fa-solid fa-envelope"></i></div></div>
+        <div class="bubble-btn"><span class="bubble-label">会面</span><div class="bubble-icon"><i class="fa-solid fa-heart"></i></div></div>
+    </div>
+
+    <div class="bottom-left-menu">
+        <div class="bubble-btn"><div class="bubble-icon"><i class="fa-solid fa-book"></i></div><span class="bubble-label">日记</span></div>
+        <div class="bubble-btn"><div class="bubble-icon"><i class="fa-solid fa-address-book"></i></div><span class="bubble-label">通讯录</span></div>
+        <div class="bubble-btn"><div class="bubble-icon"><i class="fa-solid fa-shirt"></i></div><span class="bubble-label">外观</span></div>
+    </div>
+
+    <div class="polaroid-container">
+        <div class="polaroid"><img src="https://files.catbox.moe/8jamai.jpg" alt="Photo"></div>
+    </div>
+
+    <!-- 底部导航 Dock -->
+    <div class="dock-container">
+        <!-- 核心修复：添加了 ./ 确保在当前目录下查找文件 -->
+        <div class="dock-item" onclick="window.location.href='./settings.html'">
+            <div class="dock-icon"><i class="fa-solid fa-gear"></i></div>
+            <span class="dock-label">设定</span>
+        </div>
+        <div class="dock-item">
+            <div class="dock-icon"><i class="fa-solid fa-globe"></i></div>
+            <span class="dock-label">世界书</span>
+        </div>
+        <div class="dock-item">
+            <div class="dock-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <span class="dock-label">预设</span>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours();
+            const secondDegrees = ((seconds / 60) * 360);
+            const minuteDegrees = ((minutes / 60) * 360) + ((seconds/60)*6);
+            const hourDegrees = ((hours / 12) * 360) + ((minutes/60)*30);
+            document.getElementById('secondHand').style.transform = `translateX(-50%) rotate(${secondDegrees}deg)`;
+            document.getElementById('minuteHand').style.transform = `translateX(-50%) rotate(${minuteDegrees}deg)`;
+            document.getElementById('hourHand').style.transform = `translateX(-50%) rotate(${hourDegrees}deg)`;
+            const dayNames = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+            document.getElementById('dateDisplay').innerHTML = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日<br>${dayNames[now.getDay()]}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
