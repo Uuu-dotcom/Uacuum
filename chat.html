@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --header-bg: rgba(20, 20, 20, 0.9);
+            --bubble-user: #0a84ff;
+            --bubble-ai: #262628;
+            --text-color: #ffffff;
+            --gray-text: #8e8e93;
+            --border-color: #38383a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- 顶部导航 --- */
+        .header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            z-index: 100;
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--bubble-user);
+            font-size: 16px;
+            cursor: pointer;
+            width: 40px;
+        }
+
+        .chat-info {
+            text-align: center;
+            cursor: pointer; /* 点击名字切换 */
+        }
+
+        .chat-name {
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .chat-status {
+            font-size: 10px;
+            color: var(--gray-text);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #30d158;
+            border-radius: 50%;
+        }
+
+        /* --- 角色切换下拉菜单 --- */
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1c1c1e;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 200px;
+            display: none; /* 默认隐藏 */
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 101;
+            overflow: hidden;
+        }
+        .dropdown-menu.show { display: flex; }
+        .menu-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #2c2c2e;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:hover { background: #2c2c2e; }
+
+        /* --- 聊天区域 --- */
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .msg-user {
+            align-self: flex-end;
+            background-color: var(--bubble-user);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            background-color: var(--bubble-ai);
+            color: white;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* 系统通知条 (非气泡) */
+        .system-toast {
+            align-self: center;
+            background: rgba(255, 69, 58, 0.2);
+            color: #ff453a;
+            border: 1px solid rgba(255, 69, 58, 0.5);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        /* --- 底部输入栏 --- */
+        .input-area {
+            background: rgba(20, 20, 20, 0.95);
+            border-top: 1px solid var(--border-color);
+            padding: 10px 15px 20px 15px; /* iOS底部安全距离 */
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            color: var(--bubble-user);
+            font-size: 20px;
+            padding: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* 麦克风/触发AI按钮 特效 */
+        #trigger-ai-btn {
+            color: var(--gray-text); /* 默认灰色，表示AI在休息 */
+            transition: color 0.3s;
+        }
+        #trigger-ai-btn.active {
+            color: #30d158; /* 绿色，表示正在生成 */
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .input-box-wrapper {
+            flex: 1;
+            background: #1c1c1e;
+            border-radius: 20px;
+            padding: 8px 12px;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+        }
+
+        textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 15px;
+            resize: none;
+            max-height: 80px;
+            outline: none;
+            font-family: inherit;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 表情面板 */
+        #emoji-picker {
+            height: 0;
+            background: #1c1c1e;
+            transition: height 0.3s ease;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 0 10px;
+        }
+        #emoji-picker.open { height: 150px; padding: 10px; }
+        .emoji-item { font-size: 24px; text-align: center; padding: 5px; cursor: pointer; }
+
+        /* 正在输入动画 */
+        .typing-indicator {
+            align-self: flex-start;
+            background: var(--bubble-ai);
+            padding: 10px 14px;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            display: none;
+            gap: 4px;
+        }
+        .dot { width: 6px; height: 6px; background: #8e8e93; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- 顶部 -->
+    <div class="header">
+        <button class="header-btn" onclick="window.location.href='index.html'"><i class="fa-solid fa-chevron-left"></i></button>
+        
+        <div class="chat-info" onclick="toggleCharMenu()">
+            <div class="chat-name">
+                <span id="header-name">AI 助手</span> 
+                <i class="fa-solid fa-caret-down" style="font-size: 12px; color: #666;"></i>
+            </div>
+            <div class="chat-status" id="header-status">
+                <div class="status-dot"></div> 在线
+            </div>
+        </div>
+        
+        <button class="header-btn" onclick="window.location.href='settings.html'"><i class="fa-solid fa-sliders"></i></button>
+    </div>
+
+    <!-- 角色切换菜单 -->
+    <div class="dropdown-menu" id="char-menu">
+        <div class="menu-item" onclick="changeChar('AI 助手')">AI 助手</div>
+        <div class="menu-item" onclick="changeChar('暴躁老哥')">暴躁老哥</div>
+        <div class="menu-item" onclick="changeChar('温柔学姐')">温柔学姐</div>
+        <div class="menu-item" onclick="changeChar('中二病')">中二病</div>
+        <div class="menu-item" style="color: #ff453a" onclick="clearHistory()"><i class="fa-solid fa-trash"></i> 清空记录</div>
+    </div>
+
+    <!-- 聊天内容 -->
+    <div id="chat-container">
+        <!-- 消息会动态插入这里 -->
+    </div>
+
+    <!-- 正在输入占位符 -->
+    <div class="typing-indicator" id="typing-indicator">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <!-- 底部功能区 -->
+    <div class="input-area">
+        <!-- 触发 AI 回复的麦克风按钮 -->
+        <button class="icon-btn" id="trigger-ai-btn" onclick="triggerAIResponse()">
+            <i class="fa-solid fa-microphone"></i>
+        </button>
+
+        <div class="input-box-wrapper">
+            <textarea id="msg-input" rows="1" placeholder="发消息..." oninput="autoResize(this)"></textarea>
+        </div>
+
+        <button class="icon-btn" onclick="toggleEmoji()"><i class="fa-regular fa-face-smile"></i></button>
+        
+        <!-- 发送用户消息（不触发AI） -->
+        <button class="icon-btn" onclick="sendUserMessage()">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+
+    <!-- 表情选择 -->
+    <div id="emoji-picker"></div>
+
+    <script>
+        // === 全局变量 ===
+        const chatBox = document.getElementById('chat-container');
+        const inputField = document.getElementById('msg-input');
+        const typingInd = document.getElementById('typing-indicator');
+        const statusText = document.getElementById('header-status');
+        const aiBtn = document.getElementById('trigger-ai-btn');
+
+        // 默认数据
+        let currentName = localStorage.getItem('chat_character') || 'AI 助手';
+        // 聊天记录结构: [{role: 'user', content: 'hi'}, {role: 'assistant', content: 'hello'}]
+        let history = JSON.parse(localStorage.getItem('chat_history')) || [];
+
+        // === 1. 初始化页面 ===
+        window.onload = function() {
+            // 恢复角色名
+            document.getElementById('header-name').innerText = currentName;
+            
+            // 恢复聊天记录
+            renderHistory();
+            
+            // 初始化表情包
+            const emojis = ['😀','😂','🤣','😍','🥰','😎','😭','😡','👍','👎','🙏','🤝','❤️','💔','🤔','👀','🔥','✨','🎉','💤'];
+            const picker = document.getElementById('emoji-picker');
+            emojis.forEach(e => {
+                let span = document.createElement('span');
+                span.className = 'emoji-item';
+                span.innerText = e;
+                span.onclick = () => { inputField.value += e; };
+                picker.appendChild(span);
+            });
+        };
+
+        // === 2. 渲染历史记录 ===
+        function renderHistory() {
+            chatBox.innerHTML = ''; // 清空界面，防止重复
+            history.forEach(msg => {
+                appendBubble(msg.role, msg.content, false); // false = 不滚动到底部(如果数据量大)
+            });
+            scrollToBottom();
+        }
+
+        // === 3. 添加气泡到界面 ===
+        function appendBubble(role, text, saveToStorage = true) {
+            const div = document.createElement('div');
+            
+            // 如果是 system 类型的错误提示，走特殊样式
+            if (role === 'system_error') {
+                div.className = 'system-toast';
+                div.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${text} <span style="font-size:10px; opacity:0.7">(点击消除)</span>`;
+                div.onclick = function() { this.remove(); };
+                chatBox.appendChild(div);
+                scrollToBottom();
+                return;
+            }
+
+            // 正常聊天气泡
+            div.className = `message ${role === 'user' ? 'msg-user' : 'msg-ai'}`;
+            // 简单的防XSS处理
+            div.innerText = text; 
+            
+            // 插入在正在输入动画之前
+            chatBox.insertBefore(div, typingInd);
+            
+            if (saveToStorage) {
+                history.push({ role: role, content: text });
+                localStorage.setItem('chat_history', JSON.stringify(history));
+            }
+            
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // === 4. 发送用户消息 (仅仅发送上屏，不触发AI) ===
+        function sendUserMessage() {
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            appendBubble('user', text);
+            inputField.value = '';
+            inputField.style.height = 'auto'; // 重置高度
+            
+            // 用户发送后，不触发AI，等待用户点麦克风
+        }
+
+        // === 5. 触发 AI 回复 (核心逻辑) ===
+        async function triggerAIResponse() {
+            // UI 状态改变
+            aiBtn.classList.add('active'); // 麦克风变绿闪烁
+            statusText.innerHTML = "对方正在输入...";
+            statusText.classList.add('status-typing');
+            typingInd.style.display = 'flex'; // 显示三个点动画
+            scrollToBottom();
+
+            // 准备参数
+            const apiKey = localStorage.getItem('gcli_api_key');
+            let apiUrl = localStorage.getItem('gcli_api_url');
+            const model = localStorage.getItem('gcli_model_name') || 'gpt-3.5-turbo';
+            const sysPrompt = localStorage.getItem('gcli_system_prompt') || "你是一个有用的助手。";
+            const temp = parseFloat(localStorage.getItem('gcli_temp') || 0.7);
+
+            // 检查配置
+            if (!apiKey || !apiUrl) {
+                endAIState();
+                appendBubble('system_error', "连接失败：请先在右上角【设置】中配置 API Key 和 URL。", false);
+                return;
+            }
+
+            // 处理 URL
+            if (apiUrl.endsWith('/')) apiUrl = apiUrl.slice(0, -1);
+            if (!apiUrl.endsWith('/chat/completions')) {
+                 if (apiUrl.endsWith('/v1')) apiUrl += '/chat/completions';
+                 else apiUrl += '/v1/chat/completions';
+            }
+
+            try {
+                // 构建消息上下文： 系统提示词 + 历史记录
+                // 注意：这里我们把历史记录全部发过去，这样AI才能接得住上下文
+                // 如果历史太长，可以截取最后 N 条，例如 history.slice(-20)
+                const messagesToSend = [
+                    { role: "system", content: sysPrompt },
+                    ...history
+                ];
+
+                const res = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: messagesToSend,
+                        temperature: temp
+                    })
+                });
+
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`HTTP ${res.status} - ${errText}`);
+                }
+
+                const data = await res.json();
+                const reply = data.choices[0].message.content;
+
+                // AI 回复上屏
+                appendBubble('assistant', reply);
+
+            } catch (error) {
+                console.error(error);
+                appendBubble('system_error', `请求出错: ${error.message}`, false);
+            } finally {
+                endAIState();
+            }
+        }
+
+        // 结束 AI 思考状态
+        function endAIState() {
+            aiBtn.classList.remove('active');
+            statusText.innerHTML = '<div class="status-dot"></div> 在线';
+            typingInd.style.display = 'none';
+        }
+
+        // === 6. 其他 UI 逻辑 ===
+
+        // 切换角色名 (不发消息，只改状态)
+        function toggleCharMenu() {
+            const menu = document.getElementById('char-menu');
+            menu.classList.toggle('show');
+        }
+
+        function changeChar(name) {
+            currentName = name;
+            document.getElementById('header-name').innerText = name;
+            localStorage.setItem('chat_character', name);
+            document.getElementById('char-menu').classList.remove('show');
+            // 不发送任何气泡，保持沉浸
+        }
+
+        function clearHistory() {
+            if(confirm("确定清空当前对话记录吗？")) {
+                history = [];
+                localStorage.setItem('chat_history', JSON.stringify([]));
+                renderHistory();
+                document.getElementById('char-menu').classList.remove('show');
+            }
+        }
+
+        function toggleEmoji() {
+            document.getElementById('emoji-picker').classList.toggle('open');
+        }
+
+        // 输入框自适应高度
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // 点击页面其他地方关闭菜单
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('char-menu');
+            const headerInfo = document.querySelector('.chat-info');
+            if (!headerInfo.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
