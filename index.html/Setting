@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>系统设定</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; outline: none; }
+        
+        body {
+            margin: 0; padding: 0; width: 100vw; height: 100dvh;
+            /* 同样的背景图，保持连贯性 */
+            background: url('https://files.catbox.moe/q1t6rm.jpg') no-repeat center center;
+            background-size: cover;
+            font-family: "Microsoft YaHei", sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 全屏深色遮罩，让页面看起来像是一个打开的“界面” */
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 0;
+        }
+
+        /* 设定内容容器 */
+        .settings-container {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 450px;
+            height: 85vh; /* 稍微高一点 */
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* 简单的淡入动画 */
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 头部 */
+        .header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        
+        /* 关闭按钮 */
+        .close-btn {
+            background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0 10px;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: #add8e6; }
+
+        /* 内容滚动区 */
+        .content-body { padding: 20px; overflow-y: auto; flex-grow: 1; }
+
+        /* 区块通用样式 */
+        .section {
+            background: rgba(0, 0, 0, 0.2); border-radius: 12px;
+            padding: 15px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section-title { font-size: 14px; color: rgba(255, 255, 255, 0.8); margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+
+        /* 表单样式 */
+        label { display: block; font-size: 12px; margin-bottom: 5px; margin-top: 10px; color: #d1e8ff; }
+        input, select {
+            width: 100%; padding: 12px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white; font-size: 14px; margin-bottom: 5px;
+            user-select: auto; /* 允许选择文字 */
+        }
+        input:focus, select:focus { background: rgba(255, 255, 255, 0.2); border-color: #fff; }
+        option { background-color: #333; color: white; }
+
+        /* 模型选择行 */
+        .model-row { display: flex; gap: 10px; }
+        .refresh-btn {
+            background: rgba(173, 216, 230, 0.6);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px; color: white; width: 44px;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; flex-shrink: 0; margin-bottom: 5px;
+        }
+        .refresh-btn:active { transform: rotate(180deg); transition: transform 0.3s; }
+
+        /* 按钮组 */
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
+        .action-btn {
+            width: 100%; padding: 12px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.15);
+            color: white; font-size: 14px; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            transition: background 0.2s;
+        }
+        .action-btn:active { background: rgba(255, 255, 255, 0.3); }
+
+        /* 滚动条 */
+        .content-body::-webkit-scrollbar { width: 4px; }
+        .content-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
+
+    </style>
+</head>
+<body>
+
+    <!-- 模糊遮罩背景 -->
+    <div class="overlay"></div>
+
+    <!-- 设定主界面 -->
+    <div class="settings-container">
+        <div class="header">
+            <div class="title">
+                <i class="fa-solid fa-sliders"></i> 系统设定
+            </div>
+            <!-- 点击关闭，返回 index.html -->
+            <button class="close-btn" onclick="window.location.href='index.html'">&times;</button>
+        </div>
+        
+        <div class="content-body">
+            <!-- API 配置区块 -->
+            <div class="section">
+                <div class="section-title">API 连接设置</div>
+                
+                <label for="preset-select">我的预设</label>
+                <select id="preset-select">
+                    <option value="default">默认配置 (OpenAI)</option>
+                    <option value="custom1">Claude 3 Opus</option>
+                    <option value="custom2">本地 API (Ollama)</option>
+                    <option value="new">+ 新建预设...</option>
+                </select>
+
+                <label for="api-url">API 地址 (URL)</label>
+                <input type="text" id="api-url" placeholder="例如: https://api.openai.com/v1" value="https://api.openai.com/v1">
+
+                <label for="api-key">API 密钥 (Key)</label>
+                <input type="password" id="api-key" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx">
+
+                <label for="model-select">模型选择 (Model)</label>
+                <div class="model-row">
+                    <select id="model-select">
+                        <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                        <option value="gpt-4">gpt-4</option>
+                        <option value="gpt-4-turbo">gpt-4-turbo</option>
+                    </select>
+                    <button class="refresh-btn" title="刷新模型列表">
+                        <i class="fa-solid fa-rotate"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 备份区块 -->
+            <div class="section">
+                <div class="section-title">数据备份与迁移</div>
+                <div class="btn-group">
+                    <button class="action-btn" onclick="alert('数据导出功能待开发')">
+                        <i class="fa-solid fa-file-export"></i> 导出全部数据
+                    </button>
+                    <button class="action-btn" onclick="alert('数据导入功能待开发')">
+                        <i class="fa-solid fa-file-import"></i> 导入全部数据
+                    </button>
+                </div>
+            </div>
+
+            <div style="height: 20px;"></div>
+        </div>
+    </div>
+
+</body>
+</html>
