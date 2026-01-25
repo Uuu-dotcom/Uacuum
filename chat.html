@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chat</title>
+
+<style>
+body {
+  margin: 0;
+  background: #0f0f14;
+  color: #eaeaf0;
+  font-family: system-ui, -apple-system;
+}
+
+/* 顶部栏 */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: #15151d;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 10;
+}
+
+.header .title {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+}
+
+.header button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+}
+
+/* 消息区 */
+.chat {
+  padding: 70px 12px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.msg {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  line-height: 1.4;
+  font-size: 15px;
+}
+
+.user {
+  align-self: flex-end;
+  background: #3b82f6;
+}
+
+.ai {
+  align-self: flex-start;
+  background: #23232d;
+}
+
+/* 输入区 */
+.input-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #15151d;
+  display: flex;
+  align-items: flex-end;
+  padding: 8px;
+  gap: 6px;
+}
+
+textarea {
+  flex: 1;
+  background: #23232d;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  padding: 10px;
+  resize: none;
+  height: 42px;
+  max-height: 120px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+}
+
+/* 设置菜单 */
+.menu {
+  position: fixed;
+  top: 56px;
+  right: 8px;
+  background: #1c1c25;
+  border-radius: 12px;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.menu button {
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: #fff;
+  text-align: left;
+}
+
+.menu button:hover {
+  background: #2a2a35;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <button onclick="history.back()">←</button>
+  <div class="title">AI</div>
+  <button onclick="toggleMenu()">⋯</button>
+</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="input-bar">
+  <button class="icon-btn">😊</button>
+  <textarea id="input" placeholder="输入消息…"></textarea>
+  <button class="icon-btn" onclick="triggerAI()">🎤</button>
+  <button class="icon-btn" onclick="sendUser()">➤</button>
+</div>
+
+<div class="menu" id="menu">
+  <button>上传聊天背景</button>
+  <button>主动回覆</button>
+  <button>记忆笔记</button>
+  <button>大脑</button>
+  <button>聊天设置</button>
+</div>
+
+<script>
+const chat = document.getElementById('chat');
+
+function sendUser() {
+  const input = document.getElementById('input');
+  if (!input.value.trim()) return;
+  addMsg(input.value, 'user');
+  input.value = '';
+}
+
+function addMsg(text, who) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + who;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* AI 回复触发点 */
+function triggerAI() {
+  const replies = [
+    "我刚刚在想你说的事",
+    "有点复杂",
+    "但我大概明白你的感觉了"
+  ];
+  replies.forEach((t, i) => {
+    setTimeout(() => addMsg(t, 'ai'), 600 * (i + 1));
+  });
+}
+
+function toggleMenu() {
+  const menu = document.getElementById('menu');
+  menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+}
+</script>
+
+</body>
+</html>
