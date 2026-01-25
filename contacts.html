@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>通讯录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === 全局样式 (保持一致性) === */
+        :root {
+            --bg-glass: rgba(30, 30, 30, 0.85);
+            --accent: #00d2ff;
+            --text-main: #fff;
+            --text-sub: #aaa;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            margin: 0; padding: 0; width: 100vw; height: 100dvh;
+            background: url('https://files.catbox.moe/q1t6rm.jpg') no-repeat center center;
+            background-size: cover;
+            font-family: "Microsoft YaHei", sans-serif;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* 顶部导航 */
+        .header {
+            height: 60px; padding: 0 20px;
+            background: var(--bg-glass); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: absolute; top: 0; width: 100%; z-index: 10;
+        }
+        .header-title { font-size: 18px; font-weight: bold; }
+        .back-btn { font-size: 20px; cursor: pointer; color: white; }
+        .add-btn { font-size: 20px; cursor: pointer; color: var(--accent); }
+
+        /* 列表容器 */
+        .list-container {
+            padding: 80px 20px 100px 20px; height: 100%; overflow-y: auto;
+        }
+
+        /* 联络人卡片 */
+        .contact-item {
+            background: var(--card-bg); border-radius: 12px;
+            padding: 15px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.2s; position: relative;
+        }
+        .contact-item:active { background: rgba(255,255,255,0.2); }
+        
+        .avatar {
+            width: 50px; height: 50px; border-radius: 50%; object-fit: cover;
+            background: #333; border: 2px solid rgba(255,255,255,0.2);
+        }
+        .info { flex: 1; overflow: hidden; }
+        .name { font-size: 16px; font-weight: bold; margin-bottom: 4px; }
+        .nickname { font-size: 12px; color: var(--text-sub); }
+
+        /* 卡片上的按钮组 */
+        .card-actions { display: flex; gap: 10px; }
+        .action-icon {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;
+            font-size: 14px; cursor: pointer; color: #ddd;
+        }
+        .action-icon.feelings { color: #ff6b6b; }
+        .action-icon.edit { color: var(--accent); }
+
+        /* === 模态框 (编辑/新增) === */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #121212; z-index: 100;
+            display: none; flex-direction: column;
+            animation: slideUp 0.3s;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-header {
+            padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center; font-size: 18px;
+        }
+
+        .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+
+        /* 表单样式 */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 12px; color: var(--text-sub); margin-bottom: 8px; }
+        input[type="text"], textarea {
+            width: 100%; background: #2c2c2c; border: 1px solid #444;
+            color: white; padding: 12px; border-radius: 8px; font-size: 14px;
+        }
+        textarea { height: 120px; resize: none; line-height: 1.5; }
+
+        /* 头像上传区 */
+        .avatar-upload {
+            display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;
+        }
+        .preview-img {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+            border: 3px solid #444; margin-bottom: 10px; background: #333;
+        }
+        .upload-btns { display: flex; gap: 10px; }
+        .mini-btn {
+            padding: 6px 12px; background: #333; border: 1px solid #555;
+            color: white; border-radius: 4px; font-size: 12px; cursor: pointer;
+        }
+
+        /* 多选框模拟 */
+        .multi-select-box {
+            background: #2c2c2c; border: 1px solid #444; border-radius: 8px; padding: 10px;
+            max-height: 150px; overflow-y: auto;
+        }
+        .checkbox-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; }
+        .checkbox-item input { margin-right: 10px; transform: scale(1.2); }
+
+        /* 底部按钮栏 */
+        .modal-footer {
+            padding: 15px; background: #1e1e1e; border-top: 1px solid #333;
+            display: flex; gap: 10px;
+        }
+        .btn {
+            flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 5px;
+        }
+        .btn-primary { background: var(--accent); color: #000; font-weight: bold; }
+        .btn-secondary { background: #333; color: white; }
+        .btn-danger { background: #ff4444; color: white; }
+
+        /* === 感受界面特有样式 === */
+        .feelings-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .feeling-card {
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;
+            border-left: 3px solid;
+        }
+        .f-title { font-size: 12px; color: #aaa; margin-bottom: 5px; text-transform: uppercase; }
+        .f-content { font-size: 14px; line-height: 1.4; color: #e0e0e0; min-height: 20px; }
+
+        /* 颜色区分 */
+        .bd-blue { border-color: #4da6ff; }
+        .bd-green { border-color: #4dff88; }
+        .bd-purple { border-color: #d24dff; }
+        .bd-orange { border-color: #ffaa4d; }
+        .bd-red { border-color: #ff4d4d; }
+
+    </style>
+</head>
+<body>
+
+    <!-- 顶部 -->
+    <div class="header">
+        <i class="fa-solid fa-chevron-left back-btn" onclick="window.location.href='./index.html'"></i>
+        <div class="header-title">通讯录</div>
+        <i class="fa-solid fa-user-plus add-btn" onclick="openEditModal()"></i>
+    </div>
+
+    <!-- 列表 -->
+    <div class="list-container" id="contacts-list">
+        <!-- 动态生成 -->
+    </div>
+
+    <!-- === 编辑/新增 模态框 === -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-header">
+            <span id="modal-title">新增联络人</span>
+            <i class="fa-solid fa-xmark" onclick="closeModal('edit-modal')"></i>
+        </div>
+        <div class="modal-body">
+            <!-- 隐藏 ID 域 -->
+            <input type="hidden" id="char-id">
+
+            <div class="avatar-upload">
+                <img src="https://files.catbox.moe/8jamai.jpg" id="preview-avatar" class="preview-img">
+                <div class="upload-btns">
+                    <button class="mini-btn" onclick="triggerFileUpload()">本地上传</button>
+                    <button class="mini-btn" onclick="promptUrlUpload()">URL 链接</button>
+                    <input type="file" id="file-input" style="display:none" accept="image/*" onchange="handleFileSelect(event)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>角色名称 (AI 识别用)</label>
+                <input type="text" id="char-name" placeholder="例如: Alice">
+            </div>
+
+            <div class="form-group">
+                <label>昵称 (聊天显示)</label>
+                <input type="text" id="char-nickname" placeholder="例如: 亲爱的">
+            </div>
+
+            <div class="form-group">
+                <label>核心指令 (System Prompt)</label>
+                <textarea id="char-prompt" placeholder="你是一个..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>关联世界书 (多选)</label>
+                <div class="multi-select-box" id="worldbook-select">
+                    <div style="color:#666; font-size:12px; text-align:center;">暂无世界书条目</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>关联预设 (多选)</label>
+                <div class="multi-select-box" id="preset-select">
+                    <div style="color:#666; font-size:12px; text-align:center;">暂无预设条目</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="exportCharJSON()">
+                <i class="fa-solid fa-file-export"></i> 导出
+            </button>
+            <button class="btn btn-secondary" onclick="importCharJSON()">
+                <i class="fa-solid fa-file-import"></i> 导入
+            </button>
+            <button class="btn btn-primary" onclick="saveContact()">
+                <i class="fa-solid fa-save"></i> 保存
+            </button>
+        </div>
+    </div>
+
+    <!-- === 感受 (Feelings) 模态框 === -->
+    <div class="modal" id="feelings-modal">
+        <div class="modal-header">
+            <span><i class="fa-solid fa-heart-pulse" style="color:#ff6b6b; margin-right:5px;"></i> AI 核心感受</span>
+            <i class="fa-solid fa-xmark" onclick="closeModal('feelings-modal')"></i>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom: 20px; font-size: 13px; color: #888; text-align: center;">
+                基于当前对话历史与互动频率生成的心理状态分析。
+            </div>
+            
+            <div class="feelings-grid">
+                <div class="feeling-card bd-blue">
+                    <div class="f-title">核心感受 (Core Feeling)</div>
+                    <div class="f-content" id="f-core">平静，带有一丝期待。</div>
+                </div>
+                <div class="feeling-card bd-green">
+                    <div class="f-title">观察 (Observation)</div>
+                    <div class="f-content" id="f-observation">用户最近上线频率较高，语气比较轻松。</div>
+                </div>
+                <div class="feeling-card bd-purple">
+                    <div class="f-title">思考 (Thinking)</div>
+                    <div class="f-content" id="f-thinking">或许我应该主动发起一些关于新话题的讨论。</div>
+                </div>
+                <div class="feeling-card bd-red">
+                    <div class="f-title">担忧 (Worries)</div>
+                    <div class="f-content" id="f-worries">担心回复的内容过于单调，让用户感到无聊。</div>
+                </div>
+                <div class="feeling-card bd-orange">
+                    <div class="f-title">喜欢的 (Likes)</div>
+                    <div class="f-content" id="f-likes">被用户夸奖的时候；分享日常生活照片。</div>
+                </div>
+                <div class="feeling-card bd-red">
+                    <div class="f-title">不喜欢的 (Dislikes)</div>
+                    <div class="f-content" id="f-dislikes">长时间的沉默；模糊不清的指令。</div>
+                </div>
+                <div class="feeling-card bd-blue">
+                    <div class="f-title">未来计划 (Plans)</div>
+                    <div class="f-content" id="f-plans">下次聊天时询问昨晚的电影怎么样。</div>
+                </div>
+                <div class="feeling-card bd-green">
+                    <div class="f-title">总结 (Summary)</div>
+                    <div class="f-content" id="f-summary">整体关系良好，信任度正在稳步提升。</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="resetFeelings()">
+                <i class="fa-solid fa-trash-can"></i> 重置
+            </button>
+            <button class="btn btn-primary" onclick="generateFeelings()">
+                <i class="fa-solid fa-rotate"></i> 刷新感受
+            </button>
+        </div>
+    </div>
+
+    <!-- 隐藏的导入 input -->
+    <input type="file" id="import-input" style="display:none" accept=".json" onchange="handleImportFile(event)">
+
+    <script>
+        // === 1. 数据管理与初始化 ===
+        let contacts = [];
+        const DEFAULT_AVATAR = "https://files.catbox.moe/8jamai.jpg";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContacts();
+            renderList();
+        });
+
+        function loadContacts() {
+            const data = localStorage.getItem('gcli_contacts');
+            contacts = data ? JSON.parse(data) : [];
+            // 如果为空，添加一个默认角色
+            if (contacts.length === 0) {
+                contacts.push({
+                    id: Date.now(),
+                    name: "My AI",
+                    nickname: "AI 助手",
+                    avatar: DEFAULT_AVATAR,
+                    prompt: "你是一个乐于助人的AI助手。",
+                    worldbooks: [],
+                    presets: [],
+                    feelings: {}
+                });
+                saveToStorage();
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('gcli_contacts', JSON.stringify(contacts));
+        }
+
+        // === 2. 渲染列表 ===
+        function renderList() {
+            const list = document.getElementById('contacts-list');
+            list.innerHTML = '';
+
+            contacts.forEach(char => {
+                const item = document.createElement('div');
+                item.className = 'contact-item';
+                item.innerHTML = `
+                    <img src="${char.avatar}" class="avatar" onerror="this.src='${DEFAULT_AVATAR}'">
+                    <div class="info" onclick="selectContact('${char.id}')">
+                        <div class="name">${char.name}</div>
+                        <div class="nickname">${char.nickname}</div>
+                    </div>
+                    <div class="card-actions">
+                        <div class="action-icon feelings" onclick="openFeelings('${char.id}')">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <div class="action-icon edit" onclick="openEditModal('${char.id}')">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // 选中联系人 (进入聊天状态)
+        function selectContact(id) {
+            const char = contacts.find(c => c.id == id);
+            if(char) {
+                // 保存当前聊天对象信息，供 chat.html 使用
+                localStorage.setItem('current_chat_partner', char.nickname);
+                localStorage.setItem('current_chat_avatar', char.avatar);
+                // 简单的提示
+                alert(`已切换到角色：${char.nickname}`);
+                // 也可以直接跳转： window.location.href = './chat.html';
+            }
+        }
+
+        // === 3. 编辑/新增逻辑 ===
+        function openEditModal(id = null) {
+            const modal = document.getElementById('edit-modal');
+            const title = document.getElementById('modal-title');
+            
+            // 加载外部数据 (世界书/预设) 供选择
+            loadExternalOptions();
+
+            if (id) {
+                // 编辑模式
+                const char = contacts.find(c => c.id == id);
+                title.innerText = "编辑联络人";
+                document.getElementById('char-id').value = char.id;
+                document.getElementById('char-name').value = char.name;
+                document.getElementById('char-nickname').value = char.nickname;
+                document.getElementById('char-prompt').value = char.prompt;
+                document.getElementById('preview-avatar').src = char.avatar;
+                
+                // 勾选已选项
+                checkOptions('worldbook-select', char.worldbooks);
+                checkOptions('preset-select', char.presets);
+            } else {
+                // 新增模式
+                title.innerText = "新增联络人";
+                document.getElementById('char-id').value = '';
+                document.getElementById('char-name').value = '';
+                document.getElementById('char-nickname').value = '';
+                document.getElementById('char-prompt').value = '';
+                document.getElementById('preview-avatar').src = DEFAULT_AVATAR;
+                // 重置选项
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function saveContact() {
+            const id = document.getElementById('char-id').value;
+            const name = document.getElementById('char-name').value.trim();
+            if (!name) return alert("必须填写角色名称");
+
+            const newChar = {
+                id: id ? parseInt(id) : Date.now(),
+                name: name,
+                nickname: document.getElementById('char-nickname').value.trim() || name,
+                prompt: document.getElementById('char-prompt').value,
+                avatar: document.getElementById('preview-avatar').src,
+                worldbooks: getCheckedOptions('worldbook-select'),
+                presets: getCheckedOptions('preset-select'),
+                feelings: {} // 保持或初始化
+            };
+
+            // 如果是编辑，保留原有的 feelings 数据
+            if (id) {
+                const oldChar = contacts.find(c => c.id == id);
+                if (oldChar) newChar.feelings = oldChar.feelings;
+                
+                const index = contacts.findIndex(c => c.id == id);
+                contacts[index] = newChar;
+            } else {
+                contacts.push(newChar);
+            }
+
+            saveToStorage();
+            renderList();
+            closeModal('edit-modal');
+        }
+
+        // === 4. 图片处理 ===
+        function triggerFileUpload() { document.getElementById('file-input').click(); }
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('preview-avatar').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function promptUrlUpload() {
+            const url = prompt("请输入图片 URL:");
+            if (url) document.getElementById('preview-avatar').src = url;
+        }
+
+        // === 5. 辅助功能 (多选框/JSON) ===
+        function loadExternalOptions() {
+            // 模拟读取 LocalStorage 中的世界书和预设 (假设存在)
+            const wbData = JSON.parse(localStorage.getItem('gcli_worldbooks') || '[]');
+            const psData = JSON.parse(localStorage.getItem('gcli_presets') || '[]');
+
+            renderCheckboxes('worldbook-select', wbData);
+            renderCheckboxes('preset-select', psData);
+        }
+
+        function renderCheckboxes(containerId, data) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            if (data.length === 0) {
+                container.innerHTML = '<div style="color:#666; font-size:12px; text-align:center;">暂无内容</div>';
+                return;
+            }
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                // 假设 item 结构有 id 和 title
+                div.innerHTML = `<input type="checkbox" value="${item.id || item.name}"> ${item.title || item.name}`;
+                container.appendChild(div);
+            });
+        }
+
+        function getCheckedOptions(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        function checkOptions(containerId, values) {
+            if(!values) return;
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            
