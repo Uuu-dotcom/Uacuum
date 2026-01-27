@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="base.css">
 
     <style>      
-        /* --- 通知区域 CSS --- */
         #notificationArea {
             position: absolute;
             top: 25px;
@@ -68,14 +67,26 @@
         }
 
         .screen img {
-    width: 100%; 
-    height: 100%;
-    object-fit: cover;
-    image-rendering: pixelated;
-    
-    /* 核心修改：使用 top 对齐 */
-    object-position: top center; 
-}
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+            image-rendering: pixelated;
+            object-position: top center; 
+        }
+
+        /* --- 【新增】主屏幕时钟样式 --- */
+        #homeScreenClock {
+            position: absolute;
+            top: 15px; /* 与顶部的距离 */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5; /* 层级低于通知(100)，高于壁纸 */
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 24px;
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; /* 描边效果，确保清晰 */
+            pointer-events: none; /* 让时钟不影响点击壁纸 */
+        }
 
 
         .button-area {
@@ -126,15 +137,14 @@
 <body>
     <div class="phone-container" id="phoneContainer">
         
-        <!-- 通知显示区域 -->
         <div id="notificationArea"></div>
 
-        <!-- 屏幕区域 -->
         <div class="screen" id="screen">
             <img id="screenImage" src="" alt="" style="display: none;">
+            <!-- 【新增】主屏幕时钟 -->
+            <div id="homeScreenClock"></div>
         </div>
 
-        <!-- 按钮区域 -->
         <div class="button-area">
             <a href="./contacts.html" class="app-button" data-app="contacts">
                 <div class="app-icon icon-contacts"></div>
@@ -155,7 +165,6 @@
         </div>
     </div>
 
-    <!-- 上传桌面弹窗 -->
     <div class="modal" id="uploadModal">
         <div class="modal-content">
             <div class="modal-title">更换桌面</div>
@@ -173,7 +182,6 @@
         </div>
     </div>
 
-    <!-- 引入我们的后台工作脚本 -->
     <script src="./background-worker.js"></script>
 
     <script>
@@ -192,37 +200,44 @@
             'color-scheme-4', 'color-scheme-5', 'color-scheme-6'
         ];
         let currentColorIndex = -1;
+        
+        // --- 【新增】时钟更新函数 ---
+        function updateClock() {
+            const clockElement = document.getElementById('homeScreenClock');
+            if (!clockElement) return; // 安全检查
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            clockElement.textContent = `${hours}:${minutes}`;
+        }
 
-        // 页面加载时恢复设置并启动新功能
         window.addEventListener('DOMContentLoaded', () => {
-            // 恢复壁纸
             const savedWallpaper = localStorage.getItem('phoneWallpaper');
             if (savedWallpaper) {
                 screenImage.src = savedWallpaper;
                 screenImage.style.display = 'block';
             }
-            // 恢复颜色主题
             const savedColor = localStorage.getItem('phoneColor');
             if (savedColor !== null) {
                 currentColorIndex = parseInt(savedColor);
                 phoneContainer.className = 'phone-container ' + colorSchemes[currentColorIndex];
             }
             
-            // 启动后台AI检查和通知UI更新
+            // 【新增】启动时钟
+            updateClock(); // 立即显示一次
+            setInterval(updateClock, 1000); // 每秒更新一次
+
             startGlobalProactiveCheck();
             setInterval(updateNotificationDisplay, 2000);
             updateNotificationDisplay();
         });
 
         // --- 壁纸和颜色主题逻辑 ---
-
-        // 点击屏幕显示上传弹窗
         screen.addEventListener('click', (e) => {
             e.stopPropagation();
             uploadModal.classList.add('active');
         });
 
-        // 本地上传
         document.getElementById('uploadLocal').addEventListener('click', () => {
             fileInput.click();
         });
@@ -241,7 +256,6 @@
             }
         });
 
-        // URL上传
         document.getElementById('uploadUrl').addEventListener('click', () => {
             modalButtons.style.display = 'none';
             urlInputWrapper.style.display = 'flex';
@@ -269,21 +283,18 @@
             }
         });
 
-        // 返回按钮
         document.getElementById('cancelUrl').addEventListener('click', () => {
             urlInputWrapper.style.display = 'none';
             modalButtons.style.display = 'flex';
             urlInput.value = '';
         });
 
-        // 取消上传
         document.getElementById('cancelUpload').addEventListener('click', () => {
             uploadModal.classList.remove('active');
             urlInputWrapper.style.display = 'none';
             modalButtons.style.display = 'flex';
         });
 
-        // 点击手机其他区域更换颜色
         phoneContainer.addEventListener('click', (e) => {
             if (e.target === phoneContainer) {
                 currentColorIndex = (currentColorIndex + 1) % colorSchemes.length;
@@ -292,7 +303,6 @@
             }
         });
 
-        // 关闭弹窗
         uploadModal.addEventListener('click', (e) => {
             if (e.target === uploadModal) {
                 uploadModal.classList.remove('active');
@@ -302,7 +312,6 @@
         });
         
         // --- 通知系统逻辑 ---
-        
         function updateNotificationDisplay() {
             const unread = getUnreadCounts();
             const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
@@ -353,7 +362,6 @@
                 window.location.href = './sms.html';
             }
         });
-
     </script>
 </body>
 </html>
