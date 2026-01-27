@@ -17,7 +17,6 @@ html, body {
     width: 100%;
     /* 使用 100dvh 确保在移动端动态填满可视高度 */
     height: 100%; 
-    height: 100dvh;  
     overflow: hidden; /* 禁止页面滚动 */
     overscroll-behavior: none; /* 禁止下拉刷新等效果 */
 }
@@ -34,8 +33,8 @@ body {
 .phone-container {  
     width: 98vw; 
     max-width: 520px;  
-    height: 100%; /* 高度跟随 body，自动适应 100dvh */
-    
+    height: 100dvh; /* 高度跟随 body，自动适应 100dvh */
+    max-height: 100dvh;
     background: #1a1a1a;  
     border: 6px solid #000;  
     border-radius: 20px;  
