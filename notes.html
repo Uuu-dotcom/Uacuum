@@ -2,330 +2,45 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 1. 强制禁止缩放，适配刘海屏 -->
+    <!-- (head 部分内容不变) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- 2. iOS Safari 专用全屏设置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
-    
-    <!-- 3. Android Chrome 专用全屏设置 -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
-    
-    <!-- 4. 引入 Manifest 文件 -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- 图标设置 -->
     <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
-    
     <title>notes - Uacuum</title>
-     <link rel="stylesheet" href="base.css">
-
+    <link rel="stylesheet" href="base.css">
     <style>
-        /* 顶部导航 */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #444;
-            flex-shrink: 0; /* 防止头部被压缩 */
-        }
-
-        .back-button {
-            background: #fff;
-            border: 3px solid #000;
-            padding: 8px 10px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 8px;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 #000;
-        }
-
-        .back-button:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0 #000;
-        }
-
-        .page-title {
-            font-size: 10px;
-            color: #fff;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .action-btn {
-            width: 40px; /* 占位，保持标题居中 */
-            visibility: hidden;
-        }
-
-        .content {
-            flex: 1; /* 占据剩余空间 */
-            overflow-y: auto; /* 只有这里可以滚动 */
-            padding-right: 5px;
-            position: relative;
-            /* 优化移动端滚动体验 */
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* 滚动条样式 */
-        .content::-webkit-scrollbar { width: 6px; }
-        .content::-webkit-scrollbar-track { background: #000; border: 1px solid #444; }
-        .content::-webkit-scrollbar-thumb { background: #fff; border: 1px solid #000; }
-
-        /* --- 角色选择列表 --- */
-        .char-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /*稍微调小最小宽度以适配小屏*/
-            gap: 15px;
-            padding: 10px 0;
-        }
-
-        .char-card {
-            background: #fff;
-            border: 3px solid #000;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 #000;
-            transition: transform 0.1s;
-        }
-
-        .char-card:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 #000;
-        }
-
-        .char-avatar {
-            width: 50px;
-            height: 50px;
-            border: 2px solid #000;
-            margin-bottom: 8px;
-            object-fit: cover;
-            image-rendering: pixelated;
-            background: #ddd;
-        }
-
-        .char-name {
-            font-size: 8px;
-            text-align: center;
-            line-height: 1.2;
-            word-break: break-all;
-        }
-
-        /* --- 记忆时间轴视图 --- */
-        .memory-view {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toolbar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .tool-btn {
-            background: #ffe66d;
-            border: 3px solid #000;
-            padding: 10px 5px;
-            font-family: inherit;
-            font-size: 7px;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 #000;
-            text-align: center;
-        }
-        
-        .tool-btn.batch { background: #a8e6cf; }
-        
-        .tool-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0 #000;
-        }
-
-        .timeline-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding-bottom: 20px;
-        }
-
-        .year-header {
-            font-size: 10px;
-            color: #fff;
-            background: #000;
-            padding: 5px 10px;
-            display: inline-block;
-            margin-bottom: 5px;
-            border-radius: 4px;
-            align-self: flex-start;
-        }
-
-        .month-header {
-            font-size: 9px;
-            color: #fff; /* 改为白色以便在黑背景下可见，或者保持黑色 */
-            text-shadow: 1px 1px 0 #000; /* 加个描边 */
-            margin: 5px 0 5px 10px;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        .memory-card {
-            background: #fff; /* 笔记本纸张色 */
-            border: 2px solid #000;
-            padding: 10px;
-            margin-left: 5px;
-            margin-bottom: 10px;
-            position: relative;
-            box-shadow: 2px 2px 0 #666;
-            border-left: 6px solid #4ecdc4; /* 装饰线 */
-        }
-
-        .memory-date {
-            font-size: 6px;
-            color: #666;
-            margin-bottom: 5px;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 3px;
-        }
-
-        .memory-content {
-            font-size: 8px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            font-family: "SimSun", "Songti SC", serif; /* 看起来像笔记字体 */
-            font-weight: bold;
-            /* 允许用户选择复制记忆内容 */
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
-        .memory-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 5px;
-            margin-top: 8px;
-            padding-top: 5px;
-            border-top: 1px solid #eee;
-        }
-
-        .mini-btn {
-            font-size: 6px;
-            padding: 4px 6px;
-            background: #eee;
-            border: 1px solid #000;
-            cursor: pointer;
-            font-family: 'Press Start 2P', cursive;
-        }
-        
-        .mini-btn.del { background: #ff6b6b; color: #fff; }
-        .mini-btn.edit { background: #fff; }
-
-        /* 编辑弹窗 */
-        .modal-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            padding: 20px;
-        }
-
-        .modal-box {
-            background: #fff;
-            border: 4px solid #000;
-            padding: 15px;
-            width: 100%;
-            box-shadow: 5px 5px 0 #444;
-        }
-
-        .modal-title { font-size: 8px; margin-bottom: 10px; text-align: center; }
-        
-        .modal-input {
-            width: 100%;
-            height: 150px;
-            margin-bottom: 10px;
-            padding: 8px;
-            font-size: 8px;
-            border: 2px solid #000;
-            font-family: inherit;
-            resize: none;
-            /* 允许输入框操作 */
-            -webkit-user-select: text;
-            user-select: text;
-        }
-        
-        .modal-input:focus {
-            outline: none;
-            background: #f0f0f0;
-        }
-
-        /* Loading遮罩 */
-        .loading-overlay {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; 
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 8px;
-            line-height: 2;
-        }
-
-        /* 颜色方案 */
-        .color-scheme-1 { background: #ff6b9d; }
-        .color-scheme-2 { background: #4ecdc4; }
-        .color-scheme-3 { background: #ffe66d; }
-        .color-scheme-4 { background: #a8e6cf; }
-        .color-scheme-5 { background: #ffd3b6; }
-        .color-scheme-6 { background: #c7ceea; }
+        /* (CSS样式保持不变, 此处省略) */
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; } .back-button { background: #fff; border: 3px solid #000; padding: 8px 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; } .back-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; } .page-title { font-size: 10px; color: #fff; text-shadow: 2px 2px 0 #000; } .action-btn { width: 40px; visibility: hidden; } .content { flex: 1; overflow-y: auto; padding-right: 5px; position: relative; -webkit-overflow-scrolling: touch; } .content::-webkit-scrollbar { width: 6px; } .content::-webkit-scrollbar-track { background: #000; border: 1px solid #444; } .content::-webkit-scrollbar-thumb { background: #fff; border: 1px solid #000; } .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px; padding: 10px 0; } .char-card { background: #fff; border: 3px solid #000; padding: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: transform 0.1s; } .char-card:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; } .char-avatar { width: 50px; height: 50px; border: 2px solid #000; margin-bottom: 8px; object-fit: cover; image-rendering: pixelated; background: #ddd; } .char-name { font-size: 8px; text-align: center; line-height: 1.2; word-break: break-all; } .memory-view { display: none; flex-direction: column; gap: 10px; } .toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; } .tool-btn { background: #ffe66d; border: 3px solid #000; padding: 10px 5px; font-family: inherit; font-size: 7px; cursor: pointer; box-shadow: 3px 3px 0 #000; text-align: center; } .tool-btn.batch { background: #a8e6cf; } .tool-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; } .timeline-container { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; } .year-header { font-size: 10px; color: #fff; background: #000; padding: 5px 10px; display: inline-block; margin-bottom: 5px; border-radius: 4px; align-self: flex-start; } .month-header { font-size: 9px; color: #fff; text-shadow: 1px 1px 0 #000; margin: 5px 0 5px 10px; font-weight: bold; text-decoration: underline; } .memory-card { background: #fff; border: 2px solid #000; padding: 10px; margin-left: 5px; margin-bottom: 10px; position: relative; box-shadow: 2px 2px 0 #666; border-left: 6px solid #4ecdc4; } .memory-date { font-size: 6px; color: #666; margin-bottom: 5px; border-bottom: 1px dashed #ccc; padding-bottom: 3px; } .memory-content { font-size: 8px; line-height: 1.6; white-space: pre-wrap; font-family: "SimSun", "Songti SC", serif; font-weight: bold; -webkit-user-select: text; user-select: text; } .memory-actions { display: flex; justify-content: flex-end; gap: 5px; margin-top: 8px; padding-top: 5px; border-top: 1px solid #eee; } .mini-btn { font-size: 6px; padding: 4px 6px; background: #eee; border: 1px solid #000; cursor: pointer; font-family: 'Press Start 2P', cursive; } .mini-btn.del { background: #ff6b6b; color: #fff; } .mini-btn.edit { background: #fff; } .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; } .modal-box { background: #fff; border: 4px solid #000; padding: 15px; width: 100%; box-shadow: 5px 5px 0 #444; } .modal-title { font-size: 8px; margin-bottom: 10px; text-align: center; } .modal-input { width: 100%; height: 150px; margin-bottom: 10px; padding: 8px; font-size: 8px; border: 2px solid #000; font-family: inherit; resize: none; -webkit-user-select: text; user-select: text; } .modal-input:focus { outline: none; background: #f0f0f0; } .loading-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: #fff; z-index: 200; justify-content: center; align-items: center; text-align: center; font-size: 8px; line-height: 2; } .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
     </style>
 </head>
 <body>
     <div class="phone-container" id="phoneContainer">
         
-        <!-- 头部 -->
+        <!-- (HTML结构不变) -->
         <div class="header">
             <button class="back-button" id="backBtn">← 返回</button>
             <div class="page-title" id="pageTitle">笔记本</div>
             <div class="action-btn"></div>
         </div>
-
         <div class="content">
-            <!-- 视图1: 角色列表 -->
             <div id="charListView" class="char-grid"></div>
-
-            <!-- 视图2: 记忆时间轴 -->
             <div id="memoryView" class="memory-view">
                 <div class="toolbar">
                     <button class="tool-btn" id="summaryBtn">✨ 记忆总结</button>
                     <button class="tool-btn batch" id="batchBtn">📚 批量总结</button>
                 </div>
-                
-                <div id="timelineContainer" class="timeline-container">
-                    <!-- 动态生成的内容 -->
-                </div>
-                
+                <div id="timelineContainer" class="timeline-container"></div>
                 <div style="text-align:center; padding: 20px; font-size: 6px; color:#aaa;" id="emptyMemTip">
                     暂无记忆，去聊天或手动记录吧
                 </div>
             </div>
         </div>
-
-        <!-- 编辑框 Modal -->
         <div class="modal-overlay" id="editModal">
             <div class="modal-box">
                 <div class="modal-title" id="modalTitle">编辑记忆</div>
@@ -337,8 +52,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- 批量总结配置 Modal -->
         <div class="modal-overlay" id="batchModal">
             <div class="modal-box">
                 <div class="modal-title">批量总结设置</div>
@@ -351,321 +64,31 @@
                 </div>
             </div>
         </div>
-
-        <!-- Loading -->
         <div class="loading-overlay" id="loadingOverlay">
             AI 正在整理回忆...<br>请稍候...   
         </div>
-
     </div>
 
     <script>
-        // --- 系统 Prompt 配置 ---
-        const SYSTEM_PROMPT = `<总结规则>
-禁止私自编造不存在的内容!
-禁止私自编造不存在的内容!
-禁止私自编造不存在的内容!
-如果遇到复杂的请如实直述，禁止去编造、改动!
-## 【系统总结最高协议】：进行summary时，绝对必须正确按照<总结规则>生成！！！
-
-**【内容核心 (最高优先级)】**: 你的summary【必须】专注于以下几点，请直接输出(不需要回答我好的）：
-
-总结规则：
-进行summary时，必须精准提取内容，不遗漏任何锚点的重要细节，完美判断{{char}}和{{user}}的关系发展，必须直白且如实总结时间节点和故事发展，每件事的叙述控制在最多80字左右，此外再包含重要日期+时间节点即可。
-
-char的长期记忆summary格式为：
-当前年份日期星期时间/具体地点，{{char}}的第一人称总结与{{user}}发生的事件，禁止太过于主观!
-
-## 示例：“线上(线下）/2025年4月2日8:30，星期三，我和user聊了关于早餐的话题。”
-
-## 精炼记忆时禁止偷懒输出token count，必须进行正确的精炼
-
-##图片禁止总结为“发了一张图片/个人照片”，必须说明是什么图片，如果只是表情包则禁止总结在其中!!
-</总结规则>`;
-
-        // --- DOM 元素 ---
-        const phoneContainer = document.getElementById('phoneContainer');
-        const charListView = document.getElementById('charListView');
-        const memoryView = document.getElementById('memoryView');
-        const timelineContainer = document.getElementById('timelineContainer');
-        const pageTitle = document.getElementById('pageTitle');
-        const backBtn = document.getElementById('backBtn');
-        const emptyMemTip = document.getElementById('emptyMemTip');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-
-        // Modals
-        const editModal = document.getElementById('editModal');
-        const batchModal = document.getElementById('batchModal');
-
-        // 状态
-        let currentContactId = null;
-
-        // 配色方案
-        const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
-
-        // --- 初始化 ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedColor = localStorage.getItem('phoneColor');
-            if (savedColor !== null) {
-                phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)];
-            }
-            showCharList();
-        });
-
-        // --- 视图切换逻辑 ---
-
-        function showCharList() {
-            currentContactId = null;
-            charListView.style.display = 'grid';
-            memoryView.style.display = 'none';
-            pageTitle.textContent = '笔记本';
-            backBtn.textContent = '← 返回';
-            
-            backBtn.onclick = () => window.location.href = './index.html';
-
-            renderCharList();
-        }
-
-        function showMemoryTimeline(contactId, contactName) {
-            currentContactId = contactId;
-            charListView.style.display = 'none';
-            memoryView.style.display = 'flex';
-            pageTitle.textContent = contactName;
-            backBtn.textContent = '← 用户';
-            
-            backBtn.onclick = showCharList;
-
-            renderTimeline();
-        }
-
-        // --- 渲染逻辑 ---
-
-        function renderCharList() {
-            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-            charListView.innerHTML = '';
-
-            if (contacts.length === 0) {
-                charListView.innerHTML = '<div style="grid-column:1/-1; text-align:center; font-size:8px; color:#fff; padding:20px;">通讯录为空<br>请先添加联络人</div>';
-                return;
-            }
-
-            contacts.forEach(c => {
-                const card = document.createElement('div');
-                card.className = 'char-card';
-                card.onclick = () => showMemoryTimeline(c.id, c.nick || c.name);
-
-                const avatarSrc = c.avatar || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'><rect fill=\'%23ccc\' width=\'16\' height=\'16\'/></svg>';
-
-                card.innerHTML = `
-                    <img src="${avatarSrc}" class="char-avatar">
-                    <div class="char-name">${c.nick || c.name}</div>
-                `;
-                charListView.appendChild(card);
-            });
-        }
-
-        function renderTimeline() {
-            const memories = JSON.parse(localStorage.getItem('memories') || '{}');
-            const charMemories = memories[currentContactId] || [];
-            
-            timelineContainer.innerHTML = '';
-
-            if (charMemories.length === 0) {
-                emptyMemTip.style.display = 'block';
-                return;
-            } else {
-                emptyMemTip.style.display = 'none';
-            }
-
-            // 按时间倒序排列 (最新的在最上面)
-            charMemories.sort((a, b) => b.timestamp - a.timestamp);
-
-            let lastYear = null;
-            let lastMonth = null;
-
-            charMemories.forEach(mem => {
-                const dateObj = new Date(mem.timestamp);
-                const year = dateObj.getFullYear();
-                const month = dateObj.getMonth() + 1;
-
-                // 插入年份头
-                if (year !== lastYear) {
-                    const yearHeader = document.createElement('div');
-                    yearHeader.className = 'year-header';
-                    yearHeader.textContent = `${year}年`;
-                    timelineContainer.appendChild(yearHeader);
-                    lastYear = year;
-                    lastMonth = null; 
-                }
-
-                // 插入月份头
-                if (month !== lastMonth) {
-                    const monthHeader = document.createElement('div');
-                    monthHeader.className = 'month-header';
-                    monthHeader.textContent = `${month}月`;
-                    timelineContainer.appendChild(monthHeader);
-                    lastMonth = month;
-                }
-
-                // 记忆卡片
-                const div = document.createElement('div');
-                div.className = 'memory-card';
-                div.innerHTML = `
-                    <div class="memory-date">${mem.dateStr || dateObj.toLocaleString()}</div>
-                    <div class="memory-content">${escapeHtml(mem.content)}</div>
-                    <div class="memory-actions">
-                        <button class="mini-btn edit" onclick="openEdit(${mem.id})">编辑</button>
-                        <button class="mini-btn del" onclick="deleteMemory(${mem.id})">删除</button>
-                    </div>
-                `;
-                timelineContainer.appendChild(div);
-            });
-        }
-
-        // --- 增删改逻辑 ---
-
-        // 存储
-        function saveMemoryToStorage(content, timestamp, isUpdateId = null) {
-            const memories = JSON.parse(localStorage.getItem('memories') || '{}');
-            if (!memories[currentContactId]) memories[currentContactId] = [];
-
-            if (isUpdateId) {
-                // 更新
-                const idx = memories[currentContactId].findIndex(m => m.id === isUpdateId);
-                if (idx !== -1) {
-                    memories[currentContactId][idx].content = content;
-                }
-            } else {
-                // 新增
-                const dateObj = new Date(timestamp);
-                memories[currentContactId].push({
-                    id: Date.now(),
-                    timestamp: timestamp,
-                    dateStr: dateObj.toLocaleString(),
-                    content: content
-                });
-            }
-            
-            localStorage.setItem('memories', JSON.stringify(memories));
-            renderTimeline();
-        }
-
-        window.deleteMemory = function(id) {
-            if(!confirm('确定删除这条记忆吗？')) return;
-            const memories = JSON.parse(localStorage.getItem('memories') || '{}');
-            if (memories[currentContactId]) {
-                memories[currentContactId] = memories[currentContactId].filter(m => m.id !== id);
-                localStorage.setItem('memories', JSON.stringify(memories));
-                renderTimeline();
-            }
-        };
-
-        // 编辑弹窗
-        window.openEdit = function(id) {
-            const memories = JSON.parse(localStorage.getItem('memories') || '{}');
-            const list = memories[currentContactId] || [];
-            const mem = list.find(m => m.id === id);
-            if (mem) {
-                document.getElementById('editMemId').value = id;
-                document.getElementById('editMemContent').value = mem.content;
-                document.getElementById('modalTitle').textContent = '编辑记忆';
-                editModal.style.display = 'flex';
-            }
-        };
-
+        // --- (大部分JS代码不变, 直到 callAiApi 函数) ---
+        const SYSTEM_PROMPT = `<总结规则> 禁止私自编造不存在的内容! 禁止私自编造不存在的内容! 禁止私自编造不存在的内容! 如果遇到复杂的请如实直述，禁止去编造、改动! ## 【系统总结最高协议】：进行summary时，绝对必须正确按照<总结规则>生成！！！ **【内容核心 (最高优先级)】**: 你的summary【必须】专注于以下几点，请直接输出(不需要回答我好的）： 总结规则： 进行summary时，必须精准提取内容，不遗漏任何锚点的重要细节，完美判断{{char}}和{{user}}的关系发展，必须直白且如实总结时间节点和故事发展，每件事的叙述控制在最多80字左右，此外再包含重要日期+时间节点即可。 char的长期记忆summary格式为： 当前年份日期星期时间/具体地点，{{char}}的第一人称总结与{{user}}发生的事件，禁止太过于主观! ## 示例：“线上(线下）/2025年4月2日8:30，星期三，我和user聊了关于早餐的话题。” ## 精炼记忆时禁止偷懒输出token count，必须进行正确的精炼 ##图片禁止总结为“发了一张图片/个人照片”，必须说明是什么图片，如果只是表情包则禁止总结在其中!! </总结规则>`;
+        const phoneContainer = document.getElementById('phoneContainer'); const charListView = document.getElementById('charListView'); const memoryView = document.getElementById('memoryView'); const timelineContainer = document.getElementById('timelineContainer'); const pageTitle = document.getElementById('pageTitle'); const backBtn = document.getElementById('backBtn'); const emptyMemTip = document.getElementById('emptyMemTip'); const loadingOverlay = document.getElementById('loadingOverlay'); const editModal = document.getElementById('editModal'); const batchModal = document.getElementById('batchModal'); let currentContactId = null; const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
+        window.addEventListener('DOMContentLoaded', () => { const savedColor = localStorage.getItem('phoneColor'); if (savedColor !== null) { phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)]; } showCharList(); });
+        function showCharList() { currentContactId = null; charListView.style.display = 'grid'; memoryView.style.display = 'none'; pageTitle.textContent = '笔记本'; backBtn.textContent = '← 返回'; backBtn.onclick = () => window.location.href = './index.html'; renderCharList(); }
+        function showMemoryTimeline(contactId, contactName) { currentContactId = contactId; charListView.style.display = 'none'; memoryView.style.display = 'flex'; pageTitle.textContent = contactName; backBtn.textContent = '← 用户'; backBtn.onclick = showCharList; renderTimeline(); }
+        function renderCharList() { const contacts = JSON.parse(localStorage.getItem('contacts') || '[]'); charListView.innerHTML = ''; if (contacts.length === 0) { charListView.innerHTML = '<div style="grid-column:1/-1; text-align:center; font-size:8px; color:#fff; padding:20px;">通讯录为空<br>请先添加联络人</div>'; return; } contacts.forEach(c => { const card = document.createElement('div'); card.className = 'char-card'; card.onclick = () => showMemoryTimeline(c.id, c.nick || c.name); const avatarSrc = c.avatar || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'><rect fill=\'%23ccc\' width=\'16\' height=\'16\'/></svg>'; card.innerHTML = ` <img src="${avatarSrc}" class="char-avatar"> <div class="char-name">${c.nick || c.name}</div> `; charListView.appendChild(card); }); }
+        function renderTimeline() { const memories = JSON.parse(localStorage.getItem('memories') || '{}'); const charMemories = memories[currentContactId] || []; timelineContainer.innerHTML = ''; if (charMemories.length === 0) { emptyMemTip.style.display = 'block'; return; } else { emptyMemTip.style.display = 'none'; } charMemories.sort((a, b) => b.timestamp - a.timestamp); let lastYear = null; let lastMonth = null; charMemories.forEach(mem => { const dateObj = new Date(mem.timestamp); const year = dateObj.getFullYear(); const month = dateObj.getMonth() + 1; if (year !== lastYear) { const yearHeader = document.createElement('div'); yearHeader.className = 'year-header'; yearHeader.textContent = `${year}年`; timelineContainer.appendChild(yearHeader); lastYear = year; lastMonth = null; } if (month !== lastMonth) { const monthHeader = document.createElement('div'); monthHeader.className = 'month-header'; monthHeader.textContent = `${month}月`; timelineContainer.appendChild(monthHeader); lastMonth = month; } const div = document.createElement('div'); div.className = 'memory-card'; div.innerHTML = ` <div class="memory-date">${mem.dateStr || dateObj.toLocaleString()}</div> <div class="memory-content">${escapeHtml(mem.content)}</div> <div class="memory-actions"> <button class="mini-btn edit" onclick="openEdit(${mem.id})">编辑</button> <button class="mini-btn del" onclick="deleteMemory(${mem.id})">删除</button> </div> `; timelineContainer.appendChild(div); }); }
+        function saveMemoryToStorage(content, timestamp, isUpdateId = null) { const memories = JSON.parse(localStorage.getItem('memories') || '{}'); if (!memories[currentContactId]) memories[currentContactId] = []; if (isUpdateId) { const idx = memories[currentContactId].findIndex(m => m.id === isUpdateId); if (idx !== -1) { memories[currentContactId][idx].content = content; } } else { const dateObj = new Date(timestamp); memories[currentContactId].push({ id: Date.now(), timestamp: timestamp, dateStr: dateObj.toLocaleString(), content: content }); } localStorage.setItem('memories', JSON.stringify(memories)); renderTimeline(); }
+        window.deleteMemory = function(id) { if(!confirm('确定删除这条记忆吗？')) return; const memories = JSON.parse(localStorage.getItem('memories') || '{}'); if (memories[currentContactId]) { memories[currentContactId] = memories[currentContactId].filter(m => m.id !== id); localStorage.setItem('memories', JSON.stringify(memories)); renderTimeline(); } };
+        window.openEdit = function(id) { const memories = JSON.parse(localStorage.getItem('memories') || '{}'); const list = memories[currentContactId] || []; const mem = list.find(m => m.id === id); if (mem) { document.getElementById('editMemId').value = id; document.getElementById('editMemContent').value = mem.content; document.getElementById('modalTitle').textContent = '编辑记忆'; editModal.style.display = 'flex'; } };
         document.getElementById('cancelEdit').onclick = () => editModal.style.display = 'none';
-        
-        document.getElementById('saveEdit').onclick = () => {
-            const id = parseInt(document.getElementById('editMemId').value);
-            const content = document.getElementById('editMemContent').value;
-            if (content.trim()) {
-                saveMemoryToStorage(content, null, id);
-                editModal.style.display = 'none';
-            }
-        };
-
-        // --- AI 总结功能 ---
-
-        // 1. 记忆总结 (针对近期聊天)
-        document.getElementById('summaryBtn').onclick = async () => {
-            if (!checkApiConfig()) return;
-
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            const thisChat = allChats[currentContactId] || [];
-
-            if (thisChat.length === 0) {
-                alert('该角色没有聊天记录，无法生成总结。');
-                return;
-            }
-
-            const recentChats = thisChat.slice(-20); 
-            const chatText = recentChats.map(c => `${c.role}: ${c.content}`).join('\n');
-
-            loadingOverlay.style.display = 'flex';
-            
-            try {
-                const summary = await callAiApi(chatText, "normal");
-                saveMemoryToStorage(summary, Date.now());
-                alert('记忆总结成功！已添加至笔记本。');
-            } catch (err) {
-                alert('生成失败: ' + err.message);
-            } finally {
-                loadingOverlay.style.display = 'none';
-            }
-        };
-
-        // 2. 批量总结
-        document.getElementById('batchBtn').onclick = () => {
-            batchModal.style.display = 'flex';
-        };
-
+        document.getElementById('saveEdit').onclick = () => { const id = parseInt(document.getElementById('editMemId').value); const content = document.getElementById('editMemContent').value; if (content.trim()) { saveMemoryToStorage(content, null, id); editModal.style.display = 'none'; } };
+        document.getElementById('summaryBtn').onclick = async () => { if (!checkApiConfig()) return; const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); const thisChat = allChats[currentContactId] || []; if (thisChat.length === 0) { alert('该角色没有聊天记录，无法生成总结。'); return; } const recentChats = thisChat.slice(-20); const chatText = recentChats.map(c => `${c.role}: ${c.content}`).join('\n'); loadingOverlay.style.display = 'flex'; try { const summary = await callAiApi(chatText, "normal"); saveMemoryToStorage(summary, Date.now()); alert('记忆总结成功！已添加至笔记本。'); } catch (err) { alert('生成失败: ' + err.message); } finally { loadingOverlay.style.display = 'none'; } };
+        document.getElementById('batchBtn').onclick = () => { batchModal.style.display = 'flex'; };
         document.getElementById('cancelBatch').onclick = () => batchModal.style.display = 'none';
-
-        document.getElementById('runBatch').onclick = async () => {
-            const start = document.getElementById('batchStart').value;
-            const end = document.getElementById('batchEnd').value;
-            
-            if (!start || !end) {
-                alert('请选择开始和结束日期');
-                return;
-            }
-            
-            batchModal.style.display = 'none';
-            if (!checkApiConfig()) return;
-
-            loadingOverlay.style.display = 'flex';
-
-            const memories = JSON.parse(localStorage.getItem('memories') || '{}');
-            const list = memories[currentContactId] || [];
-            
-            const startDate = new Date(start).getTime();
-            const endDate = new Date(end).getTime() + 86400000;
-
-            const targetMemories = list.filter(m => m.timestamp >= startDate && m.timestamp < endDate);
-
-            if (targetMemories.length === 0) {
-                loadingOverlay.style.display = 'none';
-                alert('该日期范围内没有可总结的记忆。');
-                return;
-            }
-
-            const memoryText = targetMemories.map(m => `[${m.dateStr}] ${m.content}`).join('\n\n');
-
-            try {
-                const summary = await callAiApi(memoryText, "batch");
-                
-                if (confirm('AI 总结完成，内容如下：\n\n' + summary.substring(0, 100) + '...\n\n是否保存为新的一条精简记忆？(这将保留原始记忆)')) {
-                     saveMemoryToStorage(summary, Date.now());
-                }
-            } catch (err) {
-                alert('批量总结失败: ' + err.message);
-            } finally {
-                loadingOverlay.style.display = 'none';
-            }
-        };
-
-        // --- API 调用模拟 ---
-                async function callAiApi(inputText, type) {
+        document.getElementById('runBatch').onclick = async () => { const start = document.getElementById('batchStart').value; const end = document.getElementById('batchEnd').value; if (!start || !end) { alert('请选择开始和结束日期'); return; } batchModal.style.display = 'none'; if (!checkApiConfig()) return; loadingOverlay.style.display = 'flex'; const memories = JSON.parse(localStorage.getItem('memories') || '{}'); const list = memories[currentContactId] || []; const startDate = new Date(start).getTime(); const endDate = new Date(end).getTime() + 86400000; const targetMemories = list.filter(m => m.timestamp >= startDate && m.timestamp < endDate); if (targetMemories.length === 0) { loadingOverlay.style.display = 'none'; alert('该日期范围内没有可总结的记忆。'); return; } const memoryText = targetMemories.map(m => `[${m.dateStr}] ${m.content}`).join('\n\n'); try { const summary = await callAiApi(memoryText, "batch"); if (confirm('AI 总结完成，内容如下：\n\n' + summary.substring(0, 100) + '...\n\n是否保存为新的一条精简记忆？(这将保留原始记忆)')) { saveMemoryToStorage(summary, Date.now()); } } catch (err) { alert('批量总结失败: ' + err.message); } finally { loadingOverlay.style.display = 'none'; } };
+        
+        async function callAiApi(inputText, type) {
             const apiUrl = localStorage.getItem('apiUrl');
             const apiKey = localStorage.getItem('apiKey');
             const model = localStorage.getItem('selectedModel');
@@ -680,12 +103,10 @@ char的长期记忆summary格式为：
                 .replace(/{{char}}/g, charName)
                 .replace(/{{user}}/g, "User");
 
-            // --- 新增：读取 User 设定并注入 Prompt ---
             const userPersona = localStorage.getItem('user_persona');
             if (userPersona && userPersona.trim() !== "") {
                 finalSystemPrompt += `\n\n[User Info / User Persona]:\n${userPersona}\n`;
             }
-            // ---------------------------------------
 
             let userPromptContent = "";
             if (type === 'normal') {
@@ -711,39 +132,22 @@ char的长期记忆summary格式为：
                         { role: "system", content: finalSystemPrompt },
                         { role: "user", content: userPromptContent }
                     ],
-                    temperature: parseFloat(localStorage.getItem('temperature') || 0.9)
+                    // 【关键修复】将从localStorage读取的值除以10，以匹配API要求
+                    temperature: parseFloat((localStorage.getItem('temperature') || '9')) / 10.0
                 })
             });
 
             if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.error?.message || 'API 请求错误');
+                const errData = await response.json().catch(() => ({ error: { message: response.statusText } }));
+                throw new Error(errData.error?.message || `API 请求错误 (${response.status})`);
             }
 
             const data = await response.json();
             return data.choices[0].message.content;
         }
 
-
-        function checkApiConfig() {
-            const apiUrl = localStorage.getItem('apiUrl');
-            const apiKey = localStorage.getItem('apiKey');
-            if (!apiUrl || !apiKey) {
-                alert('请先在设置中配置 API URL 和 Key！');
-                return false;
-            }
-            return true;
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
+        function checkApiConfig() { const apiUrl = localStorage.getItem('apiUrl'); const apiKey = localStorage.getItem('apiKey'); if (!apiUrl || !apiKey) { alert('请先在设置中配置 API URL 和 Key！'); return false; } return true; }
+        function escapeHtml(text) { if (!text) return ''; return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
     </script>
 </body>
 </html>
