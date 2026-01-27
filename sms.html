@@ -2,22 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 1. 强制禁止缩放，适配刘海屏 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- 2. iOS Safari 专用全屏设置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
-    
-    <!-- 3. Android Chrome 专用全屏设置 -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
-    
-    <!-- 4. 引入 Manifest 文件 -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- 图标设置 -->
     <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
     
@@ -34,31 +25,21 @@
             align-items: center;
             width: 100vw;
             height: 100vh;
-            height: 100dvh; /* 适配移动端高度 */
+            height: 100dvh;
             background: #2a2a2a;
-            overflow: hidden; /* 禁止背景滚动 */
-            
-            /* 禁止长按选中文本 */
+            overflow: hidden;
             -webkit-user-select: none;
             user-select: none;
-            
-            /* 防止 iOS 下拉回弹 */
             overscroll-behavior: none;
-            
-            /* 适配刘海屏安全区域 */
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
         }
 
         .phone-container {
-            /* 修改屏幕宽度，留出一点上下边距 */
             width: 98vw; 
             max-width: 520px;
-            
-            /* 修改：高度适配，留出一点上下边距 */
             height: 100%;
             max-height: 95dvh;
-            
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
@@ -69,7 +50,6 @@
             overflow: hidden;
         }
 
-        /* --- 顶部栏 --- */
         .header {
             background: rgba(26, 26, 26, 0.95);
             border-bottom: 3px solid #000;
@@ -78,7 +58,20 @@
             align-items: center;
             z-index: 10;
             flex-shrink: 0;
-            height: 50px; /* 固定高度 */
+            height: 50px;
+        }
+
+        /* --- 【新增】头像样式 --- */
+        .char-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #000;
+            margin-right: 10px;
+            object-fit: cover;
+            background: #444;
+            display: none; /* 默认隐藏 */
+            flex-shrink: 0;
         }
 
         .back-btn {
@@ -99,7 +92,7 @@
         }
 
         .char-name {
-            font-size: 12px; /* 稍微调大 */
+            font-size: 12px;
             color: #fff;
             white-space: nowrap;
             overflow: hidden;
@@ -114,84 +107,52 @@
             line-height: 10px;
         }
 
-        .header-icons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .icon-btn {
-            font-size: 16px;
-            cursor: pointer;
-            color: #fff;
-            transition: transform 0.1s;
-        }
+        .header-icons { display: flex; gap: 15px; }
+        .icon-btn { font-size: 16px; cursor: pointer; color: #fff; transition: transform 0.1s; }
         .icon-btn:active { transform: scale(0.9); }
 
-        /* --- 聊天区域 --- */
         .chat-area {
             flex: 1;
             background-color: #e5e5f7;
-            /* 默认网格背景 */
             background-image:  radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
-            
             overflow-y: auto;
             padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 15px;
             scroll-behavior: smooth;
-            /* 背景图覆盖 */
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-            
-            /* 解决 iOS 滚动不流畅问题 */
             -webkit-overflow-scrolling: touch; 
         }
 
-        /* 滚动条 */
         .chat-area::-webkit-scrollbar { width: 4px; }
         .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
 
-        .message-row {
-            display: flex;
-            flex-direction: column;
-            max-width: 85%; /* 增加宽度 */
-            position: relative;
-        }
-
+        .message-row { display: flex; flex-direction: column; max-width: 85%; position: relative; }
         .message-row.char { align-self: flex-start; }
         .message-row.user { align-self: flex-end; align-items: flex-end; }
 
         .bubble {
             padding: 12px 10px;
-            font-size: 12px; /* 字体调大，更易读 */
+            font-size: 12px;
             line-height: 1.5;
             border: 3px solid #000;
             box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
             word-wrap: break-word;
             position: relative;
-            /* 优化中文字体显示 */
             font-family: "SimSun", "Songti SC", serif; 
             font-weight: bold;
         }
 
-        .message-row.char .bubble {
-            background: #fff;
-            color: #000;
-            border-bottom-left-radius: 0;
-        }
-
-        .message-row.user .bubble {
-            background: #4ecdc4;
-            color: #000;
-            border-bottom-right-radius: 0;
-        }
+        .message-row.char .bubble { background: #fff; color: #000; border-bottom-left-radius: 0; }
+        .message-row.user .bubble { background: #4ecdc4; color: #000; border-bottom-right-radius: 0; }
 
         .time-tag {
-            font-size: 8px; /* 调大 */
+            font-size: 8px;
             color: #555; 
             margin-top: 4px;
             padding: 2px 4px;
@@ -202,7 +163,6 @@
         }
         .message-row.user .time-tag { align-self: flex-end; }
 
-        /* --- 底部输入栏 --- */
         .footer {
             background: #1a1a1a;
             border-top: 3px solid #000;
@@ -211,7 +171,6 @@
             align-items: flex-end;
             gap: 8px;
             flex-shrink: 0;
-            /* 适配底部小黑条 */
             padding-bottom: max(10px, env(safe-area-inset-bottom));
         }
 
@@ -221,9 +180,9 @@
             border: 3px solid #000;
             padding: 10px;
             font-family: "SimSun", "Songti SC", serif;
-            font-size: 14px; /* 输入框字体调大 */
+            font-size: 14px;
             font-weight: bold;
-            min-height: 44px; /* 方便点击 */
+            min-height: 44px;
             max-height: 100px;
             overflow-y: auto;
             resize: none;
@@ -250,7 +209,6 @@
         .btn-star { background: #ffe66d; color: #000; }
         .btn-send { background: #a8e6cf; color: #000; }
 
-        /* --- 菜单弹窗 --- */
         .popup-menu {
             display: none;
             position: absolute;
@@ -264,22 +222,12 @@
             padding: 10px;
         }
 
-        .menu-item {
-            padding: 12px;
-            border-bottom: 2px dashed #ccc;
-            font-size: 10px;
-            cursor: pointer;
-        }
+        .menu-item { padding: 12px; border-bottom: 2px dashed #ccc; font-size: 10px; cursor: pointer; }
         .menu-item:last-child { border-bottom: none; }
         .menu-item:hover { background: #eee; }
 
-        .toggle-switch {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .toggle-switch { display: flex; justify-content: space-between; align-items: center; }
 
-        /* --- 长按上下文菜单 --- */
         .context-menu {
             display: none;
             position: fixed; 
@@ -291,18 +239,10 @@
             width: 140px;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        .context-btn {
-            padding: 15px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 10px;
-            border-bottom: 1px solid #444;
-            cursor: pointer;
-            text-align: center;
-        }
+        .context-btn { padding: 15px; font-family: 'Press Start 2P', cursive; font-size: 10px; border-bottom: 1px solid #444; cursor: pointer; text-align: center; }
         .context-btn:hover { background: #444; }
         .context-btn.danger { color: #ff6b6b; }
 
-        /* 颜色方案 (适配主页) */
         .color-scheme-1 .header { border-bottom-color: #ff6b9d; }
         .color-scheme-2 .header { border-bottom-color: #4ecdc4; }
         .color-scheme-3 .header { border-bottom-color: #ffe66d; } 
@@ -314,9 +254,11 @@
 <body>
     <div class="phone-container" id="phoneContainer">
         
-        <!-- 顶部 -->
+        <!-- 顶部 (这是正确的位置) -->
         <div class="header">
             <a onclick="window.location.href='./index.html'" class="back-btn">←</a>
+            <!-- 【新增】头像元素放在这里 -->
+            <img id="charAvatar" class="char-avatar">
             <div class="header-info">
                 <div class="char-name" id="charNameDisplay">加载中...</div>
                 <div class="status-text" id="statusText"></div>
@@ -338,9 +280,7 @@
         </div>
 
         <!-- 聊天内容 -->
-        <div class="chat-area" id="chatArea">
-            <!-- 消息会动态插入这里 -->
-        </div>
+        <div class="chat-area" id="chatArea"></div>
 
         <!-- 底部 -->
         <div class="footer">
@@ -359,8 +299,7 @@
     </div>
 
     <script>
-        // --- 全局变量 ---
-        const currentChatId = localStorage.getItem('currentChatId'); // 需要从上一页传入
+        const currentChatId = localStorage.getItem('currentChatId');
         const chatArea = document.getElementById('chatArea');
         const msgInput = document.getElementById('msgInput');
         const statusText = document.getElementById('statusText');
@@ -369,59 +308,51 @@
         const contextMenu = document.getElementById('contextMenu');
         const phoneContainer = document.getElementById('phoneContainer');
 
-        let proactiveTimer = null;
-        let contextTargetId = null; // 当前长按选中的消息ID
+        let contextTargetId = null;
         
-        // 配色恢复
         const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
         const savedColor = localStorage.getItem('phoneColor');
         if (savedColor !== null) phoneContainer.classList.add(colorSchemes[parseInt(savedColor)]);
 
-        // --- 初始化 ---
         window.addEventListener('DOMContentLoaded', () => {
             if (!currentChatId) {
                 alert('未选择联系人，即将返回通讯录');
                 window.location.href = './contacts.html';
                 return;
             }
-            
             loadContactInfo();
             loadSettings();
             renderMessages();
             startProactiveCheck();
         });
 
-        // 点击其他地方关闭菜单
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('#menuBtn') && !e.target.closest('#settingsMenu')) {
-                settingsMenu.style.display = 'none';
-            }
-            if (!e.target.closest('.context-menu')) {
-                contextMenu.style.display = 'none';
-            }
+            if (!e.target.closest('#menuBtn') && !e.target.closest('#settingsMenu')) settingsMenu.style.display = 'none';
+            if (!e.target.closest('.context-menu')) contextMenu.style.display = 'none';
         });
 
-        // --- 1. 数据加载 ---
         function loadContactInfo() {
+            const charAvatar = document.getElementById('charAvatar'); // 获取头像元素
             const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
             const contact = contacts.find(c => c.id === currentChatId);
             if (contact) {
                 charNameDisplay.textContent = contact.nick || contact.name;
+                if (contact.pfp && contact.pfp.trim() !== "") {
+                    charAvatar.src = contact.pfp;
+                    charAvatar.style.display = 'block'; // 有头像则显示
+                } else {
+                    charAvatar.style.display = 'none'; // 无则隐藏
+                }
             } else {
                 charNameDisplay.textContent = "未知号码";
+                charAvatar.style.display = 'none'; // 未知也隐藏
             }
         }
 
         function loadSettings() {
             const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
             const settings = allSettings[currentChatId] || { proactive: false, bg: '' };
-            
-            // 设置背景
-            if (settings.bg) {
-                chatArea.style.backgroundImage = `url('${settings.bg}')`;
-            }
-
-            // 设置开关状态
+            if (settings.bg) chatArea.style.backgroundImage = `url('${settings.bg}')`;
             updateProactiveUI(settings.proactive);
         }
 
@@ -434,35 +365,23 @@
         function saveSettings(key, value) {
             const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
             if (!allSettings[currentChatId]) allSettings[currentChatId] = {};
-            
             allSettings[currentChatId][key] = value;
             localStorage.setItem('chatSettings', JSON.stringify(allSettings));
         }
 
-        // --- 2. 消息渲染与滚动 ---
         function renderMessages() {
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             const messages = allChats[currentChatId] || [];
-            
             chatArea.innerHTML = '';
-            
             messages.forEach(msg => {
                 const row = document.createElement('div');
                 row.className = `message-row ${msg.role === 'user' ? 'user' : 'char'}`;
-                
-                // 长按事件绑定
                 addLongPressEvent(row, msg.id);
-
                 const date = new Date(msg.timestamp);
                 const timeStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
-
-                row.innerHTML = `
-                    <div class="bubble">${escapeHtml(msg.content)}</div>
-                    <div class="time-tag">${timeStr}</div>
-                `;
+                row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div><div class="time-tag">${timeStr}</div>`;
                 chatArea.appendChild(row);
             });
-
             scrollToBottom();
         }
 
@@ -473,114 +392,118 @@
         function addMessage(role, content) {
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             if (!allChats[currentChatId]) allChats[currentChatId] = [];
-
-            const newMsg = {
-                id: Date.now(),
-                role: role, // 'user' or 'assistant'
-                content: content,
-                timestamp: Date.now()
-            };
-
+            const newMsg = { id: Date.now(), role: (role === 'user' ? 'user' : 'assistant'), content: content, timestamp: Date.now() };
             allChats[currentChatId].push(newMsg);
             localStorage.setItem('chats', JSON.stringify(allChats));
-            
             renderMessages();
         }
 
-        // --- 3. 发送与 AI 逻辑 ---
-        
-        // 发送按钮 (仅上屏，不触发AI)
         document.getElementById('sendBtn').addEventListener('click', () => {
             const text = msgInput.value.trim();
             if (!text) return;
-            
             addMessage('user', text);
             msgInput.value = '';
-            statusText.textContent = ''; // 清除状态
+            statusText.textContent = '';
         });
 
-        // 星星按钮 (强制 AI 回复)
-        document.getElementById('starBtn').addEventListener('click', async () => {
-            await triggerAiReply();
-        });
+        document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); });
 
+        // 触发 AI 回复 (多条回复版本)
         async function triggerAiReply() {
             statusText.textContent = '对方正在输入...';
             statusText.style.color = '#4ecdc4';
 
+            const addMessageWithDelay = (content, delay) => new Promise(resolve => setTimeout(() => { addMessage('assistant', content); resolve(); }, delay));
+
             try {
-                const reply = await callAiApi();
-                addMessage('assistant', reply);
-                statusText.textContent = '';
+                const rawReply = await callAiApi();
+                let replyMessages = [];
+                try {
+                    const parsed = JSON.parse(rawReply);
+                    if (parsed && Array.isArray(parsed.replies)) {
+                        replyMessages = parsed.replies;
+                    } else {
+                        replyMessages.push(rawReply); 
+                    }
+                } catch (e) {
+                    console.error("AI 未返回有效 JSON，按单条消息处理.", rawReply);
+                    replyMessages.push(rawReply);
+                }
+
+                for (const msg of replyMessages) {
+                    if (msg.trim() === "") continue;
+                    const delay = replyMessages.indexOf(msg) === 0 ? 300 : Math.random() * 800 + 500;
+                    statusText.textContent = '对方正在输入...';
+                    await addMessageWithDelay(msg, delay);
+                }
             } catch (err) {
                 statusText.textContent = '发送失败!';
                 statusText.style.color = '#ff6b6b';
                 alert('API 错误: ' + err.message);
+            } finally {
+                statusText.textContent = '';
             }
         }
 
-        // API 调用核心
+        // API 调用核心 (多条回复的 JSON 版本)
         async function callAiApi() {
             const apiUrl = localStorage.getItem('apiUrl');
             const apiKey = localStorage.getItem('apiKey');
             const model = localStorage.getItem('selectedModel');
-            
             if (!apiUrl || !apiKey) throw new Error("请先在设置页配置API");
 
-            // 获取上下文
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             const history = allChats[currentChatId] || [];
-            
-            // 获取人设
             const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
             const charData = contacts.find(c => c.id === currentChatId);
             
             const persona = charData ? charData.persona : "";
             const note = charData ? charData.note : "";
             const charName = charData ? charData.name : "Character";
-
+            const userPersona = localStorage.getItem('user_persona') || "";
             const now = new Date().toLocaleString();
 
-            const systemPrompt = `
-你现在扮演 ${charName}。
-你正在通过手机短信与 User 聊天。
-当前现实时间是: ${now}。
-请务必感知时间流逝（如深夜要说晚安，早上要说早安）。
-回复要求：
-1. 必须使用短信风格：简短、口语化。
-2. 禁止长篇大论，每条回复尽量控制在 50 字以内。
-3. 严禁使用Markdown格式，严禁使用代码块。
-4. 如果 User 发了图片链接，请根据上下文反应。
+            const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信与 User 聊天。当前现实时间是: ${now}。
 
-${persona ? "你的角色设定:\n" + persona : ""}
-${note ? "备注/世界书:\n" + note : ""}
-            `;
+[角色设定]:
+${persona}
 
-            // 构建消息链 (最近 10 条，防止超长)
+${userPersona ? `[关于 User 的信息]:\n${userPersona}` : ""}
+
+${note ? `[备注/强制指令]:\n${note}` : ""}
+
+[回复规则 - 你必须严格遵守]:
+1.  你的回复**必须**是一个 JSON 对象，且只包含一个名为 "replies" 的键。
+2.  "replies" 的值**必须**是一个数组，数组中包含 1 到 8 条字符串。
+3.  数组中的每个字符串就是一条独立的短信内容。
+4.  每条短信内容都必须简短、口语化，就像真人在发短信一样。
+5.  严禁在字符串内使用 Markdown 或任何格式化语法。
+6.  根据聊天上下文，决定回复 1 条还是多条。如果内容简单，就只回 1 条。如果内容复杂或情绪激动，可以回 2-3 条来模拟连续输入。
+
+[回复范例]:
+{
+  "replies": [
+    "天啊！",
+    "真的假的？",
+    "快给我看看！"
+  ]
+}`;
+
             const msgsToSend = [
-                { role: "system", content: systemPrompt },
-                ...history.slice(-15).map(m => ({
-                    role: m.role,
-                    content: m.content
-                }))
+                { role: "system", content: systemPrompt.trim() },
+                ...history.slice(-15).map(m => ({ role: m.role, content: m.content }))
             ];
 
-            // 修正 URL
             let fullUrl = apiUrl;
-            if (!apiUrl.includes('/chat/completions')) {
-                fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
-            }
+            if (!apiUrl.includes('/chat/completions')) fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
 
             const res = await fetch(fullUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
                 body: JSON.stringify({
                     model: model,
                     messages: msgsToSend,
-                    max_tokens: 150, // 限制回复长度
+                    response_format: { type: "json_object" }, 
                     temperature: parseFloat(localStorage.getItem('temperature') || 0.9)
                 })
             });
@@ -589,60 +512,41 @@ ${note ? "备注/世界书:\n" + note : ""}
                 const err = await res.json();
                 throw new Error(err.error?.message || res.statusText);
             }
-
             const data = await res.json();
             return data.choices[0].message.content;
         }
 
-        // --- 4. 主动消息逻辑 ---
         function startProactiveCheck() {
-            // 每 10 秒检查一次
             setInterval(async () => {
                 const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
                 const settings = allSettings[currentChatId];
-                
-                // 如果未开启，或者页面隐藏，不执行
                 if (!settings || !settings.proactive || document.hidden) return;
 
                 const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
                 const history = allChats[currentChatId] || [];
-
-                if (history.length === 0) return; // 没聊过天不主动发
+                if (history.length === 0) return;
 
                 const lastMsg = history[history.length - 1];
                 const now = Date.now();
                 
-                // 300秒 = 300000 毫秒
-                // 逻辑：如果最后一条不是我发的(防止自己连续发)，且时间超过300秒
                 if (now - lastMsg.timestamp > 300000 && lastMsg.role === 'user') {
-                    // 还需要一个标志位防止重复触发同一时段的
-                    // 这里简化处理：如果在输入中就不发
                     if (statusText.textContent !== '') return;
-
                     console.log("触发主动消息...");
                     await triggerAiReply();
                 }
-
             }, 10000); 
         }
 
-        // --- 5. 菜单功能 ---
-        document.getElementById('menuBtn').onclick = () => {
-            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
-        };
+        document.getElementById('menuBtn').onclick = () => { settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block'; };
 
-        // 切换主动消息
         document.getElementById('proactiveToggleBtn').onclick = () => {
             const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
             const current = (allSettings[currentChatId] && allSettings[currentChatId].proactive) || false;
-            
             saveSettings('proactive', !current);
             updateProactiveUI(!current);
-            
             if (!current) alert('已开启主动消息。\nAI将在后台每5分钟检测一次是否需要回复。\n(仅当此页面保持开启时有效)');
         };
 
-        // 背景上传
         document.getElementById('bgUploadBtn').onclick = () => {
             if (confirm('选择上传方式：\n[确定] 本地上传\n[取消] 输入 URL')) {
                 document.getElementById('bgFileInput').click();
@@ -662,17 +566,12 @@ ${note ? "备注/世界书:\n" + note : ""}
                 reader.onload = (evt) => {
                     const res = evt.target.result;
                     chatArea.style.backgroundImage = `url('${res}')`;
-                    try {
-                        saveSettings('bg', res);
-                    } catch(err) {
-                        alert('图片太大无法保存，但本次会话有效。');
-                    }
+                    try { saveSettings('bg', res); } catch(err) { alert('图片太大无法保存，但本次会话有效。'); }
                 };
                 reader.readAsDataURL(file);
             }
         };
 
-        // 清空历史
         document.getElementById('clearHistoryBtn').onclick = () => {
             if (confirm('确定要清空与该角色的所有聊天记录吗？')) {
                 if (confirm('再次确认：此操作不可恢复！')) {
@@ -685,29 +584,16 @@ ${note ? "备注/世界书:\n" + note : ""}
             }
         };
 
-        // --- 6. 长按编辑/删除逻辑 ---
         let pressTimer;
-
         function addLongPressEvent(element, msgId) {
             const startPress = (e) => {
-                // 允许点击输入框不触发
                 if (e.target.tagName === 'TEXTAREA') return;
-                
-                pressTimer = setTimeout(() => {
-                    showContextMenu(e, msgId);
-                }, 600); // 600ms 长按
+                pressTimer = setTimeout(() => { showContextMenu(e, msgId); }, 600);
             };
-
-            const cancelPress = () => {
-                clearTimeout(pressTimer);
-            };
-
-            // 触摸设备
+            const cancelPress = () => { clearTimeout(pressTimer); };
             element.addEventListener('touchstart', startPress);
             element.addEventListener('touchend', cancelPress);
             element.addEventListener('touchmove', cancelPress);
-            
-            // 鼠标设备
             element.addEventListener('mousedown', startPress);
             element.addEventListener('mouseup', cancelPress);
             element.addEventListener('mouseleave', cancelPress);
@@ -716,21 +602,10 @@ ${note ? "备注/世界书:\n" + note : ""}
         function showContextMenu(event, msgId) {
             contextTargetId = msgId;
             contextMenu.style.display = 'flex';
-            
-            // 计算位置
             let x, y;
-            if (event.touches && event.touches[0]) {
-                x = event.touches[0].clientX;
-                y = event.touches[0].clientY;
-            } else {
-                x = event.clientX;
-                y = event.clientY;
-            }
-
-            // 边界检测
+            if (event.touches && event.touches[0]) { x = event.touches[0].clientX; y = event.touches[0].clientY; } else { x = event.clientX; y = event.clientY; }
             if (x + 140 > window.innerWidth) x = window.innerWidth - 150;
             if (y + 150 > window.innerHeight) y = window.innerHeight - 160;
-
             contextMenu.style.left = x + 'px';
             contextMenu.style.top = y + 'px';
         }
@@ -753,27 +628,16 @@ ${note ? "备注/世界书:\n" + note : ""}
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             let msgs = allChats[currentChatId] || [];
             const msg = msgs.find(m => m.id === contextTargetId);
-            
             if (msg) {
                 const newContent = prompt('编辑消息内容:', msg.content);
-                if (newContent !== null) {
-                    msg.content = newContent;
-                    localStorage.setItem('chats', JSON.stringify(allChats));
-                    renderMessages();
-                }
+                if (newContent !== null) { msg.content = newContent; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); }
             }
             contextMenu.style.display = 'none';
         };
 
-        // HTML 转义
         function escapeHtml(text) {
             if (!text) return '';
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
 </body>
