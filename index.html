@@ -74,20 +74,18 @@
             object-position: top center; 
         }
 
-        /* --- 【新增】主屏幕时钟样式 --- */
         #homeScreenClock {
             position: absolute;
-            top: 15px; /* 与顶部的距离 */
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 5; /* 层级低于通知(100)，高于壁纸 */
+            z-index: 5;
             color: #fff;
             font-family: 'Press Start 2P', cursive;
             font-size: 24px;
-            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; /* 描边效果，确保清晰 */
-            pointer-events: none; /* 让时钟不影响点击壁纸 */
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+            pointer-events: none;
         }
-
 
         .button-area {
             flex: 1; display: grid;
@@ -141,7 +139,6 @@
 
         <div class="screen" id="screen">
             <img id="screenImage" src="" alt="" style="display: none;">
-            <!-- 【新增】主屏幕时钟 -->
             <div id="homeScreenClock"></div>
         </div>
 
@@ -194,6 +191,9 @@
         const urlInputWrapper = document.getElementById('urlInputWrapper');
         const modalButtons = document.getElementById('modalButtons');
         const notificationArea = document.getElementById('notificationArea');
+        // --- 【新增】用于保存定时器ID的变量 ---
+        let clockIntervalId = null;
+        let notificationIntervalId = null;
 
         const colorSchemes = [
             'color-scheme-1', 'color-scheme-2', 'color-scheme-3',
@@ -201,14 +201,27 @@
         ];
         let currentColorIndex = -1;
         
-        // --- 【新增】时钟更新函数 ---
         function updateClock() {
             const clockElement = document.getElementById('homeScreenClock');
-            if (!clockElement) return; // 安全检查
+            if (!clockElement) return;
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             clockElement.textContent = `${hours}:${minutes}`;
+        }
+        
+        // --- 【新增】一个专门启动/重启定时器的函数 ---
+        function startIntervals() {
+            // 先清除旧的定时器，防止重复
+            if (clockIntervalId) clearInterval(clockIntervalId);
+            if (notificationIntervalId) clearInterval(notificationIntervalId);
+            
+            // 立即执行一次，然后设置新的定时器
+            updateClock();
+            clockIntervalId = setInterval(updateClock, 1000);
+
+            updateNotificationDisplay();
+            notificationIntervalId = setInterval(updateNotificationDisplay, 2000);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -223,14 +236,21 @@
                 phoneContainer.className = 'phone-container ' + colorSchemes[currentColorIndex];
             }
             
-            // 【新增】启动时钟
-            updateClock(); // 立即显示一次
-            setInterval(updateClock, 1000); // 每秒更新一次
-
+            // 首次加载时，启动所有任务
             startGlobalProactiveCheck();
-            setInterval(updateNotificationDisplay, 2000);
-            updateNotificationDisplay();
+            startIntervals(); // 使用新函数启动
         });
+        
+        // --- 【新增】处理从缓存恢复的事件 ---
+        window.addEventListener('pageshow', (event) => {
+            // event.persisted 为 true 表示页面是从 bfcache 恢复的
+            if (event.persisted) {
+                console.log("Page restored from bfcache. Restarting intervals.");
+                // 重新启动时钟和通知更新，因为它们在页面隐藏时被暂停了
+                startIntervals();
+            }
+        });
+
 
         // --- 壁纸和颜色主题逻辑 ---
         screen.addEventListener('click', (e) => {
