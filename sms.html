@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <!-- (head部分内容不变) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,63 +12,16 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
-    
     <title>sms - Uacuum</title>
     <link rel="stylesheet" href="base.css">
-
     <style>
-        /* (CSS样式保持不变，此处省略以节省空间) */
-        .header { background: rgba(26, 26, 26, 0.95); border-bottom: 3px solid #000; padding: 10px 15px; display: flex; align-items: center; z-index: 10; flex-shrink: 0; height: 50px; }
-        .char-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #000; margin-right: 10px; object-fit: cover; background: #444; display: none; flex-shrink: 0; }
-        .back-btn { font-size: 16px; color: #fff; text-decoration: none; cursor: pointer; padding-right: 15px; font-weight: bold; }
-        .header-info { flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
-        .char-name { font-size: 12px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .status-text { font-size: 8px; color: #4ecdc4; margin-top: 4px; height: 10px; line-height: 10px; }
-        .header-icons { display: flex; gap: 15px; }
-        .icon-btn { font-size: 16px; cursor: pointer; color: #fff; transition: transform 0.1s; }
-        .icon-btn:active { transform: scale(0.9); }
-        .chat-area { flex: 1; background-color: #e5e5f7; background-image: radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; background-repeat: no-repeat; background-size: cover; background-position: center; -webkit-overflow-scrolling: touch; }
-        .chat-area::-webkit-scrollbar { width: 4px; }
-        .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
-        .message-row { display: flex; flex-direction: column; max-width: 85%; position: relative; }
-        .message-row.char { align-self: flex-start; }
-        .message-row.user { align-self: flex-end; align-items: flex-end; }
-        .bubble { padding: 10px 12px; font-size: 12px; line-height: 1.5; border: 3px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,0.3); word-wrap: break-word; position: relative; font-family: "SimSun", "Songti SC", serif; font-weight: bold; }
-        .message-row.char .bubble { background: #fff; color: #000; border-bottom-left-radius: 0; }
-        .message-row.user .bubble { background: #4ecdc4; color: #000; border-bottom-right-radius: 0; }
-        .time-tag { font-size: 8px; color: #555; margin-top: 4px; padding: 2px 4px; background: rgba(255,255,255,0.8); border-radius: 4px; align-self: flex-start; }
-        .message-row.user .time-tag { align-self: flex-end; }
-        .footer { background: #1a1a1a; border-top: 3px solid #000; padding: 10px; display: flex; align-items: flex-end; gap: 8px; flex-shrink: 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
-        .input-box { flex: 1; background: #fff; border: 3px solid #000; padding: 10px; font-family: "SimSun", "Songti SC", serif; font-size: 14px; font-weight: bold; min-height: 44px; max-height: 100px; overflow-y: auto; resize: none; outline: none; border-radius: 0; -webkit-appearance: none; }
-        .action-btn { width: 44px; height: 44px; background: #fff; border: 3px solid #000; display: flex; justify-content: center; align-items: center; font-size: 18px; cursor: pointer; box-shadow: 2px 2px 0 #000; flex-shrink: 0; }
-        .action-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0; }
-        .btn-star { background: #ffe66d; color: #000; }
-        .btn-send { background: #a8e6cf; color: #000; }
-        .popup-menu { display: none; position: absolute; top: 55px; right: 10px; background: #fff; border: 3px solid #000; box-shadow: 5px 5px 0 rgba(0,0,0,0.5); z-index: 100; width: 200px; padding: 10px; }
-        .menu-item { padding: 12px; border-bottom: 2px dashed #ccc; font-size: 10px; cursor: pointer; }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item:hover { background: #eee; }
-        .toggle-switch { display: flex; justify-content: space-between; align-items: center; }
-        .context-menu { display: none; position: fixed; background: #2a2a2a; border: 2px solid #fff; color: #fff; z-index: 200; flex-direction: column; width: 140px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 300; padding: 15px; box-sizing: border-box; }
-        .modal-content { background: #fff; border: 3px solid #000; box-shadow: 5px 5px 0 rgba(0,0,0,0.5); width: 100%; max-width: 300px; font-family: "SimSun", "Songti SC", serif; font-weight: bold; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 2px solid #000; background: #eee; }
-        .modal-header h4 { margin: 0; font-size: 12px; }
-        .modal-close { font-size: 24px; cursor: pointer; font-family: Arial, sans-serif; font-weight: bold; }
-        .modal-body { padding: 15px; }
-        .modal-btn { padding: 15px; border: 2px solid #000; margin-bottom: 10px; text-align: center; cursor: pointer; background: #f0f0f0; box-shadow: 2px 2px 0 #000; transition: all 0.1s; font-size: 12px; }
-        .modal-btn:last-child { margin-bottom: 0; }
-        .modal-btn:active { transform: translate(2px, 2px); box-shadow: none; }
-        #bgUrlInputContainer .action-btn { flex: 1; }
-        .context-btn { padding: 15px; font-family: 'Press Start 2P', cursive; font-size: 10px; border-bottom: 1px solid #444; cursor: pointer; text-align: center; }
-        .context-btn:hover { background: #444; }
-        .context-btn.danger { color: #ff6b6b; }
-        .color-scheme-1 .header { border-bottom-color: #ff6b9d; } .color-scheme-2 .header { border-bottom-color: #4ecdc4; } .color-scheme-3 .header { border-bottom-color: #ffe66d; } .color-scheme-4 .header { border-bottom-color: #a8e6cf; } .color-scheme-5 .header { border-bottom-color: #ffd3b6; } .color-scheme-6 .header { border-bottom-color: #c7ceea; }
+        /* (CSS样式保持不变，此处省略) */
+        .header { background: rgba(26, 26, 26, 0.95); border-bottom: 3px solid #000; padding: 10px 15px; display: flex; align-items: center; z-index: 10; flex-shrink: 0; height: 50px; } .char-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #000; margin-right: 10px; object-fit: cover; background: #444; display: none; flex-shrink: 0; } .back-btn { font-size: 16px; color: #fff; text-decoration: none; cursor: pointer; padding-right: 15px; font-weight: bold; } .header-info { flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; } .char-name { font-size: 12px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .status-text { font-size: 8px; color: #4ecdc4; margin-top: 4px; height: 10px; line-height: 10px; } .header-icons { display: flex; gap: 15px; } .icon-btn { font-size: 16px; cursor: pointer; color: #fff; transition: transform 0.1s; } .icon-btn:active { transform: scale(0.9); } .chat-area { flex: 1; background-color: #e5e5f7; background-image: radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; background-repeat: no-repeat; background-size: cover; background-position: center; -webkit-overflow-scrolling: touch; } .chat-area::-webkit-scrollbar { width: 4px; } .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; } .message-row { display: flex; flex-direction: column; max-width: 85%; position: relative; } .message-row.char { align-self: flex-start; } .message-row.user { align-self: flex-end; align-items: flex-end; } .bubble { padding: 10px 12px; font-size: 12px; line-height: 1.5; border: 3px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,0.3); word-wrap: break-word; position: relative; font-family: "SimSun", "Songti SC", serif; font-weight: bold; } .message-row.char .bubble { background: #fff; color: #000; border-bottom-left-radius: 0; } .message-row.user .bubble { background: #4ecdc4; color: #000; border-bottom-right-radius: 0; } .time-tag { font-size: 8px; color: #555; margin-top: 4px; padding: 2px 4px; background: rgba(255,255,255,0.8); border-radius: 4px; align-self: flex-start; } .message-row.user .time-tag { align-self: flex-end; } .footer { background: #1a1a1a; border-top: 3px solid #000; padding: 10px; display: flex; align-items: flex-end; gap: 8px; flex-shrink: 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); } .input-box { flex: 1; background: #fff; border: 3px solid #000; padding: 10px; font-family: "SimSun", "Songti SC", serif; font-size: 14px; font-weight: bold; min-height: 44px; max-height: 100px; overflow-y: auto; resize: none; outline: none; border-radius: 0; -webkit-appearance: none; } .action-btn { width: 44px; height: 44px; background: #fff; border: 3px solid #000; display: flex; justify-content: center; align-items: center; font-size: 18px; cursor: pointer; box-shadow: 2px 2px 0 #000; flex-shrink: 0; } .action-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0; } .btn-star { background: #ffe66d; color: #000; } .btn-send { background: #a8e6cf; color: #000; } .popup-menu { display: none; position: absolute; top: 55px; right: 10px; background: #fff; border: 3px solid #000; box-shadow: 5px 5px 0 rgba(0,0,0,0.5); z-index: 100; width: 200px; padding: 10px; } .menu-item { padding: 12px; border-bottom: 2px dashed #ccc; font-size: 10px; cursor: pointer; } .menu-item:last-child { border-bottom: none; } .menu-item:hover { background: #eee; } .toggle-switch { display: flex; justify-content: space-between; align-items: center; } .context-menu { display: none; position: fixed; background: #2a2a2a; border: 2px solid #fff; color: #fff; z-index: 200; flex-direction: column; width: 140px; box-shadow: 0 0 10px rgba(0,0,0,0.5); } .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 300; padding: 15px; box-sizing: border-box; } .modal-content { background: #fff; border: 3px solid #000; box-shadow: 5px 5px 0 rgba(0,0,0,0.5); width: 100%; max-width: 300px; font-family: "SimSun", "Songti SC", serif; font-weight: bold; } .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 2px solid #000; background: #eee; } .modal-header h4 { margin: 0; font-size: 12px; } .modal-close { font-size: 24px; cursor: pointer; font-family: Arial, sans-serif; font-weight: bold; } .modal-body { padding: 15px; } .modal-btn { padding: 15px; border: 2px solid #000; margin-bottom: 10px; text-align: center; cursor: pointer; background: #f0f0f0; box-shadow: 2px 2px 0 #000; transition: all 0.1s; font-size: 12px; } .modal-btn:last-child { margin-bottom: 0; } .modal-btn:active { transform: translate(2px, 2px); box-shadow: none; } #bgUrlInputContainer .action-btn { flex: 1; } .context-btn { padding: 15px; font-family: 'Press Start 2P', cursive; font-size: 10px; border-bottom: 1px solid #444; cursor: pointer; text-align: center; } .context-btn:hover { background: #444; } .context-btn.danger { color: #ff6b6b; } .color-scheme-1 .header { border-bottom-color: #ff6b9d; } .color-scheme-2 .header { border-bottom-color: #4ecdc4; } .color-scheme-3 .header { border-bottom-color: #ffe66d; } .color-scheme-4 .header { border-bottom-color: #a8e6cf; } .color-scheme-5 .header { border-bottom-color: #ffd3b6; } .color-scheme-6 .header { border-bottom-color: #c7ceea; }
     </style>
 </head>
 <body>
+    <!-- (body的HTML结构不变) -->
     <div class="phone-container" id="phoneContainer">
-        
         <div class="header">
             <a onclick="window.location.href='./index.html'" class="back-btn">←</a>
             <img id="charAvatar" class="char-avatar">
@@ -79,7 +33,6 @@
                 <div class="icon-btn" id="menuBtn">☰</div>
             </div>
         </div>
-
         <div class="popup-menu" id="settingsMenu">
             <div class="menu-item toggle-switch" id="proactiveToggleBtn">
                 <span>主动消息</span>
@@ -89,21 +42,17 @@
             <div class="menu-item" id="clearHistoryBtn" style="color:red;">清空聊天记录</div>
             <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
         </div>
-
         <div class="chat-area" id="chatArea"></div>
-
         <div class="footer">
             <textarea class="input-box" id="msgInput" rows="1" placeholder="发送短信..."></textarea>
             <button class="action-btn btn-star" id="starBtn">★</button>
             <button class="action-btn btn-send" id="sendBtn">➤</button>
         </div>
-
         <div class="context-menu" id="contextMenu">
             <div class="context-btn" id="ctxEdit">编辑此消息</div>
             <div class="context-btn danger" id="ctxDelete">删除此消息</div>
             <div class="context-btn" id="ctxCancel">取消</div>
         </div>
-
         <div class="modal-overlay" id="bgModalOverlay">
             <div class="modal-content" id="bgModal">
                 <div class="modal-header">
@@ -128,118 +77,18 @@
     </div>
 
     <script>
-        // --- 全局变量定义 ---
-        const currentChatId = localStorage.getItem('currentChatId');
-        const chatArea = document.getElementById('chatArea');
-        const msgInput = document.getElementById('msgInput');
-        const statusText = document.getElementById('statusText');
-        const charNameDisplay = document.getElementById('charNameDisplay');
-        const settingsMenu = document.getElementById('settingsMenu');
-        const contextMenu = document.getElementById('contextMenu');
-        const phoneContainer = document.getElementById('phoneContainer');
-        const bgModalOverlay = document.getElementById('bgModalOverlay');
-        const bgModal = document.getElementById('bgModal');
-        const closeBgModal = document.getElementById('closeBgModal');
-        const bgOptionsContainer = document.getElementById('bgOptionsContainer');
-        const bgUrlInputContainer = document.getElementById('bgUrlInputContainer');
-        const bgOptionLocal = document.getElementById('bgOptionLocal');
-        const bgOptionUrl = document.getElementById('bgOptionUrl');
-        const bgUrlInput = document.getElementById('bgUrlInput');
-        const bgUrlCancel = document.getElementById('bgUrlCancel');
-        const bgUrlConfirm = document.getElementById('bgUrlConfirm');
-        let contextTargetId = null;
-        const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
-        const savedColor = localStorage.getItem('phoneColor');
-        if (savedColor !== null) phoneContainer.classList.add(colorSchemes[parseInt(savedColor)]);
-
-        // --- 页面加载和全局事件 ---
-        window.addEventListener('DOMContentLoaded', () => {
-            if (!currentChatId) {
-                alert('未选择联系人，即将返回通讯录');
-                window.location.href = './index.html';
-                return;
-            }
-            loadContactInfo();
-            loadSettings();
-            renderMessages();
-            startProactiveCheck();
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#menuBtn') && !e.target.closest('#settingsMenu')) settingsMenu.style.display = 'none';
-            if (!e.target.closest('.context-menu')) contextMenu.style.display = 'none';
-        });
-
-        // --- 核心功能函数 ---
-        function loadContactInfo() {
-            const charAvatar = document.getElementById('charAvatar');
-            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-            const contact = contacts.find(c => c.id === currentChatId);
-            if (contact) {
-                charNameDisplay.textContent = contact.nick || contact.name;
-                if (contact.pfp && contact.pfp.trim() !== "") {
-                    charAvatar.src = contact.pfp;
-                    charAvatar.style.display = 'block';
-                } else {
-                    charAvatar.style.display = 'none';
-                }
-            } else {
-                charNameDisplay.textContent = "未知号码";
-                charAvatar.style.display = 'none';
-            }
-        }
-
-        function loadSettings() {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            const settings = allSettings[currentChatId] || { proactive: false, bg: '' };
-            if (settings.bg) chatArea.style.backgroundImage = `url('${settings.bg}')`;
-            updateProactiveUI(settings.proactive);
-        }
-
-        function saveSettings(key, value) {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            if (!allSettings[currentChatId]) allSettings[currentChatId] = {};
-            allSettings[currentChatId][key] = value;
-            localStorage.setItem('chatSettings', JSON.stringify(allSettings));
-        }
-
-        function updateProactiveUI(isActive) {
-            const el = document.getElementById('proactiveStatus');
-            el.textContent = isActive ? '[ON]' : '[OFF]';
-            el.style.color = isActive ? '#4ecdc4' : '#666';
-        }
-
-        function scrollToBottom() {
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
-
-        function renderMessages() {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            const messages = allChats[currentChatId] || [];
-            chatArea.innerHTML = '';
-            messages.forEach((msg, index) => {
-                const row = document.createElement('div');
-                row.className = `message-row ${msg.role === 'user' ? 'user' : 'char'}`;
-                addLongPressEvent(row, msg.id);
-                const date = new Date(msg.timestamp);
-                const timeStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
-                const isLastMessage = (index === messages.length - 1);
-                const timeTagHTML = isLastMessage ? `<div class="time-tag">${timeStr}</div>` : '';
-                row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div>${timeTagHTML}`;
-                chatArea.appendChild(row);
-            });
-            scrollToBottom();
-        }
-
-        function addMessage(role, content) {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            if (!allChats[currentChatId]) allChats[currentChatId] = [];
-            const newMsg = { id: Date.now(), role: (role === 'user' ? 'user' : 'assistant'), content: content, timestamp: Date.now() };
-            allChats[currentChatId].push(newMsg);
-            localStorage.setItem('chats', JSON.stringify(allChats));
-            renderMessages();
-        }
-
+        // --- (前面大部分JS代码不变，直到 triggerAiReply) ---
+        const currentChatId = localStorage.getItem('currentChatId'); const chatArea = document.getElementById('chatArea'); const msgInput = document.getElementById('msgInput'); const statusText = document.getElementById('statusText'); const charNameDisplay = document.getElementById('charNameDisplay'); const settingsMenu = document.getElementById('settingsMenu'); const contextMenu = document.getElementById('contextMenu'); const phoneContainer = document.getElementById('phoneContainer'); const bgModalOverlay = document.getElementById('bgModalOverlay'); const bgModal = document.getElementById('bgModal'); const closeBgModal = document.getElementById('closeBgModal'); const bgOptionsContainer = document.getElementById('bgOptionsContainer'); const bgUrlInputContainer = document.getElementById('bgUrlInputContainer'); const bgOptionLocal = document.getElementById('bgOptionLocal'); const bgOptionUrl = document.getElementById('bgOptionUrl'); const bgUrlInput = document.getElementById('bgUrlInput'); const bgUrlCancel = document.getElementById('bgUrlCancel'); const bgUrlConfirm = document.getElementById('bgUrlConfirm'); let contextTargetId = null; const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6']; const savedColor = localStorage.getItem('phoneColor'); if (savedColor !== null) phoneContainer.classList.add(colorSchemes[parseInt(savedColor)]);
+        window.addEventListener('DOMContentLoaded', () => { if (!currentChatId) { alert('未选择联系人，即将返回通讯录'); window.location.href = './index.html'; return; } loadContactInfo(); loadSettings(); renderMessages(); startProactiveCheck(); });
+        document.addEventListener('click', (e) => { if (!e.target.closest('#menuBtn') && !e.target.closest('#settingsMenu')) settingsMenu.style.display = 'none'; if (!e.target.closest('.context-menu')) contextMenu.style.display = 'none'; });
+        function loadContactInfo() { const charAvatar = document.getElementById('charAvatar'); const contacts = JSON.parse(localStorage.getItem('contacts') || '[]'); const contact = contacts.find(c => c.id === currentChatId); if (contact) { charNameDisplay.textContent = contact.nick || contact.name; if (contact.pfp && contact.pfp.trim() !== "") { charAvatar.src = contact.pfp; charAvatar.style.display = 'block'; } else { charAvatar.style.display = 'none'; } } else { charNameDisplay.textContent = "未知号码"; charAvatar.style.display = 'none'; } }
+        function loadSettings() { const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}'); const settings = allSettings[currentChatId] || { proactive: false, bg: '' }; if (settings.bg) chatArea.style.backgroundImage = `url('${settings.bg}')`; updateProactiveUI(settings.proactive); }
+        function saveSettings(key, value) { const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}'); if (!allSettings[currentChatId]) allSettings[currentChatId] = {}; allSettings[currentChatId][key] = value; localStorage.setItem('chatSettings', JSON.stringify(allSettings)); }
+        function updateProactiveUI(isActive) { const el = document.getElementById('proactiveStatus'); el.textContent = isActive ? '[ON]' : '[OFF]'; el.style.color = isActive ? '#4ecdc4' : '#666'; }
+        function scrollToBottom() { chatArea.scrollTop = chatArea.scrollHeight; }
+        function renderMessages() { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); const messages = allChats[currentChatId] || []; chatArea.innerHTML = ''; messages.forEach((msg, index) => { const row = document.createElement('div'); row.className = `message-row ${msg.role === 'user' ? 'user' : 'char'}`; addLongPressEvent(row, msg.id); const date = new Date(msg.timestamp); const timeStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`; const isLastMessage = (index === messages.length - 1); const timeTagHTML = isLastMessage ? `<div class="time-tag">${timeStr}</div>` : ''; row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div>${timeTagHTML}`; chatArea.appendChild(row); }); scrollToBottom(); }
+        function addMessage(role, content) { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); if (!allChats[currentChatId]) allChats[currentChatId] = []; const newMsg = { id: Date.now(), role: (role === 'user' ? 'user' : 'assistant'), content: content, timestamp: Date.now() }; allChats[currentChatId].push(newMsg); localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); }
+        
         async function triggerAiReply() {
             statusText.textContent = '对方正在输入...';
             statusText.style.color = '#4ecdc4';
@@ -249,6 +98,7 @@
                 const rawReply = await callAiApi();
                 let replyMessages = [];
                 try {
+                    // 这个解析逻辑保持不变，它能兼容非JSON的回复
                     let jsonString = rawReply.trim();
                     const startIndex = jsonString.indexOf('{');
                     const endIndex = jsonString.lastIndexOf('}');
@@ -273,16 +123,10 @@
                     await addMessageWithDelay(msg, delay);
                 }
             } catch (err) {
-                // 【重要修改】增强错误提示
                 statusText.textContent = '发送失败!';
                 statusText.style.color = '#ff6b6b';
-                
-                // 1. 在控制台打印详细错误，这是最重要的！
                 console.error("API 调用失败，详细错误信息:", err); 
-                
-                // 2. 弹出更友好的提示，引导用户查看控制台
                 alert('API 错误: ' + err.message + '\n\n请按 F12 打开开发者工具，查看控制台 (Console) 中的红色错误信息以获取根本原因。');
-
             } finally {
                 statusText.textContent = '';
             }
@@ -294,6 +138,9 @@
             const model = localStorage.getItem('selectedModel');
             if (!apiUrl || !apiKey) {
                 throw new Error("请先在设置页配置API URL和API Key");
+            }
+            if (!model) { // 增加一个模型未选择的检查
+                throw new Error("请先在设置页选择一个模型并保存");
             }
 
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
@@ -307,45 +154,28 @@
             const userPersona = localStorage.getItem('user_persona') || "";
             const now = new Date().toLocaleString();
 
-            const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信与 User 聊天。当前现实时间是: ${now}。
-[角色设定]:
-${persona}
-${userPersona ? `[关于 User 的信息]:\n${userPersona}` : ""}
-${note ? `[备注/强制指令]:\n${note}` : ""}
-[回复规则 - 你必须严格遵守]:
-1.  你的回复**必须**是一个纯粹的、不含任何其他字符的 JSON 对象。绝对不能用 Markdown 代码块（\`\`\`json）包裹它。
-2.  该 JSON 对象**必须**只包含一个名为 "replies" 的键。
-3.  "replies" 的值**必须**是一个包含 1 到 8 条字符串的数组。
-4.  数组中的每个字符串就是一条独立的短信内容。内容必须简短、口语化。
-5.  严禁在字符串内使用 Markdown 或任何格式化语法。
-6.  根据聊天上下文，决定回复 1 条还是多条。如果内容简单，就只回 1 条。如果内容复杂或情绪激动，可以回 2-3 条来模拟连续输入。
-[错误回复示例 - 绝对禁止]:
-\`\`\`json
-{
-  "replies": ["你好"]
-}
-\`\`\`
-[正确回复范例]:
-{
-  "replies": [
-    "天啊！",
-    "真的假的？",
-    "快给我看看！"
-  ]
-}`;
+            const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信与 User 聊天。当前现实时间是: ${now}。[角色设定]:\n${persona}\n${userPersona ? `[关于 User 的信息]:\n${userPersona}` : ""}\n${note ? `[备注/强制指令]:\n${note}` : ""}\n[回复规则 - 你必须严格遵守]:\n1.  你的回复必须是一个纯粹的、不含任何其他字符的 JSON 对象。绝对不能用 Markdown 代码块（\`\`\`json）包裹它。\n2.  该 JSON 对象必须只包含一个名为 "replies" 的键。\n3.  "replies" 的值必须是一个包含 1 到 8 条字符串的数组。\n4.  数组中的每个字符串就是一条独立的短信内容。内容必须简短、口语化。\n5.  严禁在字符串内使用 Markdown 或任何格式化语法。\n6.  根据聊天上下文，决定回复 1 条还是多条。如果内容简单，就只回 1 条。如果内容复杂或情绪激动，可以回 2-3 条来模拟连续输入。\n[错误回复示例 - 绝对禁止]:\n\`\`\`json\n{\n  "replies": ["你好"]\n}\n\`\`\`\n[正确回复范例]:\n{\n  "replies": [\n    "天啊！",\n    "真的假的？",\n    "快给我看看！"\n  ]\n}`;
             
-            // 从 localStorage 读取上下文长度，如果未设置则默认为15
             const contextLength = parseInt(localStorage.getItem('contextLength') || '15');
-
             const msgsToSend = [
                 { role: "system", content: systemPrompt.trim() },
                 ...history.slice(-contextLength).map(m => ({ role: m.role, content: m.content }))
             ];
 
-            let fullUrl = apiUrl;
-            if (!apiUrl.includes('/chat/completions')) {
-                fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
-            }
+            let fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
+
+            // --- ★★★ 关键修改区域 ★★★ ---
+            const requestBody = {
+                model: model,
+                messages: msgsToSend,
+                // 【修复 1】修正 temperature 的值
+                temperature: parseFloat((localStorage.getItem('temperature') || '9')) / 10.0,
+                // 【修复 2】暂时注释掉 response_format，以提高兼容性
+                // response_format: { type: "json_object" }, 
+            };
+            // --- ★★★ 修改结束 ★★★ ---
+
+            console.log("即将发送给API的请求体:", requestBody); // 增加一个日志，方便调试
 
             const res = await fetch(fullUrl, {
                 method: 'POST',
@@ -353,12 +183,7 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
                     'Content-Type': 'application/json', 
                     'Authorization': `Bearer ${apiKey}` 
                 },
-                body: JSON.stringify({
-                    model: model,
-                    messages: msgsToSend,
-                    response_format: { type: "json_object" }, 
-                    temperature: parseFloat(localStorage.getItem('temperature') || 0.9)
-                })
+                body: JSON.stringify(requestBody) // 使用我们构建好的 requestBody
             });
 
             if (!res.ok) {
@@ -369,45 +194,9 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
             return data.choices[0].message.content;
         }
 
-        function startProactiveCheck() {
-            setInterval(async () => {
-                const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-                const settings = allSettings[currentChatId];
-                if (!settings || !settings.proactive || document.hidden) return;
-                const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-                const history = allChats[currentChatId] || [];
-                if (history.length === 0) return;
-                const lastMsg = history[history.length - 1];
-                const now = Date.now();
-                if (now - lastMsg.timestamp > 300000 && lastMsg.role === 'user') {
-                    if (statusText.textContent !== '') return;
-                    console.log("触发主动消息...");
-                    await triggerAiReply();
-                }
-            }, 10000); 
-        }
-
-        // --- 事件监听器 (保持不变) ---
-        document.getElementById('sendBtn').addEventListener('click', () => { const text = msgInput.value.trim(); if (!text) return; addMessage('user', text); msgInput.value = ''; msgInput.style.height = 'auto'; });
-        document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); });
-        document.getElementById('menuBtn').onclick = () => { settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block'; };
-        document.getElementById('proactiveToggleBtn').onclick = () => { const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}'); const current = (allSettings[currentChatId] && allSettings[currentChatId].proactive) || false; saveSettings('proactive', !current); updateProactiveUI(!current); if (!current) alert('已开启主动消息。\nAI将在后台每5分钟检测一次是否需要回复。\n(仅当此页面保持开启时有效)'); };
-        document.getElementById('bgUploadBtn').onclick = () => { bgOptionsContainer.style.display = 'block'; bgUrlInputContainer.style.display = 'none'; bgUrlInput.value = ''; bgModalOverlay.style.display = 'flex'; settingsMenu.style.display = 'none'; };
-        const closeModal = () => { bgModalOverlay.style.display = 'none'; };
-        closeBgModal.addEventListener('click', closeModal);
-        bgModalOverlay.addEventListener('click', (e) => { if (e.target === bgModalOverlay) closeModal(); });
-        bgOptionLocal.addEventListener('click', () => { document.getElementById('bgFileInput').click(); closeModal(); });
-        bgOptionUrl.addEventListener('click', () => { bgOptionsContainer.style.display = 'none'; bgUrlInputContainer.style.display = 'flex'; });
-        bgUrlCancel.addEventListener('click', () => { bgOptionsContainer.style.display = 'block'; bgUrlInputContainer.style.display = 'none'; });
-        bgUrlConfirm.addEventListener('click', () => { const url = bgUrlInput.value.trim(); if (url) { chatArea.style.backgroundImage = `url('${url}')`; saveSettings('bg', url); closeModal(); } else { alert('URL不能为空！'); } });
-        document.getElementById('bgFileInput').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (evt) => { const res = evt.target.result; chatArea.style.backgroundImage = `url('${res}')`; try { saveSettings('bg', res); } catch(err) { alert('图片太大无法保存，但本次会话有效。'); } }; reader.readAsDataURL(file); } };
-        document.getElementById('clearHistoryBtn').onclick = () => { if (confirm('确定要清空与该角色的所有聊天记录吗？')) { if (confirm('再次确认：此操作不可恢复！')) { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); delete allChats[currentChatId]; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); settingsMenu.style.display = 'none'; } } };
-        let pressTimer; function addLongPressEvent(element, msgId) { const startPress = (e) => { if (e.target.tagName === 'TEXTAREA') return; pressTimer = setTimeout(() => { showContextMenu(e, msgId); }, 600); }; const cancelPress = () => { clearTimeout(pressTimer); }; element.addEventListener('touchstart', startPress); element.addEventListener('touchend', cancelPress); element.addEventListener('touchmove', cancelPress); element.addEventListener('mousedown', startPress); element.addEventListener('mouseup', cancelPress); element.addEventListener('mouseleave', cancelPress); }
-        function showContextMenu(event, msgId) { contextTargetId = msgId; contextMenu.style.display = 'flex'; let x, y; if (event.touches && event.touches[0]) { x = event.touches[0].clientX; y = event.touches[0].clientY; } else { x = event.clientX; y = event.clientY; } if (x + 140 > window.innerWidth) x = window.innerWidth - 150; if (y + 150 > window.innerHeight) y = window.innerHeight - 160; contextMenu.style.left = x + 'px'; contextMenu.style.top = y + 'px'; }
-        document.getElementById('ctxCancel').onclick = () => contextMenu.style.display = 'none';
-        document.getElementById('ctxDelete').onclick = () => { if (confirm('删除这条消息？')) { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); let msgs = allChats[currentChatId] || []; msgs = msgs.filter(m => m.id !== contextTargetId); allChats[currentChatId] = msgs; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); contextMenu.style.display = 'none'; } };
-        document.getElementById('ctxEdit').onclick = () => { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); let msgs = allChats[currentChatId] || []; const msg = msgs.find(m => m.id === contextTargetId); if (msg) { const newContent = prompt('编辑消息内容:', msg.content); if (newContent !== null) { msg.content = newContent; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); } } contextMenu.style.display = 'none'; };
-        function escapeHtml(text) { if (!text) return ''; return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+        // --- (后面的JS代码不变) ---
+        function startProactiveCheck() { setInterval(async () => { const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}'); const settings = allSettings[currentChatId]; if (!settings || !settings.proactive || document.hidden) return; const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); const history = allChats[currentChatId] || []; if (history.length === 0) return; const lastMsg = history[history.length - 1]; const now = Date.now(); if (now - lastMsg.timestamp > 300000 && lastMsg.role === 'user') { if (statusText.textContent !== '') return; console.log("触发主动消息..."); await triggerAiReply(); } }, 10000); }
+        document.getElementById('sendBtn').addEventListener('click', () => { const text = msgInput.value.trim(); if (!text) return; addMessage('user', text); msgInput.value = ''; msgInput.style.height = 'auto'; }); document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); }); document.getElementById('menuBtn').onclick = () => { settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block'; }; document.getElementById('proactiveToggleBtn').onclick = () => { const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}'); const current = (allSettings[currentChatId] && allSettings[currentChatId].proactive) || false; saveSettings('proactive', !current); updateProactiveUI(!current); if (!current) alert('已开启主动消息。\nAI将在后台每5分钟检测一次是否需要回复。\n(仅当此页面保持开启时有效)'); }; document.getElementById('bgUploadBtn').onclick = () => { bgOptionsContainer.style.display = 'block'; bgUrlInputContainer.style.display = 'none'; bgUrlInput.value = ''; bgModalOverlay.style.display = 'flex'; settingsMenu.style.display = 'none'; }; const closeModal = () => { bgModalOverlay.style.display = 'none'; }; closeBgModal.addEventListener('click', closeModal); bgModalOverlay.addEventListener('click', (e) => { if (e.target === bgModalOverlay) closeModal(); }); bgOptionLocal.addEventListener('click', () => { document.getElementById('bgFileInput').click(); closeModal(); }); bgOptionUrl.addEventListener('click', () => { bgOptionsContainer.style.display = 'none'; bgUrlInputContainer.style.display = 'flex'; }); bgUrlCancel.addEventListener('click', () => { bgOptionsContainer.style.display = 'block'; bgUrlInputContainer.style.display = 'none'; }); bgUrlConfirm.addEventListener('click', () => { const url = bgUrlInput.value.trim(); if (url) { chatArea.style.backgroundImage = `url('${url}')`; saveSettings('bg', url); closeModal(); } else { alert('URL不能为空！'); } }); document.getElementById('bgFileInput').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (evt) => { const res = evt.target.result; chatArea.style.backgroundImage = `url('${res}')`; try { saveSettings('bg', res); } catch(err) { alert('图片太大无法保存，但本次会话有效。'); } }; reader.readAsDataURL(file); } }; document.getElementById('clearHistoryBtn').onclick = () => { if (confirm('确定要清空与该角色的所有聊天记录吗？')) { if (confirm('再次确认：此操作不可恢复！')) { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); delete allChats[currentChatId]; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); settingsMenu.style.display = 'none'; } } }; let pressTimer; function addLongPressEvent(element, msgId) { const startPress = (e) => { if (e.target.tagName === 'TEXTAREA') return; pressTimer = setTimeout(() => { showContextMenu(e, msgId); }, 600); }; const cancelPress = () => { clearTimeout(pressTimer); }; element.addEventListener('touchstart', startPress); element.addEventListener('touchend', cancelPress); element.addEventListener('touchmove', cancelPress); element.addEventListener('mousedown', startPress); element.addEventListener('mouseup', cancelPress); element.addEventListener('mouseleave', cancelPress); } function showContextMenu(event, msgId) { contextTargetId = msgId; contextMenu.style.display = 'flex'; let x, y; if (event.touches && event.touches[0]) { x = event.touches[0].clientX; y = event.touches[0].clientY; } else { x = event.clientX; y = event.clientY; } if (x + 140 > window.innerWidth) x = window.innerWidth - 150; if (y + 150 > window.innerHeight) y = window.innerHeight - 160; contextMenu.style.left = x + 'px'; contextMenu.style.top = y + 'px'; } document.getElementById('ctxCancel').onclick = () => contextMenu.style.display = 'none'; document.getElementById('ctxDelete').onclick = () => { if (confirm('删除这条消息？')) { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); let msgs = allChats[currentChatId] || []; msgs = msgs.filter(m => m.id !== contextTargetId); allChats[currentChatId] = msgs; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); contextMenu.style.display = 'none'; } }; document.getElementById('ctxEdit').onclick = () => { const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); let msgs = allChats[currentChatId] || []; const msg = msgs.find(m => m.id === contextTargetId); if (msg) { const newContent = prompt('编辑消息内容:', msg.content); if (newContent !== null) { msg.content = newContent; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); } } contextMenu.style.display = 'none'; }; function escapeHtml(text) { if (!text) return ''; return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
     </script>
 </body>
 </html>
