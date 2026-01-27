@@ -544,10 +544,14 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
     "快给我看看！"
   ]
 }`;
+                        // 【修改点】从 localStorage 读取上下文长度
+            const contextLength = parseInt(localStorage.getItem('contextLength') || '15');
+
             const msgsToSend = [
                 { role: "system", content: systemPrompt.trim() },
-                ...history.slice(-15).map(m => ({ role: m.role, content: m.content }))
+                ...history.slice(-contextLength).map(m => ({ role: m.role, content: m.content }))
             ];
+
 
             let fullUrl = apiUrl;
             if (!apiUrl.includes('/chat/completions')) fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
