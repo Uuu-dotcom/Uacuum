@@ -45,5 +45,5 @@ body {
     
     /* 3. 底部：基础 15px + 底部黑条安全距离 */
     /* calc 自动计算，保证内容不被挡住 */
-    padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); 
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); 
 }
