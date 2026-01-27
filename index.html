@@ -14,13 +14,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
     
-    <!-- 4. 引入 Manifest 文件 (下一步会创建) -->
+    <!-- 4. 引入 Manifest 文件 -->
     <link rel="manifest" href="manifest.json">
-<!-- 1. 苹果手机专用图标 -->
-    <link rel="apple-touch-icon" href="app-icon.png">
     
-    <!-- 2. 浏览器标签页图标 -->
+    <!-- 图标设置 -->
+    <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
+    
     <title>UacuumMobile</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -29,6 +29,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* 禁止长按选中文本，更有APP的感觉 */
+            -webkit-user-select: none;
+            user-select: none;
+            /* 禁止移动端点击高亮背景 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -36,23 +41,30 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;   
-            min-height: 100dvh;
+            width: 100vw;
+            height: 100vh;   
+            height: 100dvh; /* 适配移动端动态高度 */
             background: #2a2a2a;
-            overflow: hidden;
+            overflow: hidden; /* 禁止背景滚动 */
+            
+            /* --- 之前你写在括号外面的代码，现在移进来了 --- */
+            /* 防止 iOS 下拉回弹橡皮筋效果 */
+            overscroll-behavior: none;
+            
+            /* 适配刘海屏安全区域 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
-  /* 新增：防止 iOS 下拉回弹 */
-    overscroll-behavior: none;
-    
-    /* 新增：适配刘海屏安全区域 */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-}
+
         .phone-container {
-            width: 110vmin;
-            max-width: 450px;
-            height: calc(100dvh - 24px);
-            max-height: 900px;
+            /* 修改：宽度改为 95vw，保证不超过屏幕宽度 */
+            width: 95vw; 
+            max-width: 400px; /* 电脑上限制最大宽度 */
+            
+            /* 修改：高度适配，留出一点上下边距 */
+            height: 92dvh; 
+            max-height: 850px;
+            
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
@@ -68,7 +80,8 @@
 
         .screen {
             width: 100%;
-            aspect-ratio: 1;
+            /* 修改：屏幕比例稍微调整，或者保持 1/1 */
+            aspect-ratio: 1 / 0.9; 
             background: #87ceeb;
             border: 4px solid #000;
             box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px #000;
@@ -76,7 +89,7 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            flex-shrink: 0;
+            flex-shrink: 0; /* 防止屏幕被挤压 */
         }
 
         .screen img {
@@ -93,6 +106,7 @@
             grid-template-rows: 1fr 1fr;
             gap: 10px;
             padding: 15px 0 5px 0;
+            min-height: 0; /* 防止 Grid 溢出 */
         }
 
         .app-button {
@@ -104,9 +118,9 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            font-size: 8px;
+            font-size: 8px; /* 字体稍微调小一点点适配小屏 */
             font-weight: bold;
-            padding: 8px;
+            padding: 4px;
             transition: all 0.1s;
             box-shadow: 3px 3px 0 #000;
             text-decoration: none;
@@ -124,8 +138,8 @@
         }
 
         .app-icon {
-            width: 40px;
-            height: 40px;
+            width: 32px; /* 图标稍微调小一点适配 */
+            height: 32px;
             image-rendering: pixelated;
         }
 
@@ -160,6 +174,7 @@
             background: #fff;
             border: 4px solid #000;
             padding: 20px;
+            width: 85%; /* 适配小屏 */
             max-width: 300px;
             box-shadow: 6px 6px 0 #000;
         }
@@ -322,7 +337,6 @@
                     screenImage.src = e.target.result;
                     screenImage.style.display = 'block';
                     uploadModal.classList.remove('active');
-                    // 保存到 localStorage
                     localStorage.setItem('phoneWallpaper', e.target.result);
                 };
                 reader.readAsDataURL(file);
@@ -346,7 +360,6 @@
                     screenImage.style.display = 'none';
                 };
                 screenImage.onload = () => {
-                    // 保存到 localStorage
                     localStorage.setItem('phoneWallpaper', url);
                 };
                 uploadModal.classList.remove('active');
@@ -377,7 +390,6 @@
             if (e.target === phoneContainer) {
                 currentColorIndex = (currentColorIndex + 1) % colorSchemes.length;
                 phoneContainer.className = 'phone-container ' + colorSchemes[currentColorIndex];
-                // 保存颜色到 localStorage
                 localStorage.setItem('phoneColor', currentColorIndex);
             }
         });
@@ -393,14 +405,12 @@
 
         // 页面加载时恢复设置
         window.addEventListener('DOMContentLoaded', () => {
-            // 恢复壁纸
             const savedWallpaper = localStorage.getItem('phoneWallpaper');
             if (savedWallpaper) {
                 screenImage.src = savedWallpaper;
                 screenImage.style.display = 'block';
             }
 
-            // 恢复颜色
             const savedColor = localStorage.getItem('phoneColor');
             if (savedColor !== null) {
                 currentColorIndex = parseInt(savedColor);
