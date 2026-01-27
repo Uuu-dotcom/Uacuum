@@ -33,7 +33,7 @@ body {
 .phone-container {  
     width: 98vw; 
     max-width: 520px;  
-    height: 100dvh; /* 高度跟随 body，自动适应 100dvh */
+    height: 100%; /* 高度跟随 body，自动适应 100dvh */
     max-height: 100dvh;
     background: #1a1a1a;  
     border: 6px solid #000;  
