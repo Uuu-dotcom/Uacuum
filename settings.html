@@ -1,491 +1,131 @@
-】上下文长度滑块 -->
-                <div class="form-group">
-                    <label class="form-label">上下文长度 (Context Length)</label>
-                    <div class="slider-container">
-                        <input type="range" id="contextLength" class="slider" min="10" max="100" value="30" step="1">
-                        <div class="slider-value" id="contextLengthValue">30</div>
-                    </div>
-                    <div class="info-text">AI能看到最近的N条消息。数值越大记性越好，但消耗也越多。</div>
-                </div>
-                
-                <button class="btn success btn-full" id="saveParams">保存参数</button>
-            </div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#2a2a2a">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="app-icon.png">
+    <link rel="icon" type="image/png" href="app-icon.png">
+    
+    <title>Settings - UacuumMobile</title>
+    <link rel="stylesheet" href="base.css">
 
-            <div class="settings-section">
-                <div class="section-title">消息通知</div>
-                <div class="form-group">
-                    <label class="form-label">系统推送</label>
-                    <div class="toggle-container">
-                        <div class="toggle" id="notificationToggle">
-                            <div class="toggle-thumb"></div>
-                        </div>
-                        <span class="status-text" id="notificationStatus">已关闭</span>
-                    </div>
-                    <div class="info-text">允许 AI 主动向你发送消息时弹窗通知</div>
-                </div>
-                <button class="btn warning btn-full" id="testNotification">发送测试通知</button>
-            </div>
-
-            <div class="settings-section">
-                <div class="section-title">数据备份</div>
-                <div class="button-group">
-                    <button class="btn success" id="exportData">导出数据</button>
-                    <button class="btn primary" id="importData">导入数据</button>
-                </div>
-                <input type="file" id="importFile" accept=".json" style="display: none;">
-                <div class="info-text" style="margin-top: 10px; border-top: 2px dashed #ccc; padding-top: 5px;">
-                    危险操作区
-                </div>
-                <button class="btn danger btn-full" id="clearData">清除所有数据 (重置)</button>
-            </div>
-        </div>
+    <style>   
+        /* (您的 CSS 样式保持不变，此处省略) */
+        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; } .back-button { background: #fff; border: 3px solid #000; padding: 8px 12px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; text-decoration: none; color: #000; display: inline-block; } .back-button:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; } .back-button:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; } .title { font-size: 12px; color: #fff; flex: 1; text-align: center; text-shadow: 2px 2px 0 #000; } .content { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; -webkit-overflow-scrolling: touch; } .content::-webkit-scrollbar { width: 8px; } .content::-webkit-scrollbar-track { background: #000; border: 2px solid #444; } .content::-webkit-scrollbar-thumb { background: #fff; border: 2px solid #000; } .settings-section { background: #fff; border: 3px solid #000; padding: 12px; margin-bottom: 15px; box-shadow: 4px 4px 0 #000; } .section-title { font-size: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #000; color: #000; } .form-group { margin-bottom: 12px; } .form-label { display: block; font-size: 8px; margin-bottom: 6px; color: #000; font-weight: bold; } .form-input { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 10px; background: #eee; line-height: 1.4; -webkit-user-select: text; user-select: text; box-sizing: border-box; } .form-input:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #4ecdc4; } .button-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; } .btn { background: #fff; border: 3px solid #000; padding: 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; flex: 1; min-width: 80px; text-align: center; } .btn:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; } .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; } .btn.primary { background: #4ecdc4; color: #000; } .btn.success { background: #a8e6cf; color: #000; } .btn.warning { background: #ffe66d; color: #000; } .btn.danger { background: #ff6b6b; color: #fff; } .btn:disabled { background: #ccc; color: #666; cursor: not-allowed; } .btn-full { width: 100%; margin-top: 8px; } .slider-container { margin-top: 10px; display: flex; align-items: center; gap: 10px; } .slider { flex: 1; height: 20px; -webkit-appearance: none; background: #eee; border: 3px solid #000; outline: none; } .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #000; cursor: pointer; border: 2px solid #fff; box-shadow: 2px 2px 0 rgba(0,0,0,0.5); } .slider-value { font-size: 8px; color: #000; padding: 6px; background: #ffe66d; border: 3px solid #000; min-width: 45px; text-align: center; } .model-select { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 9px; background: #eee; box-sizing: border-box; } .toggle-container { display: flex; align-items: center; gap: 10px; margin-top: 5px; } .toggle { position: relative; width: 50px; height: 24px; background: #ccc; border: 3px solid #000; cursor: pointer; transition: background 0.2s; } .toggle.active { background: #a8e6cf; } .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #000; transition: left 0.2s; } .toggle.active .toggle-thumb { left: 28px; } .status-text { font-size: 7px; color: #666; } .info-text { font-size: 6px; color: #666; margin-top: 6px; line-height: 1.4; } .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
+    </style>
+</head>
+<body>
+    <div class="phone-container" id="phoneContainer">
+        <!-- (HTML 结构保持不变，此处省略) -->
+        <div class="header"> <a href="./index.html" class="back-button">← 返回</a> <div class="title">设置</div> </div> <div class="content"> <div class="settings-section"> <div class="section-title">API 连接</div> <div class="form-group"> <label class="form-label">API URL (Base URL)</label> <input type="text" id="apiUrl" class="form-input" placeholder="例如: https://api.openai.com/v1"> <div class="info-text">请填写 API 的基础地址 (Base URL)</div> </div> <div class="form-group"> <label class="form-label">API Key</label> <input type="password" id="apiKey" class="form-input" placeholder="sk-..."> </div> <div class="form-group"> <label class="form-label">模型选择</label> <select id="modelSelect" class="model-select"> <option value="">请先填写API并刷新</option> </select> </div> <div class="button-group"> <button class="btn primary" id="refreshModels">刷新模型</button> <button class="btn success" id="saveApi">保存配置</button> </div> </div> <div class="settings-section"> <div class="section-title">对话参数</div> <div class="form-group"> <label class="form-label">随机性 (Temperature)</label> <div class="slider-container"> <input type="range" id="temperature" class="slider" min="0" max="20" value="9" step="1"> <div class="slider-value" id="tempValue">0.9</div> </div> <div class="info-text">低=精确/严谨，高=创意/随机</div> </div> <div class="form-group"> <label class="form-label">上下文长度 (Context Length)</label> <div class="slider-container"> <input type="range" id="contextLength" class="slider" min="10" max="100" value="30" step="1"> <div class="slider-value" id="contextLengthValue">30</div> </div> <div class="info-text">AI能看到最近的N条消息。数值越大记性越好，但消耗也越多。</div> </div> <button class="btn success btn-full" id="saveParams">保存参数</button> </div> <div class="settings-section"> <div class="section-title">消息通知</div> <div class="form-group"> <label class="form-label">系统推送</label> <div class="toggle-container"> <div class="toggle" id="notificationToggle"> <div class="toggle-thumb"></div> </div> <span class="status-text" id="notificationStatus">已关闭</span> </div> <div class="info-text">允许 AI 主动向你发送消息时弹窗通知</div> </div> <button class="btn warning btn-full" id="testNotification">发送测试通知</button> </div> <div class="settings-section"> <div class="section-title">数据备份</div> <div class="button-group"> <button class="btn success" id="exportData">导出数据</button> <button class="btn primary" id="importData">导入数据</button> </div> <input type="file" id="importFile" accept=".json" style="display: none;"> <div class="info-text" style="margin-top: 10px; border-top: 2px dashed #ccc; padding-top: 5px;"> 危险操作区 </div> <button class="btn danger btn-full" id="clearData">清除所有数据 (重置)</button> </div> </div>
     </div>
 
     <script>
-        // DOM 元素
-        const phoneContainer = document.getElementById('phoneContainer');
-        const apiUrlInput = document.getElementById('apiUrl');
-        const apiKeyInput = document.getElementById('apiKey');
-        const modelSelect = document.getElementById('modelSelect');
-        const tempSlider = document.getElementById('temperature');
-        const tempValueDisplay = document.getElementById('tempValue');
-        const notifToggle = document.getElementById('notificationToggle');
-        const notifStatus = document.getElementById('notificationStatus');
+        // DOM 元素 (这部分不变)
+        const phoneContainer = document.getElementById('phoneContainer'); const apiUrlInput = document.getElementById('apiUrl'); const apiKeyInput = document.getElementById('apiKey'); const modelSelect = document.getElementById('modelSelect'); const tempSlider = document.getElementById('temperature'); const tempValueDisplay = document.getElementById('tempValue'); const notifToggle = document.getElementById('notificationToggle'); const notifStatus = document.getElementById('notificationStatus'); const contextSlider = document.getElementById('contextLength'); const contextValueDisplay = document.getElementById('contextLengthValue'); const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
         
-        // 【新增】获取上下文滑块元素
-        const contextSlider = document.getElementById('contextLength');
-        const contextValueDisplay = document.getElementById('contextLengthValue');
-
-        const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
-
-        window.addEventListener('DOMContentLoaded', () => {
-            loadAllSettings();
-        });
+        window.addEventListener('DOMContentLoaded', loadAllSettings);
 
         function loadAllSettings() {
-            const savedColor = localStorage.getItem('phoneColor');
-            if (savedColor !== null) {
-                phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)];
-            }
-            apiUrlInput.value = localStorage.getItem('apiUrl') || '';
-            apiKeyInput.value = localStorage.getItem('apiKey') || '';
-            
-            const savedModels = localStorage.getItem('modelList');
-            const savedSelectedModel = localStorage.getItem('selectedModel');
-            if (savedModels) {
-                try {
-                    const models = JSON.parse(savedModels);
-                    updateModelSelectUI(models, savedSelectedModel);
-                } catch (e) { console.error('模型列表解析失败', e); }
-            }
-
-            const savedTemp = localStorage.getItem('temperature') || '9';
-            tempSlider.value = savedTemp;
-            tempValueDisplay.textContent = (parseInt(savedTemp) / 10).toFixed(1);
-
-            // 【新增】加载已保存的上下文长度
-            const savedContext = localStorage.getItem('contextLength') || '30'; // 默认30
-            contextSlider.value = savedContext;
-            contextValueDisplay.textContent = savedContext;
-
+            // (函数内容不变)
+            const savedColor = localStorage.getItem('phoneColor'); if (savedColor !== null) { phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)]; }
+            apiUrlInput.value = localStorage.getItem('apiUrl') || ''; apiKeyInput.value = localStorage.getItem('apiKey') || '';
+            const savedModels = localStorage.getItem('modelList'); const savedSelectedModel = localStorage.getItem('selectedModel');
+            if (savedModels) { try { const models = JSON.parse(savedModels); updateModelSelectUI(models, savedSelectedModel); } catch (e) { console.error('模型列表解析失败', e); } }
+            const savedTemp = localStorage.getItem('temperature') || '9'; tempSlider.value = savedTemp; tempValueDisplay.textContent = (parseInt(savedTemp) / 10).toFixed(1);
+            const savedContext = localStorage.getItem('contextLength') || '30'; contextSlider.value = savedContext; contextValueDisplay.textContent = savedContext;
             const notifEnabled = localStorage.getItem('notificationEnabled') === 'true';
-            if (notifEnabled) {
-                notifToggle.classList.add('active');
-                notifStatus.textContent = '已开启';
-            }
+            if (notifEnabled) { notifToggle.classList.add('active'); notifStatus.textContent = '已开启'; }
         }
 
-        // 滑块交互
-        tempSlider.addEventListener('input', (e) => {
-            tempValueDisplay.textContent = (parseInt(e.target.value) / 10).toFixed(1);
-        });
+        // 滑块交互 (不变)
+        tempSlider.addEventListener('input', (e) => { tempValueDisplay.textContent = (parseInt(e.target.value) / 10).toFixed(1); });
+        contextSlider.addEventListener('input', (e) => { contextValueDisplay.textContent = e.target.value; });
+        document.getElementById('saveParams').addEventListener('click', () => { localStorage.setItem('temperature', tempSlider.value); localStorage.setItem('contextLength', contextSlider.value); alert('参数已保存！'); });
         
-        // 【新增】上下文滑块交互
-        contextSlider.addEventListener('input', (e) => {
-            contextValueDisplay.textContent = e.target.value;
-        });
-
-        document.getElementById('saveParams').addEventListener('click', () => {
-            localStorage.setItem('temperature', tempSlider.value);
-            // 【新增】保存上下文长度
-            localStorage.setItem('contextLength', contextSlider.value);
-            alert('参数已保存！');
-        });
-
-        // --- 其他JS代码保持不变 ---
         function updateModelSelectUI(models, selected = '') {
-            modelSelect.innerHTML = '';
-            if (!models || models.length === 0) {
-                modelSelect.innerHTML = '<option value="">暂无模型</option>';
-                return;
-            }
-            models.forEach(modelId => {
-                const opt = document.createElement('option');
-                opt.value = modelId;
-                opt.textContent = modelId;
-                if (modelId === selected) opt.selected = true;
-                modelSelect.appendChild(opt);
-            });
+            // (函数内容不变)
+            modelSelect.innerHTML = ''; if (!models || models.length === 0) { modelSelect.innerHTML = '<option value="">暂无模型</option>'; return; }
+            models.forEach(modelId => { const opt = document.createElement('option'); opt.value = modelId; opt.textContent = modelId; if (modelId === selected) opt.selected = true; modelSelect.appendChild(opt); });
         }
+        
+        // =============================================================
+        // ============  【关键修改区域】刷新模型按钮逻辑  ==================
+        // =============================================================
         document.getElementById('refreshModels').addEventListener('click', async () => {
             const url = apiUrlInput.value.trim();
             const key = apiKeyInput.value.trim();
-            if (!url || !key) { alert('请先填写完整的 URL 和 Key'); return; }
+            if (!url || !key) {
+                alert('请先填写完整的 URL 和 Key');
+                return;
+            }
+            
             const btn = document.getElementById('refreshModels');
             btn.disabled = true;
             btn.textContent = '连接中...';
+            
             try {
-                let baseUrl = url.endsWith('/') ? url.slice(0, -1) : url;
-                const requestUrl = `${baseUrl}/models`;
-                const res = await fetch(requestUrl, { method: 'GET', headers: { 'Authorization': `Bearer ${key}` } });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                // 【已修改】直接使用用户输入的 URL，不再拼接 /models
+                // 同时，为了兼容性，我们先去掉 URL 末尾可能存在的斜杠
+                const requestUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+                
+                const res = await fetch(requestUrl, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${key}` }
+                });
+
+                if (!res.ok) {
+                    // 尝试解析错误信息，如果失败则显示通用 HTTP 错误
+                    const errData = await res.json().catch(() => null);
+                    const errMsg = errData?.error?.message || `HTTP ${res.status} ${res.statusText}`;
+                    throw new Error(errMsg);
+                }
+
                 const data = await res.json();
-                const list = data.data || data;
+                
+                // OpenAI 兼容的 API 返回的数据结构是 { data: [ {id: "..."}, ... ] }
+                const list = data.data || data; // 兼容两种返回格式
+                
                 if (Array.isArray(list)) {
-                    const models = list.map(m => m.id);
-                    localStorage.setItem('modelList', JSON.stringify(models));
-                    updateModelSelectUI(models, modelSelect.value);
-                    alert(`成功获取 ${models.length} 个模型`);
-                } else { alert('返回数据格式不正确'); }
-            } catch (err) { alert('获取失败: ' + err.message + '\n请检查URL末尾是否需要加 /v1'); } 
-            finally { btn.disabled = false; btn.textContent = '刷新模型'; }
+                    const models = list.map(m => m.id).filter(id => id); // 过滤掉空的 id
+                    if (models.length === 0) {
+                        alert('API连接成功，但未返回任何模型列表。');
+                    } else {
+                        localStorage.setItem('modelList', JSON.stringify(models));
+                        updateModelSelectUI(models, modelSelect.value);
+                        alert(`成功获取 ${models.length} 个模型！`);
+                    }
+                } else {
+                    alert('API返回的数据不是有效的模型列表格式。');
+                }
+            } catch (err) {
+                // 【已修改】提供更友好的错误提示
+                alert(`获取模型列表失败: \n${err.message}\n\n请检查:\n1. API URL 和 Key 是否正确。\n2. 网络连接是否正常。`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '刷新模型';
+            }
         });
+        
+        // --- 其他JS代码保持不变 ---
         document.getElementById('saveApi').addEventListener('click', () => {
             localStorage.setItem('apiUrl', apiUrlInput.value.trim());
             localStorage.setItem('apiKey', apiKeyInput.value.trim());
             localStorage.setItem('selectedModel', modelSelect.value);
             alert('API 配置已保存');
         });
-        notifToggle.addEventListener('click', async () => {
-            const isActive = notifToggle.classList.contains('active');
-            if (!isActive) {
-                if (!('Notification' in window)) { alert('此浏览器不支持通知功能'); return; }
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    notifToggle.classList.add('active');
-                    notifStatus.textContent = '已开启';
-                    localStorage.setItem('notificationEnabled', 'true');
-                } else { alert('通知权限被拒绝，请在浏览器设置中允许'); }
-            } else {
-                notifToggle.classList.remove('active');
-                notifStatus.textContent = '已关闭';
-                localStorage.setItem('notificationEnabled', 'false');
-            }
-        });
-        document.getElementById('testNotification').addEventListener('click', () => {
-            if (localStorage.getItem('notificationEnabled') !== 'true') { alert('请先开启上方开关'); return; }
-            new Notification('像素手机通知测试', { body: '如果你看到这条消息，说明通知功能正常！📱', icon: 'app-icon.png' });
-        });
-        document.getElementById('exportData').addEventListener('click', () => {
-            const allData = {};
-            for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); allData[key] = localStorage.getItem(key); }
-            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `pixel-phone-backup-${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        });
+        notifToggle.addEventListener('click', async () => { const isActive = notifToggle.classList.contains('active'); if (!isActive) { if (!('Notification' in window)) { alert('此浏览器不支持通知功能'); return; } const permission = await Notification.requestPermission(); if (permission === 'granted') { notifToggle.classList.add('active'); notifStatus.textContent = '已开启'; localStorage.setItem('notificationEnabled', 'true'); } else { alert('通知权限被拒绝，请在浏览器设置中允许'); } } else { notifToggle.classList.remove('active'); notifStatus.textContent = '已关闭'; localStorage.setItem('notificationEnabled', 'false'); } });
+        document.getElementById('testNotification').addEventListener('click', () => { if (localStorage.getItem('notificationEnabled') !== 'true') { alert('请先开启上方开关'); return; } new Notification('像素手机通知测试', { body: '如果你看到这条消息，说明通知功能正常！📱', icon: 'app-icon.png' }); });
+        document.getElementById('exportData').addEventListener('click', () => { const allData = {}; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); allData[key] = localStorage.getItem(key); } const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `pixel-phone-backup-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); });
         document.getElementById('importData').addEventListener('click', () => { document.getElementById('importFile').click(); });
-        document.getElementById('importFile').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (confirm('这将覆盖当前的设置和记录，确定吗？')) {
-                        Object.keys(importedData).forEach(key => { localStorage.setItem(key, importedData[key]); });
-                        alert('数据导入成功！页面将刷新...');
-                        location.reload();
-                    }
-                } catch (err) { alert('文件格式错误！必须是 json 文件'); }
-            };
-            reader.readAsText(file);
-        });
-        document.getElementById('clearData').addEventListener('click', () => {
-            if (confirm('⚠️ 警告：这将删除所有聊天记录、联系人和设置！\n此操作无法撤销！')) {
-                localStorage.clear();
-                alert('手机已重置为出厂设置。');
-                location.href = './index.html';
-            }
-        });
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Settings - Uacuum</title>
-    <link rel="stylesheet" href="base.css">
-    <style>
-        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #444; }
-        .back-button { background: #fff; border: 3px solid #000; padding: 8px 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; }
-        .back-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
-        .page-title { font-size: 10px; color: #fff; text-shadow: 2px 2px 0 #000; }
-        .action-btn { width: 40px; visibility: hidden; } /* 占位 */
-
-        .content { padding: 0 5px; }
-        .setting-group { margin-bottom: 20px; }
-        .setting-title { font-size: 8px; color: #fff; margin-bottom: 8px; text-shadow: 1px 1px 0 #000; }
-        .input-field, .select-field { width: 100%; padding: 10px; font-size: 8px; border: 2px solid #000; font-family: inherit; margin-bottom: 5px; }
-        .fetch-button, .save-button, .clear-button { width: 100%; padding: 12px; font-size: 8px; border: 3px solid #000; font-family: 'Press Start 2P', cursive; cursor: pointer; box-shadow: 3px 3px 0 #000; margin-top: 5px; }
-        .fetch-button:active, .save-button:active, .clear-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
-        .fetch-button { background-color: #a8e6cf; }
-        .save-button { background-color: #4ecdc4; }
-        .clear-button { background-color: #ff6b6b; margin-top: 15px; }
-        
-        .status-message { font-size: 7px; margin-top: 5px; text-align: center; display: none; }
-        .status-message.success { color: #a8e6cf; }
-        .status-message.error { color: #ff6b6b; word-break: break-all; }
-
-        .slider-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-        .slider { flex-grow: 1; }
-        .slider-value { font-size: 8px; color: #fff; min-width: 25px; text-align: right; }
-        .color-palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 10px; }
-        .color-swatch { width: 100%; padding-bottom: 100%; border: 2px solid #000; cursor: pointer; }
-        .color-swatch.selected { border: 4px solid #fff; box-shadow: 0 0 5px #fff; }
-        .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
-        textarea.input-field { height: 80px; resize: vertical; }
-    </style>
-</head>
-<body>
-    <div class="phone-container" id="phoneContainer">
-        <div class="header">
-            <button class="back-button" onclick="window.location.href='./index.html'">← 返回</button>
-            <div class="page-title">系统设置</div>
-            <div class="action-btn"></div>
-        </div>
-
-        <div class="content">
-            <!-- API 设置 -->
-            <div class="setting-group">
-                <div class="setting-title">API 设置</div>
-                <input type="text" id="apiUrl" class="input-field" placeholder="API URL (例如: https://api.openai.com/v1)">
-                <input type="password" id="apiKey" class="input-field" placeholder="API Key (例如: sk-...)">
-                <button id="fetchModels" class="fetch-button">获取模型列表</button>
-                <select id="modelSelect" class="select-field"></select>
-                <div id="apiStatus" class="status-message"></div>
-            </div>
-
-            <!-- 对话设置 -->
-            <div class="setting-group">
-                <div class="setting-title">对话参数</div>
-                <label for="temperature" class="setting-title" style="margin-top:10px;">Temperature (随机性)</label>
-                <div class="slider-container">
-                    <input type="range" id="temperature" class="slider" min="0" max="20" step="1">
-                    <span id="tempValue" class="slider-value">0.9</span>
-                </div>
-            </div>
-
-            <!-- 个人设定 -->
-            <div class="setting-group">
-                <div class="setting-title">User Persona (你的设定)</div>
-                <textarea id="userPersona" class="input-field" placeholder="在这里输入你的设定，AI在回复时会参考这里的内容。"></textarea>
-            </div>
-
-            <!-- 外观设置 -->
-            <div class="setting-group">
-                <div class="setting-title">主题颜色</div>
-                <div id="colorPalette" class="color-palette"></div>
-            </div>
-
-            <button id="saveSettings" class="save-button">保存所有设置</button>
-            <button id="clearCache" class="clear-button">清除所有聊天记录</button>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // DOM 元素
-            const apiUrlInput = document.getElementById('apiUrl');
-            const apiKeyInput = document.getElementById('apiKey');
-            const fetchModelsBtn = document.getElementById('fetchModels');
-            const modelSelect = document.getElementById('modelSelect');
-            const apiStatus = document.getElementById('apiStatus');
-            const saveBtn = document.getElementById('saveSettings');
-            const tempSlider = document.getElementById('temperature');
-            const tempValue = document.getElementById('tempValue');
-            const userPersonaInput = document.getElementById('userPersona');
-            const phoneContainer = document.getElementById('phoneContainer');
-            const colorPalette = document.getElementById('colorPalette');
-            const clearCacheBtn = document.getElementById('clearCache');
-            const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
-
-            // 加载已有设置
-            function loadSettings() {
-                apiUrlInput.value = localStorage.getItem('apiUrl') || '';
-                apiKeyInput.value = localStorage.getItem('apiKey') || '';
-                const savedModel = localStorage.getItem('selectedModel');
-                if (savedModel) {
-                     // 预先填充一个选项，即使用户不点“获取”也能看到上次的选择
-                    modelSelect.innerHTML = `<option value="${savedModel}">${savedModel}</option>`;
-                }
-                const savedTemp = localStorage.getItem('temperature') || '9'; // 默认值'9' -> 0.9
-                tempSlider.value = savedTemp;
-                tempValue.textContent = (savedTemp / 10.0).toFixed(1);
-                userPersonaInput.value = localStorage.getItem('user_persona') || '';
-                
-                const savedColor = localStorage.getItem('phoneColor') || '1';
-                phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)];
-                renderPalette(parseInt(savedColor));
-            }
-
-            // 温度滑块
-            tempSlider.addEventListener('input', () => {
-                tempValue.textContent = (tempSlider.value / 10.0).toFixed(1);
-            });
-
-            // 渲染调色板
-            function renderPalette(selectedIndex) {
-                colorPalette.innerHTML = '';
-                colorSchemes.forEach((scheme, index) => {
-                    const swatch = document.createElement('div');
-                    swatch.className = `color-swatch ${scheme}`;
-                    if (index === selectedIndex) {
-                        swatch.classList.add('selected');
-                    }
-                    swatch.dataset.index = index;
-                    swatch.addEventListener('click', () => {
-                        localStorage.setItem('phoneColor', index);
-                        phoneContainer.className = 'phone-container ' + colorSchemes[index];
-                        renderPalette(index);
-                    });
-                    colorPalette.appendChild(swatch);
-                });
-            }
-
-            // 保存设置
-            saveBtn.addEventListener('click', () => {
-                localStorage.setItem('apiUrl', apiUrlInput.value.trim());
-                localStorage.setItem('apiKey', apiKeyInput.value.trim());
-                if (modelSelect.value) {
-                    localStorage.setItem('selectedModel', modelSelect.value);
-                }
-                localStorage.setItem('temperature', tempSlider.value);
-                localStorage.setItem('user_persona', userPersonaInput.value.trim());
-
-                apiStatus.textContent = '设置已保存！';
-                apiStatus.className = 'status-message success';
-                apiStatus.style.display = 'block';
-                setTimeout(() => apiStatus.style.display = 'none', 3000);
-            });
-            
-            // 清除缓存
-            clearCacheBtn.addEventListener('click', () => {
-                if (confirm('警告：这将删除所有角色的所有聊天记录，且无法恢复！确定要继续吗？')) {
-                    localStorage.removeItem('chats');
-                    localStorage.removeItem('memories'); // 同时清除记忆
-                    alert('所有聊天记录和记忆已被清除。');
-                }
-            });
-
-            // 初始加载
-            loadSettings();
-
-            // =============================================================
-            // ============  终极调试版 getModels 函数  =====================
-            // =============================================================
-            fetchModelsBtn.addEventListener('click', async () => {
-                const apiUrl = apiUrlInput.value.trim();
-                const apiKey = apiKeyInput.value.trim();
-
-                // 1. 清理工作区 & 基本检查
-                apiStatus.style.display = 'none';
-                modelSelect.innerHTML = '';
-                console.clear(); // 清空控制台，方便查看本次日志
-                console.log("--- 开始获取模型列表 ---");
-
-                if (!apiUrl || !apiKey) {
-                    apiStatus.textContent = '错误：API URL 和 API Key 不能为空！';
-                    apiStatus.className = 'status-message error';
-                    apiStatus.style.display = 'block';
-                    console.error("错误：URL或Key为空。");
-                    return;
-                }
-
-                apiStatus.textContent = '正在获取...';
-                apiStatus.className = 'status-message';
-                apiStatus.style.display = 'block';
-
-                // 2. 准备请求参数 (关键诊断点)
-                const finalUrl = apiUrl.replace(/\/$/, '') + '/models'; // 移除末尾斜杠并拼接
-                const headers = {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json'
-                };
-                
-                console.log("输入的原始URL:", apiUrl);
-                console.log("处理后将要请求的完整URL:", finalUrl);
-                console.log("请求头 (Headers):", headers);
-
-                try {
-                    // 3. 发送请求
-                    const response = await fetch(finalUrl, {
-                        method: 'GET',
-                        headers: headers
-                    });
-
-                    console.log("收到响应 (Response):", response);
-                    
-                    // 4. 分析响应 (关键诊断点)
-                    const responseText = await response.text(); // 先获取原始文本
-                    console.log("收到的原始响应文本:", responseText);
-
-                    if (!response.ok) {
-                         // 尝试解析JSON错误体，如果失败则使用原始文本
-                        try {
-                            const errorJson = JSON.parse(responseText);
-                            throw new Error(`API返回错误: ${errorJson.error?.message || responseText}`);
-                        } catch {
-                            throw new Error(`HTTP状态 ${response.status}: ${response.statusText}`);
-                        }
-                    }
-                    
-                    // 检查响应是否为HTML
-                    if (responseText.trim().startsWith('<')) {
-                        throw new Error("获取失败: 返回的内容是HTML页面，不是有效的JSON数据。请确认您的API URL是API的基础路径 (Base URL)，而不是网站主页。");
-                    }
-                    
-                    const data = JSON.parse(responseText); // 确定不是HTML后再解析
-                    const models = data.data || data; // 兼容不同API格式 (OpenAI是 data.data)
-
-                    if (!Array.isArray(models) || models.length === 0) {
-                        throw new Error("获取成功，但返回的模型列表为空或格式不正确。");
-                    }
-
-                    // 5. 成功处理
-                    modelSelect.innerHTML = ''; // 清空旧列表
-                    models.forEach(model => {
-                        // 通常我们只需要 gpt 模型
-                        if(model.id && (model.id.includes('gpt') || model.id.includes('claude') || model.id.includes('gemini'))) {
-                            const option = document.createElement('option');
-                            option.value = model.id;
-                            option.textContent = model.id;
-                            modelSelect.appendChild(option);
-                        }
-                    });
-
-                    apiStatus.textContent = `成功获取 ${modelSelect.options.length} 个模型！`;
-                    apiStatus.className = 'status-message success';
-
-                } catch (error) {
-                    console.error("捕获到错误:", error);
-                    // 6. 统一错误处理
-                    let errorMessage = "获取失败: " + error.message;
-                    if (error instanceof TypeError) { // 网络不通等 fetch 本身的错误
-                        errorMessage = "获取失败: 网络错误或URL无法访问。请检查网络连接、代理设置或URL拼写。";
-                    }
-                    apiStatus.textContent = errorMessage;
-                    apiStatus.className = 'status-message error';
-                } finally {
-                    apiStatus.style.display = 'block'; // 确保最终状态可见
-                }
-            });
-        });
+        document.getElementById('importFile').addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { try { const importedData = JSON.parse(e.target.result); if (confirm('这将覆盖当前的设置和记录，确定吗？')) { Object.keys(importedData).forEach(key => { localStorage.setItem(key, importedData[key]); }); alert('数据导入成功！页面将刷新...'); location.reload(); } } catch (err) { alert('文件格式错误！必须是 json 文件'); } }; reader.readAsText(file); });
+        document.getElementById('clearData').addEventListener('click', () => { if (confirm('⚠️ 警告：这将删除所有聊天记录、联系人和设置！\n此操作无法撤销！')) { localStorage.clear(); alert('手机已重置为出厂设置。'); location.href = './index.html'; } });
     </script>
 </body>
 </html>
