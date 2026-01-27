@@ -2,22 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 1. 强制禁止缩放，适配刘海屏 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- 2. iOS Safari 专用全屏设置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
-    
-    <!-- 3. Android Chrome 专用全屏设置 -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
-    
-    <!-- 4. 引入 Manifest 文件 -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- 图标设置 -->
     <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
     
@@ -26,61 +17,75 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            /* 禁止长按选中文本，更有APP的感觉 */
-            -webkit-user-select: none;
-            user-select: none;
-            /* 禁止移动端点击高亮背景 */
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-user-select: none; user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Press Start 2P', cursive;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;   
-            height: 100dvh; /* 适配移动端动态高度 */
+            display: flex; justify-content: center; align-items: center;
+            width: 100vw; height: 100vh; height: 100dvh;
             background: #2a2a2a;
-            overflow: hidden; /* 禁止背景滚动 */
-            
-            /* --- 之前你写在括号外面的代码，现在移进来了 --- */
-            /* 防止 iOS 下拉回弹橡皮筋效果 */
+            overflow: hidden;
             overscroll-behavior: none;
-            
-            /* 适配刘海屏安全区域 */
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
         }
 
         .phone-container {
-            /* 修改屏幕宽度，留出一点上下边距 */
-            width: 98vw; 
-            max-width: 520px;
-            
-            /* 修改：高度适配，留出一点上下边距 */
-            height: 100%;
-            max-height: 95dvh;
-            
+            width: 98vw; max-width: 520px;
+            height: 100%; max-height: 95dvh;
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
-            box-shadow: 
-                0 0 0 3px #444,
-                0 15px 30px rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 0 0 3px #444, 0 15px 30px rgba(0,0,0,0.8);
+            display: flex; flex-direction: column;
             padding: 15px;
             position: relative;
             transition: background 0.3s ease;
         }
 
+        /* --- 通知区域 CSS --- */
+        #notificationArea {
+            position: absolute;
+            top: 25px;
+            left: 15px;
+            right: 15px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification-popup {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #000;
+            padding: 10px 15px;
+            font-size: 8px;
+            color: #000;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .notification-close {
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 5px;
+        }
+
         .screen {
             width: 100%;
-            /* 修改：屏幕比例稍微调整，或者保持 1/1 */
             aspect-ratio: 1 / 0.9; 
             background: #87ceeb;
             border: 4px solid #000;
@@ -89,171 +94,66 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            flex-shrink: 0; /* 防止屏幕被挤压 */
+            flex-shrink: 0;
         }
 
         .screen img {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: cover;
             image-rendering: pixelated;
         }
 
         .button-area {
-            flex: 1;
-            display: grid;
+            flex: 1; display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             gap: 10px;
             padding: 15px 0 5px 0;
-            min-height: 0; /* 防止 Grid 溢出 */
+            min-height: 0;
         }
 
         .app-button {
-            background: #fff;
-            border: 3px solid #000;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 8px; /* 字体稍微调小一点点适配小屏 */
-            font-weight: bold;
-            padding: 4px;
-            transition: all 0.1s;
-            box-shadow: 3px 3px 0 #000;
-            text-decoration: none;
-            color: #000;
+            background: #fff; border: 3px solid #000; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 6px;
+            font-size: 8px; font-weight: bold; padding: 4px;
+            transition: all 0.1s; box-shadow: 3px 3px 0 #000;
+            text-decoration: none; color: #000;
         }
 
-        .app-button:hover {
-            transform: translate(1.5px, 1.5px);
-            box-shadow: 1.5px 1.5px 0 #000;
-        }
+        .app-button:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
+        .app-button:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
+        .app-icon { width: 32px; height: 32px; image-rendering: pixelated; }
 
-        .app-button:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 #000;
-        }
-
-        .app-icon {
-            width: 32px; /* 图标稍微调小一点适配 */
-            height: 32px;
-            image-rendering: pixelated;
-        }
-
-        /* 像素图标 SVG */
         .icon-contacts { background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect fill="%23000" x="4" y="2" width="8" height="2"/><rect fill="%23000" x="3" y="4" width="2" height="2"/><rect fill="%23000" x="11" y="4" width="2" height="2"/><rect fill="%23000" x="2" y="6" width="12" height="2"/><rect fill="%23000" x="5" y="9" width="6" height="2"/><rect fill="%23000" x="4" y="11" width="8" height="2"/><rect fill="%23000" x="6" y="13" width="4" height="2"/></svg>') center/contain no-repeat; }
-
         .icon-sms { background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect fill="%23000" x="1" y="3" width="14" height="8"/><rect fill="%23fff" x="3" y="5" width="10" height="4"/><rect fill="%23000" x="4" y="6" width="2" height="2"/><rect fill="%23000" x="7" y="6" width="2" height="2"/><rect fill="%23000" x="10" y="6" width="2" height="2"/><polygon fill="%23000" points="7,11 8,13 9,11"/></svg>') center/contain no-repeat; }
-
         .icon-notes { background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect fill="%23000" x="3" y="2" width="10" height="12"/><rect fill="%23fff" x="5" y="4" width="6" height="1"/><rect fill="%23fff" x="5" y="6" width="6" height="1"/><rect fill="%23fff" x="5" y="8" width="6" height="1"/><rect fill="%23fff" x="5" y="10" width="4" height="1"/></svg>') center/contain no-repeat; }
-
         .icon-settings { background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect fill="%23000" x="6" y="1" width="4" height="2"/><rect fill="%23000" x="5" y="3" width="6" height="2"/><rect fill="%23000" x="3" y="5" width="10" height="6"/><rect fill="%23000" x="5" y="11" width="6" height="2"/><rect fill="%23000" x="6" y="13" width="4" height="2"/><rect fill="%23fff" x="7" y="7" width="2" height="2"/></svg>') center/contain no-repeat; }
 
-        /* 弹窗 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #fff;
-            border: 4px solid #000;
-            padding: 20px;
-            width: 85%; /* 适配小屏 */
-            max-width: 300px;
-            box-shadow: 6px 6px 0 #000;
-        }
-
-        .modal-title {
-            font-size: 12px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .modal-button {
-            background: #fff;
-            border: 3px solid #000;
-            padding: 12px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 8px;
-            cursor: pointer;
-            transition: all 0.1s;
-            box-shadow: 3px 3px 0 #000;
-        }
-
-        .modal-button:hover {
-            transform: translate(1.5px, 1.5px);
-            box-shadow: 1.5px 1.5px 0 #000;
-        }
-
-        .modal-button:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 #000;
-        }
-
-        .modal-button.cancel {
-            background: #ff6b6b;
-            color: #fff;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .input-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .url-input {
-            display: block;
-            width: 100%;
-            border: 3px solid #000;
-            padding: 10px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 7px;
-            line-height: 1.4;
-        }
-
-        .url-input:focus {
-            outline: none;
-            box-shadow: inset 0 0 0 2px #4ecdc4;
-        }
-
-        /* 配色方案 */
-        .color-scheme-1 { background: #ff6b9d; }
-        .color-scheme-2 { background: #4ecdc4; }
-        .color-scheme-3 { background: #ffe66d; }
-        .color-scheme-4 { background: #a8e6cf; }
-        .color-scheme-5 { background: #ffd3b6; }
-        .color-scheme-6 { background: #c7ceea; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal.active { display: flex; }
+        .modal-content { background: #fff; border: 4px solid #000; padding: 20px; width: 85%; max-width: 300px; box-shadow: 6px 6px 0 #000; }
+        .modal-title { font-size: 12px; margin-bottom: 15px; text-align: center; }
+        .modal-buttons { display: flex; flex-direction: column; gap: 10px; }
+        .modal-button { background: #fff; border: 3px solid #000; padding: 12px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; transition: all 0.1s; box-shadow: 3px 3px 0 #000; }
+        .modal-button:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
+        .modal-button:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
+        .modal-button.cancel { background: #ff6b6b; color: #fff; }
+        input[type="file"] { display: none; }
+        .input-wrapper { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .url-input { display: block; width: 100%; border: 3px solid #000; padding: 10px; font-family: 'Press Start 2P', cursive; font-size: 7px; line-height: 1.4; }
+        .url-input:focus { outline: none; box-shadow: inset 0 0 0 2px #4ecdc4; }
+        
+        .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; }
+        .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
     </style>
 </head>
 <body>
     <div class="phone-container" id="phoneContainer">
+        
+        <!-- 通知显示区域 -->
+        <div id="notificationArea"></div>
+
         <!-- 屏幕区域 -->
         <div class="screen" id="screen">
             <img id="screenImage" src="" alt="" style="display: none;">
@@ -265,7 +165,7 @@
                 <div class="app-icon icon-contacts"></div>
                 <span>通讯录</span>
             </a>
-            <a href="./sms.html" class="app-button" data-app="sms">
+            <a href="./sms.html" class="app-button" data-app="sms" id="smsAppButton">
                 <div class="app-icon icon-sms"></div>
                 <span>短信</span>
             </a>
@@ -298,6 +198,9 @@
         </div>
     </div>
 
+    <!-- 引入我们的后台工作脚本 -->
+    <script src="./background-worker.js"></script>
+
     <script>
         const screen = document.getElementById('screen');
         const screenImage = document.getElementById('screenImage');
@@ -307,16 +210,36 @@
         const urlInput = document.getElementById('urlInput');
         const urlInputWrapper = document.getElementById('urlInputWrapper');
         const modalButtons = document.getElementById('modalButtons');
+        const notificationArea = document.getElementById('notificationArea');
 
         const colorSchemes = [
-            'color-scheme-1',
-            'color-scheme-2',
-            'color-scheme-3',
-            'color-scheme-4',
-            'color-scheme-5',
-            'color-scheme-6'
+            'color-scheme-1', 'color-scheme-2', 'color-scheme-3',
+            'color-scheme-4', 'color-scheme-5', 'color-scheme-6'
         ];
         let currentColorIndex = -1;
+
+        // 页面加载时恢复设置并启动新功能
+        window.addEventListener('DOMContentLoaded', () => {
+            // 恢复壁纸
+            const savedWallpaper = localStorage.getItem('phoneWallpaper');
+            if (savedWallpaper) {
+                screenImage.src = savedWallpaper;
+                screenImage.style.display = 'block';
+            }
+            // 恢复颜色主题
+            const savedColor = localStorage.getItem('phoneColor');
+            if (savedColor !== null) {
+                currentColorIndex = parseInt(savedColor);
+                phoneContainer.className = 'phone-container ' + colorSchemes[currentColorIndex];
+            }
+            
+            // 启动后台AI检查和通知UI更新
+            startGlobalProactiveCheck();
+            setInterval(updateNotificationDisplay, 2000);
+            updateNotificationDisplay();
+        });
+
+        // --- 壁纸和颜色主题逻辑 ---
 
         // 点击屏幕显示上传弹窗
         screen.addEventListener('click', (e) => {
@@ -402,21 +325,60 @@
                 modalButtons.style.display = 'flex';
             }
         });
+        
+        // --- 通知系统逻辑 ---
+        
+        function updateNotificationDisplay() {
+            const unread = getUnreadCounts();
+            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+            const contactMap = contacts.reduce((map, contact) => {
+                map[contact.id] = contact.nick || contact.name;
+                return map;
+            }, {});
 
-        // 页面加载时恢复设置
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedWallpaper = localStorage.getItem('phoneWallpaper');
-            if (savedWallpaper) {
-                screenImage.src = savedWallpaper;
-                screenImage.style.display = 'block';
+            notificationArea.innerHTML = '';
+
+            for (const contactId in unread) {
+                const count = unread[contactId];
+                if (count > 0) {
+                    const contactName = contactMap[contactId] || '未知联系人';
+                    const notificationDiv = document.createElement('div');
+                    notificationDiv.className = 'notification-popup';
+                    
+                    notificationDiv.innerHTML = `
+                        <span>${contactName} (${count})</span>
+                        <span class="notification-close" data-id="${contactId}">X</span>
+                    `;
+
+                    notificationDiv.onclick = (e) => {
+                        if (e.target.classList.contains('notification-close')) return;
+                        localStorage.setItem('currentChatId', contactId);
+                        clearUnreadCount(contactId);
+                        window.location.href = './sms.html';
+                    };
+
+                    notificationDiv.querySelector('.notification-close').onclick = () => {
+                        clearUnreadCount(contactId);
+                        updateNotificationDisplay();
+                    };
+
+                    notificationArea.appendChild(notificationDiv);
+                }
             }
+        }
 
-            const savedColor = localStorage.getItem('phoneColor');
-            if (savedColor !== null) {
-                currentColorIndex = parseInt(savedColor);
-                phoneContainer.className = 'phone-container ' + colorSchemes[currentColorIndex];
+        document.getElementById('smsAppButton').addEventListener('click', (e) => {
+            const unread = getUnreadCounts();
+            const firstUnreadContact = Object.keys(unread)[0];
+
+            if(firstUnreadContact) {
+                e.preventDefault();
+                localStorage.setItem('currentChatId', firstUnreadContact);
+                clearUnreadCount(firstUnreadContact);
+                window.location.href = './sms.html';
             }
         });
+
     </script>
 </body>
 </html>
