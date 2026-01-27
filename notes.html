@@ -22,58 +22,9 @@
     <link rel="icon" type="image/png" href="app-icon.png">
     
     <title>notes - Uacuum</title>
+     <link rel="stylesheet" href="base.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            /* 禁止长按选中文本 */
-            -webkit-user-select: none;
-            user-select: none;
-            /* 禁止点击高亮 */
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Press Start 2P', cursive;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh; /* 适配移动端动态高度 */
-            background: #2a2a2a;
-            overflow: hidden; /* 禁止整体滚动 */
-            
-            /* 防止 iOS 下拉回弹 */
-            overscroll-behavior: none;
-        }
-
-        .phone-container {
-            /* 修改屏幕宽度，留出一点上下边距 */
-            width: 98vw; 
-            max-width: 520px;
-            /* 修改：高度适配，留出一点上下边距 */
-            height: 100%;
-            max-height: 100dvh;
- 
-            background: #1a1a1a;
-            border: 6px solid #000;
-            border-radius: 20px;
-            box-shadow: 
-                0 0 0 3px #444,
-                0 15px 30px rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            position: relative;
-            /* 适配刘海屏安全区域 */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
         /* 顶部导航 */
         .header {
             display: flex;
