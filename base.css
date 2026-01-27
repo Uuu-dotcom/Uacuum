@@ -1,33 +1,120 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-user-select: none; user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
 
-        body {
-            font-family: 'Press Start 2P', cursive;
-            display: flex; justify-content: center; align-items: center;
-            width: 100vw; height: 100vh; height: 100dvh;
-            background: #2a2a2a;
-            overflow: hidden;
-            overscroll-behavior: none;
-        }
+/* ========= 全局重置 ========= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 
-        .phone-container {
-            width: 98vw; max-width: 520px;
-            height: 100%; max-height: 100dvh;
-            background: #1a1a1a;
-            border: 6px solid #000;
-            border-radius: 20px;
-            box-shadow: 0 0 0 3px #444, 0 15px 30px rgba(0,0,0,0.8);
-            display: flex; 
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 15px;
-            position: relative;
-            transition: background 0.3s ease;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ========= 根节点高度基准 ========= */
+html {
+  height: 100%;
+}
+
+body {
+  height: 100dvh;              /* 只用 dvh，不混 vh */
+  width: 100vw;
+
+  font-family: 'Press Start 2P', cursive;
+  background: #2a2a2a;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ========= 手机主体容器 ========= */
+.phone-container {
+  width: 98vw;
+  max-width: 520px;
+
+  height: 100dvh;              /* 直接绑定视口 */
+  max-height: 100dvh;
+
+  background: #1a1a1a;
+  border: 6px solid #000;
+  border-radius: 20px;
+
+  box-shadow:
+    0 0 0 3px #444,
+    0 15px 30px rgba(0,0,0,0.8);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  /* 关键：只在这里吃 safe-area，一次就够 */
+  padding: 15px;
+  padding-top: calc(15px + env(safe-area-inset-top));
+  padding-bottom: calc(15px + env(safe-area-inset-bottom));
+
+  position: relative;
+  overflow: hidden;
+
+  transition: background 0.3s ease;
+}
+
+/* ========= 屏幕区域 ========= */
+.screen {
+  width: 100%;
+  aspect-ratio: 1 / 0.9;
+
+  background: #87ceeb;
+  border: 4px solid #000;
+
+  box-shadow:
+    inset 0 0 0 2px #fff,
+    inset 0 0 0 4px #000;
+
+  image-rendering: pixelated;
+  overflow: hidden;
+
+  flex-shrink: 0;
+}
+
+/* ========= 底部按钮区 ========= */
+.button-area {
+  flex: 1;              /* 吃剩余空间 */
+  min-height: 0;        /* 防止 flex 溢出 */
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+
+  padding-top: 15px;
+}
+
+/* ========= 应用按钮 ========= */
+.app-button {
+  background: #fff;
+  border: 3px solid #000;
+  box-shadow: 3px 3px 0 #000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  font-size: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
+
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.app-button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 #000;
+}
