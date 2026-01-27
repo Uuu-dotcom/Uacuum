@@ -1,106 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#2a2a2a">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="app-icon.png">
-    <link rel="icon" type="image/png" href="app-icon.png">
-    
-    <title>Settings - UacuumMobile</title>
-    <link rel="stylesheet" href="base.css">
-
-    <style>   
-        /* (您的 CSS 样式保持不变，此处省略以节省空间) */
-        /* 顶部导航 */
-        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; }
-        .back-button { background: #fff; border: 3px solid #000; padding: 8px 12px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; text-decoration: none; color: #000; display: inline-block; }
-        .back-button:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
-        .back-button:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
-        .title { font-size: 12px; color: #fff; flex: 1; text-align: center; text-shadow: 2px 2px 0 #000; }
-        .content { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
-        .content::-webkit-scrollbar { width: 8px; }
-        .content::-webkit-scrollbar-track { background: #000; border: 2px solid #444; }
-        .content::-webkit-scrollbar-thumb { background: #fff; border: 2px solid #000; }
-        .settings-section { background: #fff; border: 3px solid #000; padding: 12px; margin-bottom: 15px; box-shadow: 4px 4px 0 #000; }
-        .section-title { font-size: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #000; color: #000; }
-        .form-group { margin-bottom: 12px; }
-        .form-label { display: block; font-size: 8px; margin-bottom: 6px; color: #000; font-weight: bold; }
-        .form-input { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 10px; background: #eee; line-height: 1.4; -webkit-user-select: text; user-select: text; box-sizing: border-box; }
-        .form-input:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #4ecdc4; }
-        .button-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-        .btn { background: #fff; border: 3px solid #000; padding: 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; flex: 1; min-width: 80px; text-align: center; }
-        .btn:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
-        .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
-        .btn.primary { background: #4ecdc4; color: #000; }
-        .btn.success { background: #a8e6cf; color: #000; }
-        .btn.warning { background: #ffe66d; color: #000; }
-        .btn.danger { background: #ff6b6b; color: #fff; }
-        .btn:disabled { background: #ccc; color: #666; cursor: not-allowed; }
-        .btn-full { width: 100%; margin-top: 8px; }
-        .slider-container { margin-top: 10px; display: flex; align-items: center; gap: 10px; }
-        .slider { flex: 1; height: 20px; -webkit-appearance: none; background: #eee; border: 3px solid #000; outline: none; }
-        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #000; cursor: pointer; border: 2px solid #fff; box-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
-        .slider-value { font-size: 8px; color: #000; padding: 6px; background: #ffe66d; border: 3px solid #000; min-width: 45px; text-align: center; }
-        .model-select { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 9px; background: #eee; box-sizing: border-box; }
-        .toggle-container { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
-        .toggle { position: relative; width: 50px; height: 24px; background: #ccc; border: 3px solid #000; cursor: pointer; transition: background 0.2s; }
-        .toggle.active { background: #a8e6cf; }
-        .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #000; transition: left 0.2s; }
-        .toggle.active .toggle-thumb { left: 28px; }
-        .status-text { font-size: 7px; color: #666; }
-        .info-text { font-size: 6px; color: #666; margin-top: 6px; line-height: 1.4; }
-        .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
-    </style>
-</head>
-<body>
-    <div class="phone-container" id="phoneContainer">
-        <div class="header">
-            <a href="./index.html" class="back-button">← 返回</a>
-            <div class="title">设置</div>
-        </div>
-
-        <div class="content">
-            <div class="settings-section">
-                <div class="section-title">API 连接</div>
-                <div class="form-group">
-                    <label class="form-label">API URL (Base URL)</label>
-                    <input type="text" id="apiUrl" class="form-input" placeholder="例如: https://api.openai.com/v1">
-                    <div class="info-text">不要带 /chat/completions</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">API Key</label>
-                    <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">模型选择</label>
-                    <select id="modelSelect" class="model-select">
-                        <option value="">请先填写API并刷新</option>
-                    </select>
-                </div>
-                <div class="button-group">
-                    <button class="btn primary" id="refreshModels">刷新模型</button>
-                    <button class="btn success" id="saveApi">保存配置</button>
-                </div>
-            </div>
-
-            <div class="settings-section">
-                <div class="section-title">对话参数</div>
-                <div class="form-group">
-                    <label class="form-label">随机性 (Temperature)</label>
-                    <div class="slider-container">
-                        <input type="range" id="temperature" class="slider" min="0" max="20" value="9" step="1">
-                        <div class="slider-value" id="tempValue">0.9</div>
-                    </div>
-                    <div class="info-text">低=精确/严谨，高=创意/随机</div>
-                </div>
-
-                <!-- 【新增】上下文长度滑块 -->
+】上下文长度滑块 -->
                 <div class="form-group">
                     <label class="form-label">上下文长度 (Context Length)</label>
                     <div class="slider-container">
@@ -312,6 +210,281 @@
                 alert('手机已重置为出厂设置。');
                 location.href = './index.html';
             }
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Settings - Uacuum</title>
+    <link rel="stylesheet" href="base.css">
+    <style>
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #444; }
+        .back-button { background: #fff; border: 3px solid #000; padding: 8px 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; }
+        .back-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+        .page-title { font-size: 10px; color: #fff; text-shadow: 2px 2px 0 #000; }
+        .action-btn { width: 40px; visibility: hidden; } /* 占位 */
+
+        .content { padding: 0 5px; }
+        .setting-group { margin-bottom: 20px; }
+        .setting-title { font-size: 8px; color: #fff; margin-bottom: 8px; text-shadow: 1px 1px 0 #000; }
+        .input-field, .select-field { width: 100%; padding: 10px; font-size: 8px; border: 2px solid #000; font-family: inherit; margin-bottom: 5px; }
+        .fetch-button, .save-button, .clear-button { width: 100%; padding: 12px; font-size: 8px; border: 3px solid #000; font-family: 'Press Start 2P', cursive; cursor: pointer; box-shadow: 3px 3px 0 #000; margin-top: 5px; }
+        .fetch-button:active, .save-button:active, .clear-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+        .fetch-button { background-color: #a8e6cf; }
+        .save-button { background-color: #4ecdc4; }
+        .clear-button { background-color: #ff6b6b; margin-top: 15px; }
+        
+        .status-message { font-size: 7px; margin-top: 5px; text-align: center; display: none; }
+        .status-message.success { color: #a8e6cf; }
+        .status-message.error { color: #ff6b6b; word-break: break-all; }
+
+        .slider-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .slider { flex-grow: 1; }
+        .slider-value { font-size: 8px; color: #fff; min-width: 25px; text-align: right; }
+        .color-palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 10px; }
+        .color-swatch { width: 100%; padding-bottom: 100%; border: 2px solid #000; cursor: pointer; }
+        .color-swatch.selected { border: 4px solid #fff; box-shadow: 0 0 5px #fff; }
+        .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
+        textarea.input-field { height: 80px; resize: vertical; }
+    </style>
+</head>
+<body>
+    <div class="phone-container" id="phoneContainer">
+        <div class="header">
+            <button class="back-button" onclick="window.location.href='./index.html'">← 返回</button>
+            <div class="page-title">系统设置</div>
+            <div class="action-btn"></div>
+        </div>
+
+        <div class="content">
+            <!-- API 设置 -->
+            <div class="setting-group">
+                <div class="setting-title">API 设置</div>
+                <input type="text" id="apiUrl" class="input-field" placeholder="API URL (例如: https://api.openai.com/v1)">
+                <input type="password" id="apiKey" class="input-field" placeholder="API Key (例如: sk-...)">
+                <button id="fetchModels" class="fetch-button">获取模型列表</button>
+                <select id="modelSelect" class="select-field"></select>
+                <div id="apiStatus" class="status-message"></div>
+            </div>
+
+            <!-- 对话设置 -->
+            <div class="setting-group">
+                <div class="setting-title">对话参数</div>
+                <label for="temperature" class="setting-title" style="margin-top:10px;">Temperature (随机性)</label>
+                <div class="slider-container">
+                    <input type="range" id="temperature" class="slider" min="0" max="20" step="1">
+                    <span id="tempValue" class="slider-value">0.9</span>
+                </div>
+            </div>
+
+            <!-- 个人设定 -->
+            <div class="setting-group">
+                <div class="setting-title">User Persona (你的设定)</div>
+                <textarea id="userPersona" class="input-field" placeholder="在这里输入你的设定，AI在回复时会参考这里的内容。"></textarea>
+            </div>
+
+            <!-- 外观设置 -->
+            <div class="setting-group">
+                <div class="setting-title">主题颜色</div>
+                <div id="colorPalette" class="color-palette"></div>
+            </div>
+
+            <button id="saveSettings" class="save-button">保存所有设置</button>
+            <button id="clearCache" class="clear-button">清除所有聊天记录</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM 元素
+            const apiUrlInput = document.getElementById('apiUrl');
+            const apiKeyInput = document.getElementById('apiKey');
+            const fetchModelsBtn = document.getElementById('fetchModels');
+            const modelSelect = document.getElementById('modelSelect');
+            const apiStatus = document.getElementById('apiStatus');
+            const saveBtn = document.getElementById('saveSettings');
+            const tempSlider = document.getElementById('temperature');
+            const tempValue = document.getElementById('tempValue');
+            const userPersonaInput = document.getElementById('userPersona');
+            const phoneContainer = document.getElementById('phoneContainer');
+            const colorPalette = document.getElementById('colorPalette');
+            const clearCacheBtn = document.getElementById('clearCache');
+            const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
+
+            // 加载已有设置
+            function loadSettings() {
+                apiUrlInput.value = localStorage.getItem('apiUrl') || '';
+                apiKeyInput.value = localStorage.getItem('apiKey') || '';
+                const savedModel = localStorage.getItem('selectedModel');
+                if (savedModel) {
+                     // 预先填充一个选项，即使用户不点“获取”也能看到上次的选择
+                    modelSelect.innerHTML = `<option value="${savedModel}">${savedModel}</option>`;
+                }
+                const savedTemp = localStorage.getItem('temperature') || '9'; // 默认值'9' -> 0.9
+                tempSlider.value = savedTemp;
+                tempValue.textContent = (savedTemp / 10.0).toFixed(1);
+                userPersonaInput.value = localStorage.getItem('user_persona') || '';
+                
+                const savedColor = localStorage.getItem('phoneColor') || '1';
+                phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)];
+                renderPalette(parseInt(savedColor));
+            }
+
+            // 温度滑块
+            tempSlider.addEventListener('input', () => {
+                tempValue.textContent = (tempSlider.value / 10.0).toFixed(1);
+            });
+
+            // 渲染调色板
+            function renderPalette(selectedIndex) {
+                colorPalette.innerHTML = '';
+                colorSchemes.forEach((scheme, index) => {
+                    const swatch = document.createElement('div');
+                    swatch.className = `color-swatch ${scheme}`;
+                    if (index === selectedIndex) {
+                        swatch.classList.add('selected');
+                    }
+                    swatch.dataset.index = index;
+                    swatch.addEventListener('click', () => {
+                        localStorage.setItem('phoneColor', index);
+                        phoneContainer.className = 'phone-container ' + colorSchemes[index];
+                        renderPalette(index);
+                    });
+                    colorPalette.appendChild(swatch);
+                });
+            }
+
+            // 保存设置
+            saveBtn.addEventListener('click', () => {
+                localStorage.setItem('apiUrl', apiUrlInput.value.trim());
+                localStorage.setItem('apiKey', apiKeyInput.value.trim());
+                if (modelSelect.value) {
+                    localStorage.setItem('selectedModel', modelSelect.value);
+                }
+                localStorage.setItem('temperature', tempSlider.value);
+                localStorage.setItem('user_persona', userPersonaInput.value.trim());
+
+                apiStatus.textContent = '设置已保存！';
+                apiStatus.className = 'status-message success';
+                apiStatus.style.display = 'block';
+                setTimeout(() => apiStatus.style.display = 'none', 3000);
+            });
+            
+            // 清除缓存
+            clearCacheBtn.addEventListener('click', () => {
+                if (confirm('警告：这将删除所有角色的所有聊天记录，且无法恢复！确定要继续吗？')) {
+                    localStorage.removeItem('chats');
+                    localStorage.removeItem('memories'); // 同时清除记忆
+                    alert('所有聊天记录和记忆已被清除。');
+                }
+            });
+
+            // 初始加载
+            loadSettings();
+
+            // =============================================================
+            // ============  终极调试版 getModels 函数  =====================
+            // =============================================================
+            fetchModelsBtn.addEventListener('click', async () => {
+                const apiUrl = apiUrlInput.value.trim();
+                const apiKey = apiKeyInput.value.trim();
+
+                // 1. 清理工作区 & 基本检查
+                apiStatus.style.display = 'none';
+                modelSelect.innerHTML = '';
+                console.clear(); // 清空控制台，方便查看本次日志
+                console.log("--- 开始获取模型列表 ---");
+
+                if (!apiUrl || !apiKey) {
+                    apiStatus.textContent = '错误：API URL 和 API Key 不能为空！';
+                    apiStatus.className = 'status-message error';
+                    apiStatus.style.display = 'block';
+                    console.error("错误：URL或Key为空。");
+                    return;
+                }
+
+                apiStatus.textContent = '正在获取...';
+                apiStatus.className = 'status-message';
+                apiStatus.style.display = 'block';
+
+                // 2. 准备请求参数 (关键诊断点)
+                const finalUrl = apiUrl.replace(/\/$/, '') + '/models'; // 移除末尾斜杠并拼接
+                const headers = {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                };
+                
+                console.log("输入的原始URL:", apiUrl);
+                console.log("处理后将要请求的完整URL:", finalUrl);
+                console.log("请求头 (Headers):", headers);
+
+                try {
+                    // 3. 发送请求
+                    const response = await fetch(finalUrl, {
+                        method: 'GET',
+                        headers: headers
+                    });
+
+                    console.log("收到响应 (Response):", response);
+                    
+                    // 4. 分析响应 (关键诊断点)
+                    const responseText = await response.text(); // 先获取原始文本
+                    console.log("收到的原始响应文本:", responseText);
+
+                    if (!response.ok) {
+                         // 尝试解析JSON错误体，如果失败则使用原始文本
+                        try {
+                            const errorJson = JSON.parse(responseText);
+                            throw new Error(`API返回错误: ${errorJson.error?.message || responseText}`);
+                        } catch {
+                            throw new Error(`HTTP状态 ${response.status}: ${response.statusText}`);
+                        }
+                    }
+                    
+                    // 检查响应是否为HTML
+                    if (responseText.trim().startsWith('<')) {
+                        throw new Error("获取失败: 返回的内容是HTML页面，不是有效的JSON数据。请确认您的API URL是API的基础路径 (Base URL)，而不是网站主页。");
+                    }
+                    
+                    const data = JSON.parse(responseText); // 确定不是HTML后再解析
+                    const models = data.data || data; // 兼容不同API格式 (OpenAI是 data.data)
+
+                    if (!Array.isArray(models) || models.length === 0) {
+                        throw new Error("获取成功，但返回的模型列表为空或格式不正确。");
+                    }
+
+                    // 5. 成功处理
+                    modelSelect.innerHTML = ''; // 清空旧列表
+                    models.forEach(model => {
+                        // 通常我们只需要 gpt 模型
+                        if(model.id && (model.id.includes('gpt') || model.id.includes('claude') || model.id.includes('gemini'))) {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.id;
+                            modelSelect.appendChild(option);
+                        }
+                    });
+
+                    apiStatus.textContent = `成功获取 ${modelSelect.options.length} 个模型！`;
+                    apiStatus.className = 'status-message success';
+
+                } catch (error) {
+                    console.error("捕获到错误:", error);
+                    // 6. 统一错误处理
+                    let errorMessage = "获取失败: " + error.message;
+                    if (error instanceof TypeError) { // 网络不通等 fetch 本身的错误
+                        errorMessage = "获取失败: 网络错误或URL无法访问。请检查网络连接、代理设置或URL拼写。";
+                    }
+                    apiStatus.textContent = errorMessage;
+                    apiStatus.className = 'status-message error';
+                } finally {
+                    apiStatus.style.display = 'block'; // 确保最终状态可见
+                }
+            });
         });
     </script>
 </body>
