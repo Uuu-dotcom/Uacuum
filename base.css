@@ -1,43 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no,
+               viewport-fit=cover">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2a2a2a">
+
+<title>UacuumMobile</title>
+
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* ========= 全局重置 ========= */
+/* ===== reset ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
-  -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ========= 根节点高度基准 ========= */
-html {
+html, body {
+  width: 100%;
   height: 100%;
 }
 
+/* ===== body ===== */
 body {
-  height: 100dvh;              /* 只用 dvh，不混 vh */
-  width: 100vw;
-
-  font-family: 'Press Start 2P', cursive;
   background: #2a2a2a;
+  font-family: 'Press Start 2P', cursive;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
   overflow: hidden;
-  overscroll-behavior: none;
 }
 
-/* ========= 手机主体容器 ========= */
+/* ===== phone container ===== */
 .phone-container {
   width: 98vw;
   max-width: 520px;
 
-  height: 100dvh;              /* 直接绑定视口 */
-  max-height: 100dvh;
+  height: var(--app-height);
+  max-height: var(--app-height);
 
   background: #1a1a1a;
   border: 6px solid #000;
@@ -51,18 +63,14 @@ body {
   flex-direction: column;
   justify-content: flex-start;
 
-  /* 关键：只在这里吃 safe-area，一次就够 */
   padding: 15px;
   padding-top: calc(15px + env(safe-area-inset-top));
   padding-bottom: calc(15px + env(safe-area-inset-bottom));
 
-  position: relative;
   overflow: hidden;
-
-  transition: background 0.3s ease;
 }
 
-/* ========= 屏幕区域 ========= */
+/* ===== screen ===== */
 .screen {
   width: 100%;
   aspect-ratio: 1 / 0.9;
@@ -74,16 +82,13 @@ body {
     inset 0 0 0 2px #fff,
     inset 0 0 0 4px #000;
 
-  image-rendering: pixelated;
-  overflow: hidden;
-
   flex-shrink: 0;
 }
 
-/* ========= 底部按钮区 ========= */
+/* ===== buttons ===== */
 .button-area {
-  flex: 1;              /* 吃剩余空间 */
-  min-height: 0;        /* 防止 flex 溢出 */
+  flex: 1;
+  min-height: 0;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -93,28 +98,54 @@ body {
   padding-top: 15px;
 }
 
-/* ========= 应用按钮 ========= */
 .app-button {
   background: #fff;
   border: 3px solid #000;
   box-shadow: 3px 3px 0 #000;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-
   font-size: 8px;
   font-weight: bold;
-  text-decoration: none;
-  color: #000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone-container">
+  <div class="screen"></div>
+
+  <div class="button-area">
+    <div class="app-button">通讯录</div>
+    <div class="app-button">短信</div>
+    <div class="app-button">笔记</div>
+    <div class="app-button">设置</div>
+  </div>
+</div>
+
+<!-- ===== 关键 JS：真实视口高度修复 ===== -->
+<script>
+function setAppHeight() {
+  const height = window.visualViewport
+    ? window.visualViewport.height
+    : window.innerHeight;
+
+  document.documentElement.style
+    .setProperty('--app-height', `${height}px`);
 }
 
-.app-button:active {
-  transform: translate(3px, 3px);
-  box-shadow: 0 0 0 #000;
+setAppHeight();
+window.addEventListener('resize', setAppHeight);
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', setAppHeight);
 }
+</script>
+
+</body>
+</html>
