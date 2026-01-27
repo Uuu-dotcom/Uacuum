@@ -14,13 +14,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
     
-    <!-- 4. 引入 Manifest 文件 (下一步会创建) -->
+    <!-- 4. 引入 Manifest 文件 -->
     <link rel="manifest" href="manifest.json">
-<!-- 1. 苹果手机专用图标 -->
-    <link rel="apple-touch-icon" href="app-icon.png">
     
-    <!-- 2. 浏览器标签页图标 -->
+    <!-- 图标设置 -->
+    <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
+    
     <title>notes - Uacuum</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -29,6 +29,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* 禁止长按选中文本 */
+            -webkit-user-select: none;
+            user-select: none;
+            /* 禁止点击高亮 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -36,23 +41,29 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            min-height: 100dvh;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* 适配移动端动态高度 */
             background: #2a2a2a;
-            overflow: hidden;
+            overflow: hidden; /* 禁止整体滚动 */
+            
+            /* 防止 iOS 下拉回弹 */
+            overscroll-behavior: none;
+            
+            /* 适配刘海屏安全区域 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
-  /* 新增：防止 iOS 下拉回弹 */
-    overscroll-behavior: none;
-    
-    /* 新增：适配刘海屏安全区域 */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-}
+
         .phone-container {
-            width: 110vmin;
-            max-width: 450px;
-            height: calc(100dvh - 24px);
-            max-height: 900px;
+            /* 修改：宽度适配手机屏幕 */
+            width: 95vw;
+            max-width: 400px;
+            
+            /* 修改：高度适配 */
+            height: 92dvh;
+            max-height: 850px;
+            
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
@@ -73,7 +84,7 @@
             margin-bottom: 10px;
             padding-bottom: 10px;
             border-bottom: 3px solid #444;
-            flex-shrink: 0;
+            flex-shrink: 0; /* 防止头部被压缩 */
         }
 
         .back-button {
@@ -86,6 +97,11 @@
             box-shadow: 3px 3px 0 #000;
         }
 
+        .back-button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 #000;
+        }
+
         .page-title {
             font-size: 10px;
             color: #fff;
@@ -93,26 +109,28 @@
         }
 
         .action-btn {
-            font-size: 8px; /* 占位，保持平衡 */
+            width: 40px; /* 占位，保持标题居中 */
             visibility: hidden;
         }
 
         .content {
-            flex: 1;
-            overflow-y: auto;
+            flex: 1; /* 占据剩余空间 */
+            overflow-y: auto; /* 只有这里可以滚动 */
             padding-right: 5px;
             position: relative;
+            /* 优化移动端滚动体验 */
+            -webkit-overflow-scrolling: touch;
         }
         
-        /* 滚动条 */
-        .content::-webkit-scrollbar { width: 8px; }
-        .content::-webkit-scrollbar-track { background: #000; border: 2px solid #444; }
-        .content::-webkit-scrollbar-thumb { background: #fff; border: 2px solid #000; }
+        /* 滚动条样式 */
+        .content::-webkit-scrollbar { width: 6px; }
+        .content::-webkit-scrollbar-track { background: #000; border: 1px solid #444; }
+        .content::-webkit-scrollbar-thumb { background: #fff; border: 1px solid #000; }
 
         /* --- 角色选择列表 --- */
         .char-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /*稍微调小最小宽度以适配小屏*/
             gap: 15px;
             padding: 10px 0;
         }
@@ -187,6 +205,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            padding-bottom: 20px;
         }
 
         .year-header {
@@ -197,11 +216,13 @@
             display: inline-block;
             margin-bottom: 5px;
             border-radius: 4px;
+            align-self: flex-start;
         }
 
         .month-header {
             font-size: 9px;
-            color: #000;
+            color: #fff; /* 改为白色以便在黑背景下可见，或者保持黑色 */
+            text-shadow: 1px 1px 0 #000; /* 加个描边 */
             margin: 5px 0 5px 10px;
             font-weight: bold;
             text-decoration: underline;
@@ -211,7 +232,7 @@
             background: #fff; /* 笔记本纸张色 */
             border: 2px solid #000;
             padding: 10px;
-            margin-left: 10px;
+            margin-left: 5px;
             margin-bottom: 10px;
             position: relative;
             box-shadow: 2px 2px 0 #666;
@@ -232,6 +253,9 @@
             white-space: pre-wrap;
             font-family: "SimSun", "Songti SC", serif; /* 看起来像笔记字体 */
             font-weight: bold;
+            /* 允许用户选择复制记忆内容 */
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         .memory-actions {
@@ -245,7 +269,7 @@
 
         .mini-btn {
             font-size: 6px;
-            padding: 3px 6px;
+            padding: 4px 6px;
             background: #eee;
             border: 1px solid #000;
             cursor: pointer;
@@ -286,13 +310,22 @@
             border: 2px solid #000;
             font-family: inherit;
             resize: none;
+            /* 允许输入框操作 */
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            background: #f0f0f0;
         }
 
         /* Loading遮罩 */
         .loading-overlay {
             display: none;
             position: absolute;
-            top: 0; left: 0; w-full; h-full;
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.7);
             color: #fff;
             z-index: 200;
@@ -337,7 +370,7 @@
                     <!-- 动态生成的内容 -->
                 </div>
                 
-                <div style="text-align:center; padding: 20px; font-size: 6px; color:#666;" id="emptyMemTip">
+                <div style="text-align:center; padding: 20px; font-size: 6px; color:#aaa;" id="emptyMemTip">
                     暂无记忆，去聊天或手动记录吧
                 </div>
             </div>
@@ -484,7 +517,7 @@ char的长期记忆summary格式为：
 
         function renderTimeline() {
             const memories = JSON.parse(localStorage.getItem('memories') || '{}');
-            const charMemories = memories[currentContactId] || []; // 格式: [{id, timestamp, content, dateStr}, ...]
+            const charMemories = memories[currentContactId] || [];
             
             timelineContainer.innerHTML = '';
 
@@ -495,8 +528,7 @@ char的长期记忆summary格式为：
                 emptyMemTip.style.display = 'none';
             }
 
-            // 按时间排序 (最新的在下面？或者最新的在上面？笔记一般最新的在后面，但时间轴最新的在上面比较好操作)
-            // 这里选择最新的在上面
+            // 按时间倒序排列 (最新的在最上面)
             charMemories.sort((a, b) => b.timestamp - a.timestamp);
 
             let lastYear = null;
@@ -505,7 +537,7 @@ char的长期记忆summary格式为：
             charMemories.forEach(mem => {
                 const dateObj = new Date(mem.timestamp);
                 const year = dateObj.getFullYear();
-                const month = dateObj.getMonth() + 1; // 1-12
+                const month = dateObj.getMonth() + 1;
 
                 // 插入年份头
                 if (year !== lastYear) {
@@ -514,7 +546,7 @@ char的长期记忆summary格式为：
                     yearHeader.textContent = `${year}年`;
                     timelineContainer.appendChild(yearHeader);
                     lastYear = year;
-                    lastMonth = null; // 重置月份
+                    lastMonth = null; 
                 }
 
                 // 插入月份头
@@ -553,7 +585,6 @@ char的长期记忆summary格式为：
                 const idx = memories[currentContactId].findIndex(m => m.id === isUpdateId);
                 if (idx !== -1) {
                     memories[currentContactId][idx].content = content;
-                    // timestamp 保持原样还是更新？通常笔记修改不改时间，或者记录最后修改时间
                 }
             } else {
                 // 新增
@@ -604,14 +635,12 @@ char的长期记忆summary格式为：
             }
         };
 
-        // --- AI 总结功能 (核心逻辑) ---
+        // --- AI 总结功能 ---
 
         // 1. 记忆总结 (针对近期聊天)
         document.getElementById('summaryBtn').onclick = async () => {
             if (!checkApiConfig()) return;
 
-            // 模拟：从 localStorage 获取聊天记录 chats
-            // 实际上这里的 chat 结构假设为 { contactId: [ {role, content, timestamp}, ... ] }
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             const thisChat = allChats[currentContactId] || [];
 
@@ -620,15 +649,13 @@ char的长期记忆summary格式为：
                 return;
             }
 
-            // 提取最近的 N 条记录作为 prompt input
-            const recentChats = thisChat.slice(-20); // 取最后20条
+            const recentChats = thisChat.slice(-20); 
             const chatText = recentChats.map(c => `${c.role}: ${c.content}`).join('\n');
 
             loadingOverlay.style.display = 'flex';
             
             try {
                 const summary = await callAiApi(chatText, "normal");
-                // 保存为新记忆
                 saveMemoryToStorage(summary, Date.now());
                 alert('记忆总结成功！已添加至笔记本。');
             } catch (err) {
@@ -638,7 +665,7 @@ char的长期记忆summary格式为：
             }
         };
 
-        // 2. 批量总结 (针对已有记忆)
+        // 2. 批量总结
         document.getElementById('batchBtn').onclick = () => {
             batchModal.style.display = 'flex';
         };
@@ -659,12 +686,11 @@ char的长期记忆summary格式为：
 
             loadingOverlay.style.display = 'flex';
 
-            // 筛选范围内的记忆
             const memories = JSON.parse(localStorage.getItem('memories') || '{}');
             const list = memories[currentContactId] || [];
             
             const startDate = new Date(start).getTime();
-            const endDate = new Date(end).getTime() + 86400000; // 包含结束当天
+            const endDate = new Date(end).getTime() + 86400000;
 
             const targetMemories = list.filter(m => m.timestamp >= startDate && m.timestamp < endDate);
 
@@ -677,12 +703,10 @@ char的长期记忆summary格式为：
             const memoryText = targetMemories.map(m => `[${m.dateStr}] ${m.content}`).join('\n\n');
 
             try {
-                // 提示修正：批量总结需要更强的精简指令
                 const summary = await callAiApi(memoryText, "batch");
                 
-                // 询问是否替换
                 if (confirm('AI 总结完成，内容如下：\n\n' + summary.substring(0, 100) + '...\n\n是否保存为新的一条精简记忆？(这将保留原始记忆)')) {
-                     saveMemoryToStorage(summary, Date.now()); // 保存为当前时间的一条新总结
+                     saveMemoryToStorage(summary, Date.now());
                 }
             } catch (err) {
                 alert('批量总结失败: ' + err.message);
@@ -691,7 +715,7 @@ char的长期记忆summary格式为：
             }
         };
 
-        // --- API 调用模拟核心 ---
+        // --- API 调用模拟 ---
         async function callAiApi(inputText, type) {
             const apiUrl = localStorage.getItem('apiUrl');
             const apiKey = localStorage.getItem('apiKey');
@@ -699,7 +723,6 @@ char的长期记忆summary格式为：
 
             if (!apiUrl || !apiKey) throw new Error("缺少配置");
 
-            // 替换 Prompt 中的占位符
             const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
             const currentContact = contacts.find(c => c.id === currentContactId);
             const charName = currentContact ? currentContact.name : "Character";
@@ -715,10 +738,9 @@ char的长期记忆summary格式为：
                 userPromptContent = `请根据以下多个日期的记忆片段，进行批量精简总结，去除重复信息：\n\n${inputText}`;
             }
 
-            // 构建请求Url (类似 settings 里的逻辑)
             let fullUrl = apiUrl;
             if (!apiUrl.includes('/chat/completions')) {
-                fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions'; // 简单拼接
+                fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
             }
 
             const response = await fetch(fullUrl, {
@@ -756,7 +778,6 @@ char的长期记忆summary格式为：
             return true;
         }
 
-        // HTML转义
         function escapeHtml(text) {
             if (!text) return '';
             return text
