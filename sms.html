@@ -31,15 +31,13 @@
             -webkit-user-select: none;
             user-select: none;
             overscroll-behavior: none;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .phone-container {
             width: 98vw; 
             max-width: 520px;
             height: 100%;
-            max-height: 95dvh;
+            max-height: 100dvh;
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
@@ -48,6 +46,8 @@
             flex-direction: column;
             position: relative;
             overflow: hidden;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .header {
