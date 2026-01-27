@@ -2,10 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <head>
-   <meta charset="UTF-8">
-    <!-- 1. 强制禁止缩放，适配刘海屏 -->
+    
+    <!-- 1. 核心：强制禁止缩放，适配刘海屏 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <!-- 2. iOS Safari 专用全屏设置 -->
@@ -17,14 +15,15 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
     
-    <!-- 4. 引入 Manifest 文件 (下一步会创建) -->
+    <!-- 4. 引入 Manifest -->
     <link rel="manifest" href="manifest.json">
-<!-- 1. 苹果手机专用图标 -->
-    <link rel="apple-touch-icon" href="app-icon.png">
     
-    <!-- 2. 浏览器标签页图标 -->
+    <!-- 图标 -->
+    <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
-    <title>settings - UcauumMobile</title>
+    
+    <title>Settings - UacuumMobile</title>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         
@@ -32,6 +31,9 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -39,24 +41,24 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            min-height: 100dvh;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
             background: #2a2a2a;
-            overflow: hidden; /* 防止页面出现双重滚动条 */
+            overflow: hidden;
+            
+            /* 之前失效的代码现在修复了： */
+            overscroll-behavior: none;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
-  /* 新增：防止 iOS 下拉回弹 */
-    overscroll-behavior: none;
-    
-    /* 新增：适配刘海屏安全区域 */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-}
-        /* 保持与主页一致的手机容器尺寸 */
+
+        /* 手机容器：修改为与主页一致的尺寸 */
         .phone-container {
-            width: 110vmin;
-            max-width: 450px;
-            height: calc(100dvh - 24px);
-            max-height: 900px;
+            width: 95vw;
+            max-width: 400px;
+            height: 92dvh;
+            max-height: 850px;
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
@@ -78,7 +80,7 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 3px solid #444;
-            flex-shrink: 0; /* 防止头部被压缩 */
+            flex-shrink: 0;
         }
 
         .back-button {
@@ -113,12 +115,14 @@
             text-shadow: 2px 2px 0 #000;
         }
 
-        /* 内容区域 - 关键修改：允许内部滚动 */
+        /* 内容区域 - 允许内部滚动 */
         .content {
             flex: 1;
             overflow-y: auto;
             padding-right: 5px;
             padding-bottom: 20px;
+            /* 允许内容区域有回弹效果，体验更好 */
+            -webkit-overflow-scrolling: touch; 
         }
 
         /* 滚动条样式 */
@@ -168,9 +172,12 @@
             border: 3px solid #000;
             padding: 8px;
             font-family: 'Press Start 2P', cursive;
-            font-size: 8px;
+            font-size: 10px; /* 字体稍微改大一点，防止iOS自动放大 */
             background: #eee;
             line-height: 1.4;
+            /* 允许输入框被选中 */
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         .form-input:focus {
@@ -261,7 +268,7 @@
             border: 3px solid #000;
             padding: 8px;
             font-family: 'Press Start 2P', cursive;
-            font-size: 7px;
+            font-size: 9px;
             background: #eee;
         }
 
@@ -300,7 +307,7 @@
         .status-text { font-size: 7px; color: #666; }
         .info-text { font-size: 6px; color: #666; margin-top: 6px; line-height: 1.4; }
         
-        /* 颜色恢复类 (与主页一致) */
+        /* 颜色恢复类 */
         .color-scheme-1 { background: #ff6b9d; }
         .color-scheme-2 { background: #4ecdc4; }
         .color-scheme-3 { background: #ffe66d; }
@@ -325,9 +332,9 @@
                 <div class="section-title">API 连接</div>
                 
                 <div class="form-group">
-                    <label class="form-label">API URL</label>
-                    <input type="text" id="apiUrl" class="form-input" placeholder="https://api.example.com">
-                    <div class="info-text">聊天时将自动追加 /v1/chat/completions</div>
+                    <label class="form-label">API URL (Base URL)</label>
+                    <input type="text" id="apiUrl" class="form-input" placeholder="例如: https://api.openai.com/v1">
+                    <div class="info-text">不要带 /chat/completions</div>
                 </div>
 
                 <div class="form-group">
@@ -459,7 +466,7 @@
             }
         }
 
-        // --- 2. 滑块逻辑 (修复点) ---
+        // --- 2. 滑块逻辑 ---
         tempSlider.addEventListener('input', (e) => {
             // 将 0-20 的整数转换为 0.0-2.0 的浮点数显示
             const val = (parseInt(e.target.value) / 10).toFixed(1);
@@ -501,34 +508,37 @@
             btn.textContent = '连接中...';
 
             try {
-                // 构建请求 models 的 URL (去掉末尾斜杠 + /v1/models)
+                // 处理 URL：去掉末尾斜杠
                 let baseUrl = url.endsWith('/') ? url.slice(0, -1) : url;
-                // 有些用户可能已经填了 /v1，这里做个简单兼容
-                if (baseUrl.endsWith('/v1')) baseUrl = baseUrl.slice(0, -3);
                 
-                const requestUrl = `${baseUrl}/v1/models`;
+                // 为了通用性，尝试构建 /models 端点
+                // 有些API需要 /v1/models，有些直接是 /models，这里简单做个拼接
+                // 如果用户没填 /v1，且请求失败，可能需要手动加上
+                const requestUrl = `${baseUrl}/models`;
 
                 const res = await fetch(requestUrl, {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${key}` }
                 });
 
-                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                 const data = await res.json();
-                const models = data.data.map(m => m.id);
-
-                if (models.length > 0) {
+                
+                // 兼容不同的返回格式 (data.data 或直接 data)
+                const list = data.data || data;
+                
+                if (Array.isArray(list)) {
+                    const models = list.map(m => m.id);
                     localStorage.setItem('modelList', JSON.stringify(models));
-                    // 默认选中第一个，或保持当前
                     const current = modelSelect.value;
                     updateModelSelectUI(models, current);
                     alert(`成功获取 ${models.length} 个模型`);
                 } else {
-                    alert('未找到可用模型');
+                    alert('返回数据格式不正确');
                 }
             } catch (err) {
-                alert('获取失败: ' + err.message + '\n请检查URL是否正确 (不需要加 /chat/completions)');
+                alert('获取失败: ' + err.message + '\n请检查URL末尾是否需要加 /v1');
             } finally {
                 btn.disabled = false;
                 btn.textContent = '刷新模型';
@@ -575,14 +585,13 @@
             }
             new Notification('像素手机通知测试', {
                 body: '如果你看到这条消息，说明通知功能正常！📱',
-                icon: 'https://cdn-icons-png.flaticon.com/512/2620/2620603.png' // 简单的测试图标
+                icon: 'app-icon.png'
             });
         });
 
-        // --- 5. 导入导出 (修复补全) ---
+        // --- 5. 导入导出 ---
         document.getElementById('exportData').addEventListener('click', () => {
             const allData = {};
-            // 遍历所有 localStorage 键值
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
                 allData[key] = localStorage.getItem(key);
@@ -610,7 +619,6 @@
                 try {
                     const importedData = JSON.parse(e.target.result);
                     if (confirm('这将覆盖当前的设置和记录，确定吗？')) {
-                        // 写入数据
                         Object.keys(importedData).forEach(key => {
                             localStorage.setItem(key, importedData[key]);
                         });
