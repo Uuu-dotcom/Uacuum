@@ -2,334 +2,119 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    
-    <!-- 1. 核心：强制禁止缩放，适配刘海屏 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- 2. iOS Safari 专用全屏设置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
-    
-    <!-- 3. Android Chrome 专用全屏设置 -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
-    
-    <!-- 4. 引入 Manifest -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- 图标 -->
     <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
     
     <title>Settings - UacuumMobile</title>
-     <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="base.css">
 
     <style>   
+        /* (您的 CSS 样式保持不变，此处省略以节省空间) */
         /* 顶部导航 */
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #444;
-            flex-shrink: 0;
-        }
-
-        .back-button {
-            background: #fff;
-            border: 3px solid #000;
-            padding: 8px 12px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 8px;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 #000;
-            transition: all 0.1s;
-            text-decoration: none;
-            color: #000;
-            display: inline-block;
-        }
-
-        .back-button:hover {
-            transform: translate(1.5px, 1.5px);
-            box-shadow: 1.5px 1.5px 0 #000;
-        }
-
-        .back-button:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 #000;
-        }
-
-        .title {
-            font-size: 12px;
-            color: #fff;
-            flex: 1;
-            text-align: center;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        /* 内容区域 - 允许内部滚动 */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 5px;
-            padding-bottom: 20px;
-            /* 允许内容区域有回弹效果，体验更好 */
-            -webkit-overflow-scrolling: touch; 
-        }
-
-        /* 滚动条样式 */
-        .content::-webkit-scrollbar {
-            width: 8px;
-        }
-        .content::-webkit-scrollbar-track {
-            background: #000;
-            border: 2px solid #444;
-        }
-        .content::-webkit-scrollbar-thumb {
-            background: #fff;
-            border: 2px solid #000;
-        }
-
-        /* 设置区块 */
-        .settings-section {
-            background: #fff;
-            border: 3px solid #000;
-            padding: 12px;
-            margin-bottom: 15px;
-            box-shadow: 4px 4px 0 #000;
-        }
-
-        .section-title {
-            font-size: 10px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #000;
-            color: #000;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 8px;
-            margin-bottom: 6px;
-            color: #000;
-            font-weight: bold;
-        }
-
-        .form-input {
-            width: 100%;
-            border: 3px solid #000;
-            padding: 8px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 10px; /* 字体稍微改大一点，防止iOS自动放大 */
-            background: #eee;
-            line-height: 1.4;
-            /* 允许输入框被选中 */
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
-        .form-input:focus {
-            outline: none;
-            background: #fff;
-            box-shadow: inset 0 0 0 2px #4ecdc4;
-        }
-
-        /* 按钮组 */
-        .button-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .btn {
-            background: #fff;
-            border: 3px solid #000;
-            padding: 10px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 8px;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 #000;
-            transition: all 0.1s;
-            flex: 1;
-            min-width: 80px;
-            text-align: center;
-        }
-
-        .btn:hover {
-            transform: translate(1.5px, 1.5px);
-            box-shadow: 1.5px 1.5px 0 #000;
-        }
-
-        .btn:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 #000;
-        }
-
+        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; }
+        .back-button { background: #fff; border: 3px solid #000; padding: 8px 12px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; text-decoration: none; color: #000; display: inline-block; }
+        .back-button:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
+        .back-button:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
+        .title { font-size: 12px; color: #fff; flex: 1; text-align: center; text-shadow: 2px 2px 0 #000; }
+        .content { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        .content::-webkit-scrollbar { width: 8px; }
+        .content::-webkit-scrollbar-track { background: #000; border: 2px solid #444; }
+        .content::-webkit-scrollbar-thumb { background: #fff; border: 2px solid #000; }
+        .settings-section { background: #fff; border: 3px solid #000; padding: 12px; margin-bottom: 15px; box-shadow: 4px 4px 0 #000; }
+        .section-title { font-size: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #000; color: #000; }
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; font-size: 8px; margin-bottom: 6px; color: #000; font-weight: bold; }
+        .form-input { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 10px; background: #eee; line-height: 1.4; -webkit-user-select: text; user-select: text; box-sizing: border-box; }
+        .form-input:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #4ecdc4; }
+        .button-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .btn { background: #fff; border: 3px solid #000; padding: 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; flex: 1; min-width: 80px; text-align: center; }
+        .btn:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
+        .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
         .btn.primary { background: #4ecdc4; color: #000; }
         .btn.success { background: #a8e6cf; color: #000; }
         .btn.warning { background: #ffe66d; color: #000; }
         .btn.danger { background: #ff6b6b; color: #fff; }
         .btn:disabled { background: #ccc; color: #666; cursor: not-allowed; }
-
         .btn-full { width: 100%; margin-top: 8px; }
-
-        /* 滑块 */
-        .slider-container {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .slider {
-            flex: 1;
-            height: 20px;
-            -webkit-appearance: none;
-            background: #eee;
-            border: 3px solid #000;
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #000;
-            cursor: pointer;
-            border: 2px solid #fff;
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-        }
-
-        .slider-value {
-            font-size: 8px;
-            color: #000;
-            padding: 6px;
-            background: #ffe66d;
-            border: 3px solid #000;
-            min-width: 45px;
-            text-align: center;
-        }
-
-        .model-select {
-            width: 100%;
-            border: 3px solid #000;
-            padding: 8px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 9px;
-            background: #eee;
-        }
-
-        /* 开关按钮 */
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 5px;
-        }
-
-        .toggle {
-            position: relative;
-            width: 50px;
-            height: 24px;
-            background: #ccc;
-            border: 3px solid #000;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
+        .slider-container { margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+        .slider { flex: 1; height: 20px; -webkit-appearance: none; background: #eee; border: 3px solid #000; outline: none; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #000; cursor: pointer; border: 2px solid #fff; box-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+        .slider-value { font-size: 8px; color: #000; padding: 6px; background: #ffe66d; border: 3px solid #000; min-width: 45px; text-align: center; }
+        .model-select { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 9px; background: #eee; box-sizing: border-box; }
+        .toggle-container { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .toggle { position: relative; width: 50px; height: 24px; background: #ccc; border: 3px solid #000; cursor: pointer; transition: background 0.2s; }
         .toggle.active { background: #a8e6cf; }
-
-        .toggle-thumb {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 14px;
-            height: 14px;
-            background: #000;
-            transition: left 0.2s;
-        }
-
+        .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #000; transition: left 0.2s; }
         .toggle.active .toggle-thumb { left: 28px; }
-
         .status-text { font-size: 7px; color: #666; }
         .info-text { font-size: 6px; color: #666; margin-top: 6px; line-height: 1.4; }
-        
-        /* 颜色恢复类 */
-        .color-scheme-1 { background: #ff6b9d; }
-        .color-scheme-2 { background: #4ecdc4; }
-        .color-scheme-3 { background: #ffe66d; }
-        .color-scheme-4 { background: #a8e6cf; }
-        .color-scheme-5 { background: #ffd3b6; }
-        .color-scheme-6 { background: #c7ceea; }
+        .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
     </style>
 </head>
 <body>
     <div class="phone-container" id="phoneContainer">
-        <!-- 顶部导航 -->
         <div class="header">
             <a href="./index.html" class="back-button">← 返回</a>
             <div class="title">设置</div>
         </div>
 
-        <!-- 内容区域 -->
         <div class="content">
-            
-            <!-- API 设定 -->
             <div class="settings-section">
                 <div class="section-title">API 连接</div>
-                
                 <div class="form-group">
                     <label class="form-label">API URL (Base URL)</label>
                     <input type="text" id="apiUrl" class="form-input" placeholder="例如: https://api.openai.com/v1">
                     <div class="info-text">不要带 /chat/completions</div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">API Key</label>
                     <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">模型选择</label>
                     <select id="modelSelect" class="model-select">
                         <option value="">请先填写API并刷新</option>
                     </select>
                 </div>
-
                 <div class="button-group">
                     <button class="btn primary" id="refreshModels">刷新模型</button>
                     <button class="btn success" id="saveApi">保存配置</button>
                 </div>
             </div>
 
-            <!-- 参数设定 -->
             <div class="settings-section">
                 <div class="section-title">对话参数</div>
-                
                 <div class="form-group">
                     <label class="form-label">随机性 (Temperature)</label>
                     <div class="slider-container">
-                        <!-- min="0" max="20" 代表 0.0 到 2.0 -->
                         <input type="range" id="temperature" class="slider" min="0" max="20" value="9" step="1">
                         <div class="slider-value" id="tempValue">0.9</div>
                     </div>
                     <div class="info-text">低=精确/严谨，高=创意/随机</div>
                 </div>
 
+                <!-- 【新增】上下文长度滑块 -->
+                <div class="form-group">
+                    <label class="form-label">上下文长度 (Context Length)</label>
+                    <div class="slider-container">
+                        <input type="range" id="contextLength" class="slider" min="10" max="100" value="30" step="1">
+                        <div class="slider-value" id="contextLengthValue">30</div>
+                    </div>
+                    <div class="info-text">AI能看到最近的N条消息。数值越大记性越好，但消耗也越多。</div>
+                </div>
+                
                 <button class="btn success btn-full" id="saveParams">保存参数</button>
             </div>
 
-            <!-- 通知设定 -->
             <div class="settings-section">
                 <div class="section-title">消息通知</div>
-                
                 <div class="form-group">
                     <label class="form-label">系统推送</label>
                     <div class="toggle-container">
@@ -340,27 +125,21 @@
                     </div>
                     <div class="info-text">允许 AI 主动向你发送消息时弹窗通知</div>
                 </div>
-
                 <button class="btn warning btn-full" id="testNotification">发送测试通知</button>
             </div>
 
-            <!-- 数据管理 -->
             <div class="settings-section">
                 <div class="section-title">数据备份</div>
-                
                 <div class="button-group">
                     <button class="btn success" id="exportData">导出数据</button>
                     <button class="btn primary" id="importData">导入数据</button>
                 </div>
-                <!-- 隐藏的文件输入框 -->
                 <input type="file" id="importFile" accept=".json" style="display: none;">
-                
                 <div class="info-text" style="margin-top: 10px; border-top: 2px dashed #ccc; padding-top: 5px;">
                     危险操作区
                 </div>
                 <button class="btn danger btn-full" id="clearData">清除所有数据 (重置)</button>
             </div>
-
         </div>
     </div>
 
@@ -374,30 +153,25 @@
         const tempValueDisplay = document.getElementById('tempValue');
         const notifToggle = document.getElementById('notificationToggle');
         const notifStatus = document.getElementById('notificationStatus');
+        
+        // 【新增】获取上下文滑块元素
+        const contextSlider = document.getElementById('contextLength');
+        const contextValueDisplay = document.getElementById('contextLengthValue');
 
-        // 配色方案（保持同步）
-        const colorSchemes = [
-            'color-scheme-1', 'color-scheme-2', 'color-scheme-3', 
-            'color-scheme-4', 'color-scheme-5', 'color-scheme-6'
-        ];
+        const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
 
-        // --- 1. 初始化加载 ---
         window.addEventListener('DOMContentLoaded', () => {
             loadAllSettings();
         });
 
         function loadAllSettings() {
-            // 1. 恢复外观
             const savedColor = localStorage.getItem('phoneColor');
             if (savedColor !== null) {
                 phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)];
             }
-
-            // 2. 恢复 API 设置
             apiUrlInput.value = localStorage.getItem('apiUrl') || '';
             apiKeyInput.value = localStorage.getItem('apiKey') || '';
             
-            // 3. 恢复模型列表
             const savedModels = localStorage.getItem('modelList');
             const savedSelectedModel = localStorage.getItem('selectedModel');
             if (savedModels) {
@@ -407,12 +181,15 @@
                 } catch (e) { console.error('模型列表解析失败', e); }
             }
 
-            // 4. 恢复温度
-            const savedTemp = localStorage.getItem('temperature') || '9'; // 默认 0.9 (9)
+            const savedTemp = localStorage.getItem('temperature') || '9';
             tempSlider.value = savedTemp;
             tempValueDisplay.textContent = (parseInt(savedTemp) / 10).toFixed(1);
 
-            // 5. 恢复通知状态
+            // 【新增】加载已保存的上下文长度
+            const savedContext = localStorage.getItem('contextLength') || '30'; // 默认30
+            contextSlider.value = savedContext;
+            contextValueDisplay.textContent = savedContext;
+
             const notifEnabled = localStorage.getItem('notificationEnabled') === 'true';
             if (notifEnabled) {
                 notifToggle.classList.add('active');
@@ -420,19 +197,24 @@
             }
         }
 
-        // --- 2. 滑块逻辑 ---
+        // 滑块交互
         tempSlider.addEventListener('input', (e) => {
-            // 将 0-20 的整数转换为 0.0-2.0 的浮点数显示
-            const val = (parseInt(e.target.value) / 10).toFixed(1);
-            tempValueDisplay.textContent = val;
+            tempValueDisplay.textContent = (parseInt(e.target.value) / 10).toFixed(1);
+        });
+        
+        // 【新增】上下文滑块交互
+        contextSlider.addEventListener('input', (e) => {
+            contextValueDisplay.textContent = e.target.value;
         });
 
         document.getElementById('saveParams').addEventListener('click', () => {
             localStorage.setItem('temperature', tempSlider.value);
-            alert('参数已保存！\n当前温度: ' + (tempSlider.value / 10).toFixed(1));
+            // 【新增】保存上下文长度
+            localStorage.setItem('contextLength', contextSlider.value);
+            alert('参数已保存！');
         });
 
-        // --- 3. API 与 模型刷新 ---
+        // --- 其他JS代码保持不变 ---
         function updateModelSelectUI(models, selected = '') {
             modelSelect.innerHTML = '';
             if (!models || models.length === 0) {
@@ -447,110 +229,58 @@
                 modelSelect.appendChild(opt);
             });
         }
-
         document.getElementById('refreshModels').addEventListener('click', async () => {
             const url = apiUrlInput.value.trim();
             const key = apiKeyInput.value.trim();
-
-            if (!url || !key) {
-                alert('请先填写完整的 URL 和 Key');
-                return;
-            }
-
+            if (!url || !key) { alert('请先填写完整的 URL 和 Key'); return; }
             const btn = document.getElementById('refreshModels');
             btn.disabled = true;
             btn.textContent = '连接中...';
-
             try {
-                // 处理 URL：去掉末尾斜杠
                 let baseUrl = url.endsWith('/') ? url.slice(0, -1) : url;
-                
-                // 为了通用性，尝试构建 /models 端点
-                // 有些API需要 /v1/models，有些直接是 /models，这里简单做个拼接
-                // 如果用户没填 /v1，且请求失败，可能需要手动加上
                 const requestUrl = `${baseUrl}/models`;
-
-                const res = await fetch(requestUrl, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${key}` }
-                });
-
+                const res = await fetch(requestUrl, { method: 'GET', headers: { 'Authorization': `Bearer ${key}` } });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
                 const data = await res.json();
-                
-                // 兼容不同的返回格式 (data.data 或直接 data)
                 const list = data.data || data;
-                
                 if (Array.isArray(list)) {
                     const models = list.map(m => m.id);
                     localStorage.setItem('modelList', JSON.stringify(models));
-                    const current = modelSelect.value;
-                    updateModelSelectUI(models, current);
+                    updateModelSelectUI(models, modelSelect.value);
                     alert(`成功获取 ${models.length} 个模型`);
-                } else {
-                    alert('返回数据格式不正确');
-                }
-            } catch (err) {
-                alert('获取失败: ' + err.message + '\n请检查URL末尾是否需要加 /v1');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = '刷新模型';
-            }
+                } else { alert('返回数据格式不正确'); }
+            } catch (err) { alert('获取失败: ' + err.message + '\n请检查URL末尾是否需要加 /v1'); } 
+            finally { btn.disabled = false; btn.textContent = '刷新模型'; }
         });
-
         document.getElementById('saveApi').addEventListener('click', () => {
             localStorage.setItem('apiUrl', apiUrlInput.value.trim());
             localStorage.setItem('apiKey', apiKeyInput.value.trim());
             localStorage.setItem('selectedModel', modelSelect.value);
             alert('API 配置已保存');
         });
-
-        // --- 4. 通知功能 ---
         notifToggle.addEventListener('click', async () => {
             const isActive = notifToggle.classList.contains('active');
-            
             if (!isActive) {
-                // 尝试开启
-                if (!('Notification' in window)) {
-                    alert('此浏览器不支持通知功能');
-                    return;
-                }
+                if (!('Notification' in window)) { alert('此浏览器不支持通知功能'); return; }
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
                     notifToggle.classList.add('active');
                     notifStatus.textContent = '已开启';
                     localStorage.setItem('notificationEnabled', 'true');
-                } else {
-                    alert('通知权限被拒绝，请在浏览器设置中允许');
-                }
+                } else { alert('通知权限被拒绝，请在浏览器设置中允许'); }
             } else {
-                // 关闭
                 notifToggle.classList.remove('active');
                 notifStatus.textContent = '已关闭';
                 localStorage.setItem('notificationEnabled', 'false');
             }
         });
-
         document.getElementById('testNotification').addEventListener('click', () => {
-            if (localStorage.getItem('notificationEnabled') !== 'true') {
-                alert('请先开启上方开关');
-                return;
-            }
-            new Notification('像素手机通知测试', {
-                body: '如果你看到这条消息，说明通知功能正常！📱',
-                icon: 'app-icon.png'
-            });
+            if (localStorage.getItem('notificationEnabled') !== 'true') { alert('请先开启上方开关'); return; }
+            new Notification('像素手机通知测试', { body: '如果你看到这条消息，说明通知功能正常！📱', icon: 'app-icon.png' });
         });
-
-        // --- 5. 导入导出 ---
         document.getElementById('exportData').addEventListener('click', () => {
             const allData = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                allData[key] = localStorage.getItem(key);
-            }
-
+            for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); allData[key] = localStorage.getItem(key); }
             const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -559,33 +289,23 @@
             a.click();
             URL.revokeObjectURL(url);
         });
-
-        document.getElementById('importData').addEventListener('click', () => {
-            document.getElementById('importFile').click();
-        });
-
+        document.getElementById('importData').addEventListener('click', () => { document.getElementById('importFile').click(); });
         document.getElementById('importFile').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     const importedData = JSON.parse(e.target.result);
                     if (confirm('这将覆盖当前的设置和记录，确定吗？')) {
-                        Object.keys(importedData).forEach(key => {
-                            localStorage.setItem(key, importedData[key]);
-                        });
+                        Object.keys(importedData).forEach(key => { localStorage.setItem(key, importedData[key]); });
                         alert('数据导入成功！页面将刷新...');
                         location.reload();
                     }
-                } catch (err) {
-                    alert('文件格式错误！必须是 json 文件');
-                }
+                } catch (err) { alert('文件格式错误！必须是 json 文件'); }
             };
             reader.readAsText(file);
         });
-
         document.getElementById('clearData').addEventListener('click', () => {
             if (confirm('⚠️ 警告：这将删除所有聊天记录、联系人和设置！\n此操作无法撤销！')) {
                 localStorage.clear();
