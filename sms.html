@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="app-icon.png">
     
     <title>sms - Uacuum</title>
-     <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="base.css">
 
     <style>
         .header {
@@ -27,7 +27,6 @@
             height: 50px;
         }
 
-        /* --- 【新增】头像样式 --- */
         .char-avatar {
             width: 32px;
             height: 32px;
@@ -36,7 +35,7 @@
             margin-right: 10px;
             object-fit: cover;
             background: #444;
-            display: none; /* 默认隐藏 */
+            display: none;
             flex-shrink: 0;
         }
 
@@ -98,12 +97,17 @@
         .chat-area::-webkit-scrollbar { width: 4px; }
         .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
 
-        .message-row { display: flex; flex-direction: column; max-width: 85%; position: relative; }
+        .message-row { 
+            display: flex; 
+            flex-direction: column; 
+            max-width: 85%; /* 在这里调节气泡最大宽度 */
+            position: relative; 
+        }
         .message-row.char { align-self: flex-start; }
         .message-row.user { align-self: flex-end; align-items: flex-end; }
 
         .bubble {
-            padding: 10px 10px;
+            padding: 12px 10px; /* 在这里调节气泡的“胖瘦” */
             font-size: 12px;
             line-height: 1.5;
             border: 3px solid #000;
@@ -137,8 +141,7 @@
             align-items: flex-end;
             gap: 8px;
             flex-shrink: 0;
-            padding: 10px; /* 先给一个基础的四边内边距 */
-            padding-bottom: calc(10px + env(safe-area-inset-bottom)); /* 再单独把安全区距离加到底部 */
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
        }
 
         .input-box {
@@ -206,84 +209,66 @@
             width: 140px;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-    /* --- 【新增】通用弹窗样式 --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: none; /* 默认隐藏 */
-    justify-content: center;
-    align-items: center;
-    z-index: 300;
-    padding: 15px;
-    box-sizing: border-box;
-}
 
-.modal-content {
-    background: #fff;
-    border: 3px solid #000;
-    box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
-    width: 100%;
-    max-width: 300px;
-    font-family: "SimSun", "Songti SC", serif;
-    font-weight: bold;
-}
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+            padding: 15px;
+            box-sizing: border-box;
+        }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 2px solid #000;
-    background: #eee;
-}
+        .modal-content {
+            background: #fff;
+            border: 3px solid #000;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 300px;
+            font-family: "SimSun", "Songti SC", serif;
+            font-weight: bold;
+        }
 
-.modal-header h4 {
-    margin: 0;
-    font-size: 12px;
-}
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 2px solid #000;
+            background: #eee;
+        }
 
-.modal-close {
-    font-size: 24px;
-    cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-}
+        .modal-header h4 { margin: 0; font-size: 12px; }
+        .modal-close { font-size: 24px; cursor: pointer; font-family: Arial, sans-serif; font-weight: bold; }
+        .modal-body { padding: 15px; }
 
-.modal-body {
-    padding: 15px;
-}
+        .modal-btn {
+            padding: 15px;
+            border: 2px solid #000;
+            margin-bottom: 10px;
+            text-align: center;
+            cursor: pointer;
+            background: #f0f0f0;
+            box-shadow: 2px 2px 0 #000;
+            transition: all 0.1s;
+            font-size: 12px;
+        }
+        .modal-btn:last-child { margin-bottom: 0; }
+        .modal-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 
-.modal-btn {
-    padding: 15px;
-    border: 2px solid #000;
-    margin-bottom: 10px;
-    text-align: center;
-    cursor: pointer;
-    background: #f0f0f0;
-    box-shadow: 2px 2px 0 #000;
-    transition: all 0.1s;
-    font-size: 12px;
-}
-.modal-btn:last-child {
-    margin-bottom: 0;
-}
-.modal-btn:active {
-    transform: translate(2px, 2px);
-    box-shadow: none;
-}
-
-#bgUrlInputContainer {
-    display: none; /* JS会控制它 */
-    flex-direction: column;
-    align-items: stretch;
-}
-#bgUrlInputContainer .action-btn {
-    flex: 1;
-}
+        #bgUrlInputContainer .input-box {
+             margin-bottom: 10px;
+        }
+        #bgUrlInputContainer .action-btn {
+            flex: 1;
+        }
+        
         .context-btn { padding: 15px; font-family: 'Press Start 2P', cursive; font-size: 10px; border-bottom: 1px solid #444; cursor: pointer; text-align: center; }
         .context-btn:hover { background: #444; }
         .context-btn.danger { color: #ff6b6b; }
@@ -299,10 +284,8 @@
 <body>
     <div class="phone-container" id="phoneContainer">
         
-        <!-- 顶部 (这是正确的位置) -->
         <div class="header">
             <a onclick="window.location.href='./index.html'" class="back-btn">←</a>
-            <!-- 【新增】头像元素放在这里 -->
             <img id="charAvatar" class="char-avatar">
             <div class="header-info">
                 <div class="char-name" id="charNameDisplay">加载中...</div>
@@ -313,7 +296,6 @@
             </div>
         </div>
 
-        <!-- 设置菜单弹窗 -->
         <div class="popup-menu" id="settingsMenu">
             <div class="menu-item toggle-switch" id="proactiveToggleBtn">
                 <span>主动消息</span>
@@ -324,23 +306,42 @@
             <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
         </div>
 
-        <!-- 聊天内容 -->
         <div class="chat-area" id="chatArea"></div>
 
-        <!-- 底部 -->
         <div class="footer">
             <textarea class="input-box" id="msgInput" rows="1" placeholder="发送短信..."></textarea>
             <button class="action-btn btn-star" id="starBtn">★</button>
             <button class="action-btn btn-send" id="sendBtn">➤</button>
         </div>
 
-        <!-- 长按菜单 -->
         <div class="context-menu" id="contextMenu">
             <div class="context-btn" id="ctxEdit">编辑此消息</div>
             <div class="context-btn danger" id="ctxDelete">删除此消息</div>
             <div class="context-btn" id="ctxCancel">取消</div>
         </div>
 
+    </div>
+
+    <div class="modal-overlay" id="bgModalOverlay">
+        <div class="modal-content" id="bgModal">
+            <div class="modal-header">
+                <h4>更换背景</h4>
+                <span class="modal-close" id="closeBgModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="bgOptionsContainer">
+                    <div class="modal-btn" id="bgOptionLocal">从本地上传</div>
+                    <div class="modal-btn" id="bgOptionUrl">使用网络链接 (URL)</div>
+                </div>
+                <div id="bgUrlInputContainer" style="display: none;">
+                    <textarea id="bgUrlInput" class="input-box" rows="2" placeholder="在此粘贴图片URL..."></textarea>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="action-btn" id="bgUrlCancel">返回</button>
+                        <button class="action-btn btn-send" id="bgUrlConfirm">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -354,7 +355,6 @@
         const contextMenu = document.getElementById('contextMenu');
         const phoneContainer = document.getElementById('phoneContainer');
 
-        // 【新增】获取弹窗相关元素
         const bgModalOverlay = document.getElementById('bgModalOverlay');
         const bgModal = document.getElementById('bgModal');
         const closeBgModal = document.getElementById('closeBgModal');
@@ -391,20 +391,20 @@
         });
 
         function loadContactInfo() {
-            const charAvatar = document.getElementById('charAvatar'); // 获取头像元素
+            const charAvatar = document.getElementById('charAvatar');
             const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
             const contact = contacts.find(c => c.id === currentChatId);
             if (contact) {
                 charNameDisplay.textContent = contact.nick || contact.name;
                 if (contact.pfp && contact.pfp.trim() !== "") {
                     charAvatar.src = contact.pfp;
-                    charAvatar.style.display = 'block'; // 有头像则显示
+                    charAvatar.style.display = 'block';
                 } else {
-                    charAvatar.style.display = 'none'; // 无则隐藏
+                    charAvatar.style.display = 'none';
                 }
             } else {
                 charNameDisplay.textContent = "未知号码";
-                charAvatar.style.display = 'none'; // 未知也隐藏
+                charAvatar.style.display = 'none';
             }
         }
 
@@ -432,785 +432,22 @@
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             const messages = allChats[currentChatId] || [];
             chatArea.innerHTML = '';
-            // 【修改后】
-    messages.forEach((msg, index) => { // 增加了 index 参数
-    const row = document.createElement('div');
-    row.className = `message-row ${msg.role === 'user' ? 'user' : 'char'}`;
-    addLongPressEvent(row, msg.id);
-    const date = new Date(msg.timestamp);
-    const timeStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
-
-    // 核心逻辑：判断当前消息是不是数组中的最后一条
-    const isLastMessage = (index === messages.length - 1);
-
-    // 如果是最后一条，则生成时间标签的HTML，否则为空字符串
-    const timeTagHTML = isLastMessage ? `<div class="time-tag">${timeStr}</div>` : '';
-
-    // 将气泡和可能存在的时间标签组合起来
-    row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div>${timeTagHTML}`;
-    
-    chatArea.appendChild(row);
-});
-
-
-        function scrollToBottom() {
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
-
-        function addMessage(role, content) {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            if (!allChats[currentChatId]) allChats[currentChatId] = [];
-            const newMsg = { id: Date.now(), role: (role === 'user' ? 'user' : 'assistant'), content: content, timestamp: Date.now() };
-            allChats[currentChatId].push(newMsg);
-            localStorage.setItem('chats', JSON.stringify(allChats));
-            renderMessages();
-        }
-
-        document.getElementById('sendBtn').addEventListener('click', () => {
-            const text = msgInput.value.trim();
-            if (!text) return;
-            addMessage('user', text);
-            msgInput.value = '';
-            statusText.textContent = '';
-        });
-
-        document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); });
-
-        // 触发 AI 回复 (多条回复版本)
-        async function triggerAiReply() {
-            statusText.textContent = '对方正在输入...';
-            statusText.style.color = '#4ecdc4';
-
-            const addMessageWithDelay = (content, delay) => new Promise(resolve => setTimeout(() => { addMessage('assistant', content); resolve(); }, delay));
-// 在 triggerAiReply 函数内部
-try {
-    const rawReply = await callAiApi();
-    let replyMessages = [];
-    try {
-        // ---【核心修改开始】---
-        // 1. 去除首尾可能存在的空白
-        let jsonString = rawReply.trim();
-
-        // 2. 寻找 JSON 对象在字符串中的实际位置
-        const startIndex = jsonString.indexOf('{');
-        const endIndex = jsonString.lastIndexOf('}');
-
-        // 3. 如果找到了 '{' 和 '}'，就提取它们之间的内容
-        //    这能有效地剥离掉外层的 ` ```json ` 和 ` ``` `
-        if (startIndex !== -1 && endIndex > startIndex) {
-            jsonString = jsonString.substring(startIndex, endIndex + 1);
-        }
-        // ---【核心修改结束】---
-
-        // 4. 使用清理后的字符串进行解析
-        const parsed = JSON.parse(jsonString);
-
-        if (parsed && Array.isArray(parsed.replies)) {
-            replyMessages = parsed.replies;
-        } else {
-            // 如果解析成功但格式不对，依然按单条消息处理
-            replyMessages.push(rawReply); 
-        }
-    } catch (e) {
-        // 如果清理后仍然解析失败（说明AI返回的就是普通文本），则按单条消息处理
-        console.error("无法解析为 JSON，按单条普通文本消息处理:", rawReply);
-        replyMessages.push(rawReply);
-    }
-
-                for (const msg of replyMessages) {
-                    if (msg.trim() === "") continue;
-                    const delay = replyMessages.indexOf(msg) === 0 ? 300 : Math.random() * 800 + 500;
-                    statusText.textContent = '对方正在输入...';
-                    await addMessageWithDelay(msg, delay);
-                }
-            } catch (err) {
-                statusText.textContent = '发送失败!';
-                statusText.style.color = '#ff6b6b';
-                alert('API 错误: ' + err.message);
-            } finally {
-                statusText.textContent = '';
-            }
-        }
-
-        // API 调用核心 (多条回复的 JSON 版本)
-        async function callAiApi() {
-            const apiUrl = localStorage.getItem('apiUrl');
-            const apiKey = localStorage.getItem('apiKey');
-            const model = localStorage.getItem('selectedModel');
-            if (!apiUrl || !apiKey) throw new Error("请先在设置页配置API");
-
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            const history = allChats[currentChatId] || [];
-            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-            const charData = contacts.find(c => c.id === currentChatId);
             
-            const persona = charData ? charData.persona : "";
-            const note = charData ? charData.note : "";
-            const charName = charData ? charData.name : "Character";
-            const userPersona = localStorage.getItem('user_persona') || "";
-            const now = new Date().toLocaleString();
-
-            const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信与 User 聊天。当前现实时间是: ${now}。
-
-[角色设定]:
-${persona}
-
-${userPersona ? `[关于 User 的信息]:\n${userPersona}` : ""}
-
-${note ? `[备注/强制指令]:\n${note}` : ""}
-const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信与 User 聊天。当前现实时间是: ${now}。
-
-[回复规则 - 你必须严格遵守]:
-1.  你的回复**必须**是一个纯粹的、不含任何其他字符的 JSON 对象。绝对不能用 Markdown 代码块（\`\`\`json）包裹它。
-2.  该 JSON 对象**必须**只包含一个名为 "replies" 的键。
-3.  "replies" 的值**必须**是一个包含 1 到 8 条字符串的数组。
-4.  数组中的每个字符串就是一条独立的短信内容。内容必须简短、口语化。
-5.  严禁在字符串内使用 Markdown 或任何格式化语法。
-6.  根据聊天上下文，决定回复 1 条还是多条。如果内容简单，就只回 1 条。如果内容复杂或情绪激动，可以回 2-3 条来模拟连续输入。
-
-[错误回复示例 - 绝对禁止]:
-\`\`\`json
-{
-  "replies": ["你好"]
-}
-\`\`\`
-
-[正确回复范例]:
-{
-  "replies": [
-    "天啊！",
-    "真的假的？",
-    "快给我看看！"
-  ]
-}`;
-
-            const msgsToSend = [
-                { role: "system", content: systemPrompt.trim() },
-                ...history.slice(-15).map(m => ({ role: m.role, content: m.content }))
-            ];
-
-            let fullUrl = apiUrl;
-            if (!apiUrl.includes('/chat/completions')) fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
-
-            const res = await fetch(fullUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                body: JSON.stringify({
-                    model: model,
-                    messages: msgsToSend,
-                    response_format: { type: "json_object" }, 
-                    temperature: parseFloat(localStorage.getItem('temperature') || 0.9)
-                })
-            });
-
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error?.message || res.statusText);
-            }
-            const data = await res.json();
-            return data.choices[0].message.content;
-        }
-
-        function startProactiveCheck() {
-            setInterval(async () => {
-                const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-                const settings = allSettings[currentChatId];
-                if (!settings || !settings.proactive || document.hidden) return;
-
-                const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-                const history = allChats[currentChatId] || [];
-                if (history.length === 0) return;
-
-                const lastMsg = history[history.length - 1];
-                const now = Date.now();
-                
-                if (now - lastMsg.timestamp > 300000 && lastMsg.role === 'user') {
-                    if (statusText.textContent !== '') return;
-                    console.log("触发主动消息...");
-                    await triggerAiReply();
-                }
-            }, 10000); 
-        }
-
-        document.getElementById('menuBtn').onclick = () => { settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block'; };
-
-        document.getElementById('proactiveToggleBtn').onclick = () => {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            const current = (allSettings[currentChatId] && allSettings[currentChatId].proactive) || false;
-            saveSettings('proactive', !current);
-            updateProactiveUI(!current);
-            if (!current) alert('已开启主动消息。\nAI将在后台每5分钟检测一次是否需要回复。\n(仅当此页面保持开启时有效)');
-        };
-
-                // 【修改】“更换背景”按钮点击事件
-        document.getElementById('bgUploadBtn').onclick = () => {
-            // 每次打开时，都重置到初始选项界面
-            bgOptionsContainer.style.display = 'block';
-            bgUrlInputContainer.style.display = 'none';
-            bgUrlInput.value = ''; // 清空可能遗留的输入
-            
-            // 显示弹窗
-            bgModalOverlay.style.display = 'flex';
-            settingsMenu.style.display = 'none'; // 关闭设置菜单
-        };
-
-        // 【新增】关闭弹窗的逻辑
-        const closeModal = () => {
-            bgModalOverlay.style.display = 'none';
-        };
-        closeBgModal.addEventListener('click', closeModal);
-        bgModalOverlay.addEventListener('click', (e) => {
-            // 如果点击的是背景遮罩层本身，而不是弹窗内容
-            if (e.target === bgModalOverlay) {
-                closeModal();
-            }
-        });
-
-        // 【新增】“本地上传”按钮
-        bgOptionLocal.addEventListener('click', () => {
-            document.getElementById('bgFileInput').click();
-            closeModal();
-        });
-
-        // 【新增】“使用URL”按钮
-        bgOptionUrl.addEventListener('click', () => {
-            bgOptionsContainer.style.display = 'none';
-            bgUrlInputContainer.style.display = 'flex';
-        });
-
-        // 【新增】URL输入界面的“返回”按钮
-        bgUrlCancel.addEventListener('click', () => {
-            bgOptionsContainer.style.display = 'block';
-            bgUrlInputContainer.style.display = 'none';
-        });
-
-        // 【新增】URL输入界面的“确定”按钮
-        bgUrlConfirm.addEventListener('click', () => {
-            const url = bgUrlInput.value.trim();
-            if (url) {
-                chatArea.style.backgroundImage = `url('${url}')`;
-                saveSettings('bg', url);
-                closeModal();
-            } else {
-                alert('URL不能为空！');
-            }
-        });
-
-
-        document.getElementById('bgFileInput').onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    const res = evt.target.result;
-                    chatArea.style.backgroundImage = `url('${res}')`;
-                    try { saveSettings('bg', res); } catch(err) { alert('图片太大无法保存，但本次会话有效。'); }
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        document.getElementById('clearHistoryBtn').onclick = () => {
-            if (confirm('确定要清空与该角色的所有聊天记录吗？')) {
-                if (confirm('再次确认：此操作不可恢复！')) {
-                    const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-                    delete allChats[currentChatId];
-                    localStorage.setItem('chats', JSON.stringify(allChats));
-                    renderMessages();
-                    settingsMenu.style.display = 'none';
-                }
-            }
-        };
-
-        let pressTimer;
-        function addLongPressEvent(element, msgId) {
-            const startPress = (e) => {
-                if (e.target.tagName === 'TEXTAREA') return;
-                pressTimer = setTimeout(() => { showContextMenu(e, msgId); }, 600);
-            };
-            const cancelPress = () => { clearTimeout(pressTimer); };
-            element.addEventListener('touchstart', startPress);
-            element.addEventListener('touchend', cancelPress);
-            element.addEventListener('touchmove', cancelPress);
-            element.addEventListener('mousedown', startPress);
-            element.addEventListener('mouseup', cancelPress);
-            element.addEventListener('mouseleave', cancelPress);
-        }
-
-        function showContextMenu(event, msgId) {
-            contextTargetId = msgId;
-            contextMenu.style.display = 'flex';
-            let x, y;
-            if (event.touches && event.touches[0]) { x = event.touches[0].clientX; y = event.touches[0].clientY; } else { x = event.clientX; y = event.clientY; }
-            if (x + 140 > window.innerWidth) x = window.innerWidth - 150;
-            if (y + 150 > window.innerHeight) y = window.innerHeight - 160;
-            contextMenu.style.left = x + 'px';
-            contextMenu.style.top = y + 'px';
-        }
-
-        document.getElementById('ctxCancel').onclick = () => contextMenu.style.display = 'none';
-
-        document.getElementById('ctxDelete').onclick = () => {
-            if (confirm('删除这条消息？')) {
-                const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-                let msgs = allChats[currentChatId] || [];
-                msgs = msgs.filter(m => m.id !== contextTargetId);
-                allChats[currentChatId] = msgs;
-                localStorage.setItem('chats', JSON.stringify(allChats));
-                renderMessages();
-                contextMenu.style.display = 'none';
-            }
-        };
-
-        document.getElementById('ctxEdit').onclick = () => {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            let msgs = allChats[currentChatId] || [];
-            const msg = msgs.find(m => m.id === contextTargetId);
-            if (msg) {
-                const newContent = prompt('编辑消息内容:', msg.content);
-                if (newContent !== null) { msg.content = newContent; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); }
-            }
-            contextMenu.style.display = 'none';
-        };
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-    </script>
-    <!-- 【新增】更换背景弹窗 -->
-<div class="modal-overlay" id="bgModalOverlay">
-    <div class="modal-content" id="bgModal">
-        <div class="modal-header">
-            <h4>更换背景</h4>
-            <span class="modal-close" id="closeBgModal">&times;</span>
-        </div>
-        <div class="modal-body">
-            <!-- 默认选项 -->
-            <div id="bgOptionsContainer">
-                <div class="modal-btn" id="bgOptionLocal">从本地上传</div>
-                <div class="modal-btn" id="bgOptionUrl">使用网络链接 (URL)</div>
-            </div>
-            <!-- URL输入界面 (默认隐藏) -->
-            <div id="bgUrlInputContainer" style="display: none;">
-                <textarea id="bgUrlInput" class="input-box" rows="2" placeholder="在此粘贴图片URL..."></textarea>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="action-btn" id="bgUrlCancel">返回</button>
-                    <button class="action-btn btn-send" id="bgUrlConfirm">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-</body>
-</html>            object-fit: cover;
-            background: #444;
-            display: none; /* 默认隐藏 */
-            flex-shrink: 0;
-        }
-
-        .back-btn {
-            font-size: 16px;
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
-            padding-right: 15px;
-            font-weight: bold;
-        }
-
-        .header-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .char-name {
-            font-size: 12px;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .status-text {
-            font-size: 8px;
-            color: #4ecdc4;
-            margin-top: 4px;
-            height: 10px;
-            line-height: 10px;
-        }
-
-        .header-icons { display: flex; gap: 15px; }
-        .icon-btn { font-size: 16px; cursor: pointer; color: #fff; transition: transform 0.1s; }
-        .icon-btn:active { transform: scale(0.9); }
-
-        .chat-area {
-            flex: 1;
-            background-color: #e5e5f7;
-            background-image:  radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            scroll-behavior: smooth;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            -webkit-overflow-scrolling: touch; 
-        }
-
-        .chat-area::-webkit-scrollbar { width: 4px; }
-        .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
-
-        .message-row { display: flex; flex-direction: column; max-width: 85%; position: relative; }
-        .message-row.char { align-self: flex-start; }
-        .message-row.user { align-self: flex-end; align-items: flex-end; }
-
-        .bubble {
-            padding: 12px 10px;
-            font-size: 12px;
-            line-height: 1.5;
-            border: 3px solid #000;
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
-            word-wrap: break-word;
-            position: relative;
-            font-family: "SimSun", "Songti SC", serif; 
-            font-weight: bold;
-        }
-
-        .message-row.char .bubble { background: #fff; color: #000; border-bottom-left-radius: 0; }
-        .message-row.user .bubble { background: #4ecdc4; color: #000; border-bottom-right-radius: 0; }
-
-        .time-tag {
-            font-size: 8px;
-            color: #555; 
-            margin-top: 4px;
-            padding: 2px 4px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 4px;
-            align-self: flex-start;
-            font-family: 'Press Start 2P', cursive;
-        }
-        .message-row.user .time-tag { align-self: flex-end; }
-
-        .footer {
-            background: #1a1a1a;
-            border-top: 3px solid #000;
-            padding: 10px;
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            flex-shrink: 0;
-            padding: 10px; /* 先给一个基础的四边内边距 */
-            padding-bottom: calc(10px + env(safe-area-inset-bottom)); /* 再单独把安全区距离加到底部 */
-       }
-
-        .input-box {
-            flex: 1;
-            background: #fff;
-            border: 3px solid #000;
-            padding: 10px;
-            font-family: "SimSun", "Songti SC", serif;
-            font-size: 14px;
-            font-weight: bold;
-            min-height: 44px;
-            max-height: 100px;
-            overflow-y: auto;
-            resize: none;
-            outline: none;
-            border-radius: 0;
-            -webkit-appearance: none;
-        }
-
-        .action-btn {
-            width: 44px;
-            height: 44px;
-            background: #fff;
-            border: 3px solid #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 2px 2px 0 #000;
-            flex-shrink: 0;
-        }
-
-        .action-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0; }
-        .btn-star { background: #ffe66d; color: #000; }
-        .btn-send { background: #a8e6cf; color: #000; }
-
-        .popup-menu {
-            display: none;
-            position: absolute;
-            top: 55px;
-            right: 10px;
-            background: #fff;
-            border: 3px solid #000;
-            box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
-            z-index: 100;
-            width: 200px;
-            padding: 10px;
-        }
-
-        .menu-item { padding: 12px; border-bottom: 2px dashed #ccc; font-size: 10px; cursor: pointer; }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item:hover { background: #eee; }
-
-        .toggle-switch { display: flex; justify-content: space-between; align-items: center; }
-
-        .context-menu {
-            display: none;
-            position: fixed; 
-            background: #2a2a2a;
-            border: 2px solid #fff;
-            color: #fff;
-            z-index: 200;
-            flex-direction: column;
-            width: 140px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-    /* --- 【新增】通用弹窗样式 --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: none; /* 默认隐藏 */
-    justify-content: center;
-    align-items: center;
-    z-index: 300;
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.modal-content {
-    background: #fff;
-    border: 3px solid #000;
-    box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
-    width: 100%;
-    max-width: 300px;
-    font-family: "SimSun", "Songti SC", serif;
-    font-weight: bold;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 2px solid #000;
-    background: #eee;
-}
-
-.modal-header h4 {
-    margin: 0;
-    font-size: 12px;
-}
-
-.modal-close {
-    font-size: 24px;
-    cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-}
-
-.modal-body {
-    padding: 15px;
-}
-
-.modal-btn {
-    padding: 15px;
-    border: 2px solid #000;
-    margin-bottom: 10px;
-    text-align: center;
-    cursor: pointer;
-    background: #f0f0f0;
-    box-shadow: 2px 2px 0 #000;
-    transition: all 0.1s;
-    font-size: 12px;
-}
-.modal-btn:last-child {
-    margin-bottom: 0;
-}
-.modal-btn:active {
-    transform: translate(2px, 2px);
-    box-shadow: none;
-}
-
-#bgUrlInputContainer {
-    display: none; /* JS会控制它 */
-    flex-direction: column;
-    align-items: stretch;
-}
-#bgUrlInputContainer .action-btn {
-    flex: 1;
-}
-        .context-btn { padding: 15px; font-family: 'Press Start 2P', cursive; font-size: 10px; border-bottom: 1px solid #444; cursor: pointer; text-align: center; }
-        .context-btn:hover { background: #444; }
-        .context-btn.danger { color: #ff6b6b; }
-
-        .color-scheme-1 .header { border-bottom-color: #ff6b9d; }
-        .color-scheme-2 .header { border-bottom-color: #4ecdc4; }
-        .color-scheme-3 .header { border-bottom-color: #ffe66d; } 
-        .color-scheme-4 .header { border-bottom-color: #a8e6cf; }
-        .color-scheme-5 .header { border-bottom-color: #ffd3b6; }
-        .color-scheme-6 .header { border-bottom-color: #c7ceea; }
-    </style>
-</head>
-<body>
-    <div class="phone-container" id="phoneContainer">
-        
-        <!-- 顶部 (这是正确的位置) -->
-        <div class="header">
-            <a onclick="window.location.href='./index.html'" class="back-btn">←</a>
-            <!-- 【新增】头像元素放在这里 -->
-            <img id="charAvatar" class="char-avatar">
-            <div class="header-info">
-                <div class="char-name" id="charNameDisplay">加载中...</div>
-                <div class="status-text" id="statusText"></div>
-            </div>
-            <div class="header-icons">
-                <div class="icon-btn" id="menuBtn">☰</div>
-            </div>
-        </div>
-
-        <!-- 设置菜单弹窗 -->
-        <div class="popup-menu" id="settingsMenu">
-            <div class="menu-item toggle-switch" id="proactiveToggleBtn">
-                <span>主动消息</span>
-                <span id="proactiveStatus">[OFF]</span>
-            </div>
-            <div class="menu-item" id="bgUploadBtn">更换背景 (URL/本地)</div>
-            <div class="menu-item" id="clearHistoryBtn" style="color:red;">清空聊天记录</div>
-            <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
-        </div>
-
-        <!-- 聊天内容 -->
-        <div class="chat-area" id="chatArea"></div>
-
-        <!-- 底部 -->
-        <div class="footer">
-            <textarea class="input-box" id="msgInput" rows="1" placeholder="发送短信..."></textarea>
-            <button class="action-btn btn-star" id="starBtn">★</button>
-            <button class="action-btn btn-send" id="sendBtn">➤</button>
-        </div>
-
-        <!-- 长按菜单 -->
-        <div class="context-menu" id="contextMenu">
-            <div class="context-btn" id="ctxEdit">编辑此消息</div>
-            <div class="context-btn danger" id="ctxDelete">删除此消息</div>
-            <div class="context-btn" id="ctxCancel">取消</div>
-        </div>
-
-    </div>
-
-    <script>
-    
-        const currentChatId = localStorage.getItem('currentChatId');
-        const chatArea = document.getElementById('chatArea');
-        const msgInput = document.getElementById('msgInput');
-        const statusText = document.getElementById('statusText');
-        const charNameDisplay = document.getElementById('charNameDisplay');
-        const settingsMenu = document.getElementById('settingsMenu');
-        const contextMenu = document.getElementById('contextMenu');
-        const phoneContainer = document.getElementById('phoneContainer');
-
-        // 【新增】获取弹窗相关元素
-        const bgModalOverlay = document.getElementById('bgModalOverlay');
-        const bgModal = document.getElementById('bgModal');
-        const closeBgModal = document.getElementById('closeBgModal');
-        const bgOptionsContainer = document.getElementById('bgOptionsContainer');
-        const bgUrlInputContainer = document.getElementById('bgUrlInputContainer');
-        const bgOptionLocal = document.getElementById('bgOptionLocal');
-        const bgOptionUrl = document.getElementById('bgOptionUrl');
-        const bgUrlInput = document.getElementById('bgUrlInput');
-        const bgUrlCancel = document.getElementById('bgUrlCancel');
-        const bgUrlConfirm = document.getElementById('bgUrlConfirm');
-
-        let contextTargetId = null;
-        
-        const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
-        const savedColor = localStorage.getItem('phoneColor');
-        if (savedColor !== null) phoneContainer.classList.add(colorSchemes[parseInt(savedColor)]);
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (!currentChatId) {
-                alert('未选择联系人，即将返回通讯录');
-                window.location.href = './contacts.html';
-                return;
-            }
-
-            loadContactInfo();
-            loadSettings();
-            renderMessages();
-            startProactiveCheck();
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#menuBtn') && !e.target.closest('#settingsMenu')) settingsMenu.style.display = 'none';
-            if (!e.target.closest('.context-menu')) contextMenu.style.display = 'none';
-        });
-
-        function loadContactInfo() {
-            const charAvatar = document.getElementById('charAvatar'); // 获取头像元素
-            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-            const contact = contacts.find(c => c.id === currentChatId);
-            if (contact) {
-                charNameDisplay.textContent = contact.nick || contact.name;
-                if (contact.pfp && contact.pfp.trim() !== "") {
-                    charAvatar.src = contact.pfp;
-                    charAvatar.style.display = 'block'; // 有头像则显示
-                } else {
-                    charAvatar.style.display = 'none'; // 无则隐藏
-                }
-            } else {
-                charNameDisplay.textContent = "未知号码";
-                charAvatar.style.display = 'none'; // 未知也隐藏
-            }
-        }
-
-        function loadSettings() {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            const settings = allSettings[currentChatId] || { proactive: false, bg: '' };
-            if (settings.bg) chatArea.style.backgroundImage = `url('${settings.bg}')`;
-            updateProactiveUI(settings.proactive);
-        }
-
-        function updateProactiveUI(isActive) {
-            const el = document.getElementById('proactiveStatus');
-            el.textContent = isActive ? '[ON]' : '[OFF]';
-            el.style.color = isActive ? '#4ecdc4' : '#666';
-        }
-
-        function saveSettings(key, value) {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            if (!allSettings[currentChatId]) allSettings[currentChatId] = {};
-            allSettings[currentChatId][key] = value;
-            localStorage.setItem('chatSettings', JSON.stringify(allSettings));
-        }
-
-        function renderMessages() {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            const messages = allChats[currentChatId] || [];
-            chatArea.innerHTML = '';
-            messages.forEach(msg => {
+            messages.forEach((msg, index) => {
                 const row = document.createElement('div');
                 row.className = `message-row ${msg.role === 'user' ? 'user' : 'char'}`;
                 addLongPressEvent(row, msg.id);
                 const date = new Date(msg.timestamp);
                 const timeStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
-                row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div><div class="time-tag">${timeStr}</div>`;
+        
+                const isLastMessage = (index === messages.length - 1);
+                const timeTagHTML = isLastMessage ? `<div class="time-tag">${timeStr}</div>` : '';
+        
+                row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div>${timeTagHTML}`;
+                
                 chatArea.appendChild(row);
             });
+        
             scrollToBottom();
         }
 
@@ -1237,703 +474,40 @@ const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信�
 
         document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); });
 
-        // 触发 AI 回复 (多条回复版本)
         async function triggerAiReply() {
             statusText.textContent = '对方正在输入...';
             statusText.style.color = '#4ecdc4';
 
             const addMessageWithDelay = (content, delay) => new Promise(resolve => setTimeout(() => { addMessage('assistant', content); resolve(); }, delay));
-// 在 triggerAiReply 函数内部
-try {
-    const rawReply = await callAiApi();
-    let replyMessages = [];
-    try {
-        // ---【核心修改开始】---
-        // 1. 去除首尾可能存在的空白
-        let jsonString = rawReply.trim();
-
-        // 2. 寻找 JSON 对象在字符串中的实际位置
-        const startIndex = jsonString.indexOf('{');
-        const endIndex = jsonString.lastIndexOf('}');
-
-        // 3. 如果找到了 '{' 和 '}'，就提取它们之间的内容
-        //    这能有效地剥离掉外层的 ` ```json ` 和 ` ``` `
-        if (startIndex !== -1 && endIndex > startIndex) {
-            jsonString = jsonString.substring(startIndex, endIndex + 1);
-        }
-        // ---【核心修改结束】---
-
-        // 4. 使用清理后的字符串进行解析
-        const parsed = JSON.parse(jsonString);
-
-        if (parsed && Array.isArray(parsed.replies)) {
-            replyMessages = parsed.replies;
-        } else {
-            // 如果解析成功但格式不对，依然按单条消息处理
-            replyMessages.push(rawReply); 
-        }
-    } catch (e) {
-        // 如果清理后仍然解析失败（说明AI返回的就是普通文本），则按单条消息处理
-        console.error("无法解析为 JSON，按单条普通文本消息处理:", rawReply);
-        replyMessages.push(rawReply);
-    }
-
-                for (const msg of replyMessages) {
-                    if (msg.trim() === "") continue;
-                    const delay = replyMessages.indexOf(msg) === 0 ? 300 : Math.random() * 800 + 500;
-                    statusText.textContent = '对方正在输入...';
-                    await addMessageWithDelay(msg, delay);
-                }
-            } catch (err) {
-                statusText.textContent = '发送失败!';
-                statusText.style.color = '#ff6b6b';
-                alert('API 错误: ' + err.message);
-            } finally {
-                statusText.textContent = '';
-            }
-        }
-
-        // API 调用核心 (多条回复的 JSON 版本)
-        async function callAiApi() {
-            const apiUrl = localStorage.getItem('apiUrl');
-            const apiKey = localStorage.getItem('apiKey');
-            const model = localStorage.getItem('selectedModel');
-            if (!apiUrl || !apiKey) throw new Error("请先在设置页配置API");
-
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            const history = allChats[currentChatId] || [];
-            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-            const charData = contacts.find(c => c.id === currentChatId);
             
-            const persona = charData ? charData.persona : "";
-            const note = charData ? charData.note : "";
-            const charName = charData ? charData.name : "Character";
-            const userPersona = localStorage.getItem('user_persona') || "";
-            const now = new Date().toLocaleString();
-
-            const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信与 User 聊天。当前现实时间是: ${now}。
-
-[角色设定]:
-${persona}
-
-${userPersona ? `[关于 User 的信息]:\n${userPersona}` : ""}
-
-${note ? `[备注/强制指令]:\n${note}` : ""}
-const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信与 User 聊天。当前现实时间是: ${now}。
-
-[回复规则 - 你必须严格遵守]:
-1.  你的回复**必须**是一个纯粹的、不含任何其他字符的 JSON 对象。绝对不能用 Markdown 代码块（\`\`\`json）包裹它。
-2.  该 JSON 对象**必须**只包含一个名为 "replies" 的键。
-3.  "replies" 的值**必须**是一个包含 1 到 8 条字符串的数组。
-4.  数组中的每个字符串就是一条独立的短信内容。内容必须简短、口语化。
-5.  严禁在字符串内使用 Markdown 或任何格式化语法。
-6.  根据聊天上下文，决定回复 1 条还是多条。如果内容简单，就只回 1 条。如果内容复杂或情绪激动，可以回 2-3 条来模拟连续输入。
-
-[错误回复示例 - 绝对禁止]:
-\`\`\`json
-{
-  "replies": ["你好"]
-}
-\`\`\`
-
-[正确回复范例]:
-{
-  "replies": [
-    "天啊！",
-    "真的假的？",
-    "快给我看看！"
-  ]
-}`;
-
-            const msgsToSend = [
-                { role: "system", content: systemPrompt.trim() },
-                ...history.slice(-15).map(m => ({ role: m.role, content: m.content }))
-            ];
-
-            let fullUrl = apiUrl;
-            if (!apiUrl.includes('/chat/completions')) fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
-
-            const res = await fetch(fullUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                body: JSON.stringify({
-                    model: model,
-                    messages: msgsToSend,
-                    response_format: { type: "json_object" }, 
-                    temperature: parseFloat(localStorage.getItem('temperature') || 0.9)
-                })
-            });
-
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error?.message || res.statusText);
-            }
-            const data = await res.json();
-            return data.choices[0].message.content;
-        }
-
-        function startProactiveCheck() {
-            setInterval(async () => {
-                const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-                const settings = allSettings[currentChatId];
-                if (!settings || !settings.proactive || document.hidden) return;
-
-                const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-                const history = allChats[currentChatId] || [];
-                if (history.length === 0) return;
-
-                const lastMsg = history[history.length - 1];
-                const now = Date.now();
-                
-                if (now - lastMsg.timestamp > 300000 && lastMsg.role === 'user') {
-                    if (statusText.textContent !== '') return;
-                    console.log("触发主动消息...");
-                    await triggerAiReply();
-                }
-            }, 10000); 
-        }
-
-        document.getElementById('menuBtn').onclick = () => { settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block'; };
-
-        document.getElementById('proactiveToggleBtn').onclick = () => {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            const current = (allSettings[currentChatId] && allSettings[currentChatId].proactive) || false;
-            saveSettings('proactive', !current);
-            updateProactiveUI(!current);
-            if (!current) alert('已开启主动消息。\nAI将在后台每5分钟检测一次是否需要回复。\n(仅当此页面保持开启时有效)');
-        };
-
-                // 【修改】“更换背景”按钮点击事件
-        document.getElementById('bgUploadBtn').onclick = () => {
-            // 每次打开时，都重置到初始选项界面
-            bgOptionsContainer.style.display = 'block';
-            bgUrlInputContainer.style.display = 'none';
-            bgUrlInput.value = ''; // 清空可能遗留的输入
-            
-            // 显示弹窗
-            bgModalOverlay.style.display = 'flex';
-            settingsMenu.style.display = 'none'; // 关闭设置菜单
-        };
-
-        // 【新增】关闭弹窗的逻辑
-        const closeModal = () => {
-            bgModalOverlay.style.display = 'none';
-        };
-        closeBgModal.addEventListener('click', closeModal);
-        bgModalOverlay.addEventListener('click', (e) => {
-            // 如果点击的是背景遮罩层本身，而不是弹窗内容
-            if (e.target === bgModalOverlay) {
-                closeModal();
-            }
-        });
-
-        // 【新增】“本地上传”按钮
-        bgOptionLocal.addEventListener('click', () => {
-            document.getElementById('bgFileInput').click();
-            closeModal();
-        });
-
-        // 【新增】“使用URL”按钮
-        bgOptionUrl.addEventListener('click', () => {
-            bgOptionsContainer.style.display = 'none';
-            bgUrlInputContainer.style.display = 'flex';
-        });
-
-        // 【新增】URL输入界面的“返回”按钮
-        bgUrlCancel.addEventListener('click', () => {
-            bgOptionsContainer.style.display = 'block';
-            bgUrlInputContainer.style.display = 'none';
-        });
-
-        // 【新增】URL输入界面的“确定”按钮
-        bgUrlConfirm.addEventListener('click', () => {
-            const url = bgUrlInput.value.trim();
-            if (url) {
-                chatArea.style.backgroundImage = `url('${url}')`;
-                saveSettings('bg', url);
-                closeModal();
-            } else {
-                alert('URL不能为空！');
-            }
-        });
-
-
-        document.getElementById('bgFileInput').onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    const res = evt.target.result;
-                    chatArea.style.backgroundImage = `url('${res}')`;
-                    try { saveSettings('bg', res); } catch(err) { alert('图片太大无法保存，但本次会话有效。'); }
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        document.getElementById('clearHistoryBtn').onclick = () => {
-            if (confirm('确定要清空与该角色的所有聊天记录吗？')) {
-                if (confirm('再次确认：此操作不可恢复！')) {
-                    const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-                    delete allChats[currentChatId];
-                    localStorage.setItem('chats', JSON.stringify(allChats));
-                    renderMessages();
-                    settingsMenu.style.display = 'none';
-                }
-            }
-        };
-
-        let pressTimer;
-        function addLongPressEvent(element, msgId) {
-            const startPress = (e) => {
-                if (e.target.tagName === 'TEXTAREA') return;
-                pressTimer = setTimeout(() => { showContextMenu(e, msgId); }, 600);
-            };
-            const cancelPress = () => { clearTimeout(pressTimer); };
-            element.addEventListener('touchstart', startPress);
-            element.addEventListener('touchend', cancelPress);
-            element.addEventListener('touchmove', cancelPress);
-            element.addEventListener('mousedown', startPress);
-            element.addEventListener('mouseup', cancelPress);
-            element.addEventListener('mouseleave', cancelPress);
-        }
-
-        function showContextMenu(event, msgId) {
-            contextTargetId = msgId;
-            contextMenu.style.display = 'flex';
-            let x, y;
-            if (event.touches && event.touches[0]) { x = event.touches[0].clientX; y = event.touches[0].clientY; } else { x = event.clientX; y = event.clientY; }
-            if (x + 140 > window.innerWidth) x = window.innerWidth - 150;
-            if (y + 150 > window.innerHeight) y = window.innerHeight - 160;
-            contextMenu.style.left = x + 'px';
-            contextMenu.style.top = y + 'px';
-        }
-
-        document.getElementById('ctxCancel').onclick = () => contextMenu.style.display = 'none';
-
-        document.getElementById('ctxDelete').onclick = () => {
-            if (confirm('删除这条消息？')) {
-                const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-                let msgs = allChats[currentChatId] || [];
-                msgs = msgs.filter(m => m.id !== contextTargetId);
-                allChats[currentChatId] = msgs;
-                localStorage.setItem('chats', JSON.stringify(allChats));
-                renderMessages();
-                contextMenu.style.display = 'none';
-            }
-        };
-
-        document.getElementById('ctxEdit').onclick = () => {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            let msgs = allChats[currentChatId] || [];
-            const msg = msgs.find(m => m.id === contextTargetId);
-            if (msg) {
-                const newContent = prompt('编辑消息内容:', msg.content);
-                if (newContent !== null) { msg.content = newContent; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); }
-            }
-            contextMenu.style.display = 'none';
-        };
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-    </script>
-    <!-- 【新增】更换背景弹窗 -->
-<div class="modal-overlay" id="bgModalOverlay">
-    <div class="modal-content" id="bgModal">
-        <div class="modal-header">
-            <h4>更换背景</h4>
-            <span class="modal-close" id="closeBgModal">&times;</span>
-        </div>
-        <div class="modal-body">
-            <!-- 默认选项 -->
-            <div id="bgOptionsContainer">
-                <div class="modal-btn" id="bgOptionLocal">从本地上传</div>
-                <div class="modal-btn" id="bgOptionUrl">使用网络链接 (URL)</div>
-            </div>
-            <!-- URL输入界面 (默认隐藏) -->
-            <div id="bgUrlInputContainer" style="display: none;">
-                <textarea id="bgUrlInput" class="input-box" rows="2" placeholder="在此粘贴图片URL..."></textarea>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="action-btn" id="bgUrlCancel">返回</button>
-                    <button class="action-btn btn-send" id="bgUrlConfirm">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-</body>
-</html>            object-fit: cover;
-            background: #444;
-            display: none; /* 默认隐藏 */
-            flex-shrink: 0;
-        }
-
-        .back-btn {
-            font-size: 16px;
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
-            padding-right: 15px;
-            font-weight: bold;
-        }
-
-        .header-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .char-name {
-            font-size: 12px;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .status-text {
-            font-size: 8px;
-            color: #4ecdc4;
-            margin-top: 4px;
-            height: 10px;
-            line-height: 10px;
-        }
-
-        .header-icons { display: flex; gap: 15px; }
-        .icon-btn { font-size: 16px; cursor: pointer; color: #fff; transition: transform 0.1s; }
-        .icon-btn:active { transform: scale(0.9); }
-
-        .chat-area {
-            flex: 1;
-            background-color: #e5e5f7;
-            background-image:  radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            scroll-behavior: smooth;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            -webkit-overflow-scrolling: touch; 
-        }
-
-        .chat-area::-webkit-scrollbar { width: 4px; }
-        .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
-
-        .message-row { display: flex; flex-direction: column; max-width: 85%; position: relative; }
-        .message-row.char { align-self: flex-start; }
-        .message-row.user { align-self: flex-end; align-items: flex-end; }
-
-        .bubble {
-            padding: 12px 10px;
-            font-size: 12px;
-            line-height: 1.5;
-            border: 3px solid #000;
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
-            word-wrap: break-word;
-            position: relative;
-            font-family: "SimSun", "Songti SC", serif; 
-            font-weight: bold;
-        }
-
-        .message-row.char .bubble { background: #fff; color: #000; border-bottom-left-radius: 0; }
-        .message-row.user .bubble { background: #4ecdc4; color: #000; border-bottom-right-radius: 0; }
-
-        .time-tag {
-            font-size: 8px;
-            color: #555; 
-            margin-top: 4px;
-            padding: 2px 4px;
-            background: rgba(255,255,255,0.8);
-            border-radius: 4px;
-            align-self: flex-start;
-            font-family: 'Press Start 2P', cursive;
-        }
-        .message-row.user .time-tag { align-self: flex-end; }
-
-        .footer {
-            background: #1a1a1a;
-            border-top: 3px solid #000;
-            padding: 10px;
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            flex-shrink: 0;
-            padding: 10px; /* 先给一个基础的四边内边距 */
-            padding-bottom: calc(10px + env(safe-area-inset-bottom)); /* 再单独把安全区距离加到底部 */
-       }
-
-        .input-box {
-            flex: 1;
-            background: #fff;
-            border: 3px solid #000;
-            padding: 10px;
-            font-family: "SimSun", "Songti SC", serif;
-            font-size: 14px;
-            font-weight: bold;
-            min-height: 44px;
-            max-height: 100px;
-            overflow-y: auto;
-            resize: none;
-            outline: none;
-            border-radius: 0;
-            -webkit-appearance: none;
-        }
-
-        .action-btn {
-            width: 44px;
-            height: 44px;
-            background: #fff;
-            border: 3px solid #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 2px 2px 0 #000;
-            flex-shrink: 0;
-        }
-
-        .action-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0; }
-        .btn-star { background: #ffe66d; color: #000; }
-        .btn-send { background: #a8e6cf; color: #000; }
-
-        .popup-menu {
-            display: none;
-            position: absolute;
-            top: 55px;
-            right: 10px;
-            background: #fff;
-            border: 3px solid #000;
-            box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
-            z-index: 100;
-            width: 200px;
-            padding: 10px;
-        }
-
-        .menu-item { padding: 12px; border-bottom: 2px dashed #ccc; font-size: 10px; cursor: pointer; }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item:hover { background: #eee; }
-
-        .toggle-switch { display: flex; justify-content: space-between; align-items: center; }
-
-        .context-menu {
-            display: none;
-            position: fixed; 
-            background: #2a2a2a;
-            border: 2px solid #fff;
-            color: #fff;
-            z-index: 200;
-            flex-direction: column;
-            width: 140px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        .context-btn { padding: 15px; font-family: 'Press Start 2P', cursive; font-size: 10px; border-bottom: 1px solid #444; cursor: pointer; text-align: center; }
-        .context-btn:hover { background: #444; }
-        .context-btn.danger { color: #ff6b6b; }
-
-        .color-scheme-1 .header { border-bottom-color: #ff6b9d; }
-        .color-scheme-2 .header { border-bottom-color: #4ecdc4; }
-        .color-scheme-3 .header { border-bottom-color: #ffe66d; } 
-        .color-scheme-4 .header { border-bottom-color: #a8e6cf; }
-        .color-scheme-5 .header { border-bottom-color: #ffd3b6; }
-        .color-scheme-6 .header { border-bottom-color: #c7ceea; }
-    </style>
-</head>
-<body>
-    <div class="phone-container" id="phoneContainer">
-        
-        <!-- 顶部 (这是正确的位置) -->
-        <div class="header">
-            <a onclick="window.location.href='./index.html'" class="back-btn">←</a>
-            <!-- 【新增】头像元素放在这里 -->
-            <img id="charAvatar" class="char-avatar">
-            <div class="header-info">
-                <div class="char-name" id="charNameDisplay">加载中...</div>
-                <div class="status-text" id="statusText"></div>
-            </div>
-            <div class="header-icons">
-                <div class="icon-btn" id="menuBtn">☰</div>
-            </div>
-        </div>
-
-        <!-- 设置菜单弹窗 -->
-        <div class="popup-menu" id="settingsMenu">
-            <div class="menu-item toggle-switch" id="proactiveToggleBtn">
-                <span>主动消息</span>
-                <span id="proactiveStatus">[OFF]</span>
-            </div>
-            <div class="menu-item" id="bgUploadBtn">更换背景 (URL/本地)</div>
-            <div class="menu-item" id="clearHistoryBtn" style="color:red;">清空聊天记录</div>
-            <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
-        </div>
-
-        <!-- 聊天内容 -->
-        <div class="chat-area" id="chatArea"></div>
-
-        <!-- 底部 -->
-        <div class="footer">
-            <textarea class="input-box" id="msgInput" rows="1" placeholder="发送短信..."></textarea>
-            <button class="action-btn btn-star" id="starBtn">★</button>
-            <button class="action-btn btn-send" id="sendBtn">➤</button>
-        </div>
-
-        <!-- 长按菜单 -->
-        <div class="context-menu" id="contextMenu">
-            <div class="context-btn" id="ctxEdit">编辑此消息</div>
-            <div class="context-btn danger" id="ctxDelete">删除此消息</div>
-            <div class="context-btn" id="ctxCancel">取消</div>
-        </div>
-
-    </div>
-
-    <script>
-        const currentChatId = localStorage.getItem('currentChatId');
-        const chatArea = document.getElementById('chatArea');
-        const msgInput = document.getElementById('msgInput');
-        const statusText = document.getElementById('statusText');
-        const charNameDisplay = document.getElementById('charNameDisplay');
-        const settingsMenu = document.getElementById('settingsMenu');
-        const contextMenu = document.getElementById('contextMenu');
-        const phoneContainer = document.getElementById('phoneContainer');
-
-        let contextTargetId = null;
-        
-        const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
-        const savedColor = localStorage.getItem('phoneColor');
-        if (savedColor !== null) phoneContainer.classList.add(colorSchemes[parseInt(savedColor)]);
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (!currentChatId) {
-                alert('未选择联系人，即将返回通讯录');
-                window.location.href = './contacts.html';
-                return;
-            }
-
-            loadContactInfo();
-            loadSettings();
-            renderMessages();
-            startProactiveCheck();
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#menuBtn') && !e.target.closest('#settingsMenu')) settingsMenu.style.display = 'none';
-            if (!e.target.closest('.context-menu')) contextMenu.style.display = 'none';
-        });
-
-        function loadContactInfo() {
-            const charAvatar = document.getElementById('charAvatar'); // 获取头像元素
-            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-            const contact = contacts.find(c => c.id === currentChatId);
-            if (contact) {
-                charNameDisplay.textContent = contact.nick || contact.name;
-                if (contact.pfp && contact.pfp.trim() !== "") {
-                    charAvatar.src = contact.pfp;
-                    charAvatar.style.display = 'block'; // 有头像则显示
-                } else {
-                    charAvatar.style.display = 'none'; // 无则隐藏
-                }
-            } else {
-                charNameDisplay.textContent = "未知号码";
-                charAvatar.style.display = 'none'; // 未知也隐藏
-            }
-        }
-
-        function loadSettings() {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            const settings = allSettings[currentChatId] || { proactive: false, bg: '' };
-            if (settings.bg) chatArea.style.backgroundImage = `url('${settings.bg}')`;
-            updateProactiveUI(settings.proactive);
-        }
-
-        function updateProactiveUI(isActive) {
-            const el = document.getElementById('proactiveStatus');
-            el.textContent = isActive ? '[ON]' : '[OFF]';
-            el.style.color = isActive ? '#4ecdc4' : '#666';
-        }
-
-        function saveSettings(key, value) {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            if (!allSettings[currentChatId]) allSettings[currentChatId] = {};
-            allSettings[currentChatId][key] = value;
-            localStorage.setItem('chatSettings', JSON.stringify(allSettings));
-        }
-
-        function renderMessages() {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            const messages = allChats[currentChatId] || [];
-            chatArea.innerHTML = '';
-            messages.forEach(msg => {
-                const row = document.createElement('div');
-                row.className = `message-row ${msg.role === 'user' ? 'user' : 'char'}`;
-                addLongPressEvent(row, msg.id);
-                const date = new Date(msg.timestamp);
-                const timeStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
-                row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div><div class="time-tag">${timeStr}</div>`;
-                chatArea.appendChild(row);
-            });
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
-
-        function addMessage(role, content) {
-            const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
-            if (!allChats[currentChatId]) allChats[currentChatId] = [];
-            const newMsg = { id: Date.now(), role: (role === 'user' ? 'user' : 'assistant'), content: content, timestamp: Date.now() };
-            allChats[currentChatId].push(newMsg);
-            localStorage.setItem('chats', JSON.stringify(allChats));
-            renderMessages();
-        }
-
-        document.getElementById('sendBtn').addEventListener('click', () => {
-            const text = msgInput.value.trim();
-            if (!text) return;
-            addMessage('user', text);
-            msgInput.value = '';
-            statusText.textContent = '';
-        });
-
-        document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); });
-
-        // 触发 AI 回复 (多条回复版本)
-        async function triggerAiReply() {
-            statusText.textContent = '对方正在输入...';
-            statusText.style.color = '#4ecdc4';
-
-            const addMessageWithDelay = (content, delay) => new Promise(resolve => setTimeout(() => { addMessage('assistant', content); resolve(); }, delay));
-
             try {
                 const rawReply = await callAiApi();
                 let replyMessages = [];
                 try {
-                    const parsed = JSON.parse(rawReply);
+                    let jsonString = rawReply.trim();
+                    const startIndex = jsonString.indexOf('{');
+                    const endIndex = jsonString.lastIndexOf('}');
+                    if (startIndex !== -1 && endIndex > startIndex) {
+                        jsonString = jsonString.substring(startIndex, endIndex + 1);
+                    }
+                    const parsed = JSON.parse(jsonString);
+
                     if (parsed && Array.isArray(parsed.replies)) {
                         replyMessages = parsed.replies;
                     } else {
                         replyMessages.push(rawReply); 
                     }
                 } catch (e) {
-                    console.error("AI 未返回有效 JSON，按单条消息处理.", rawReply);
+                    console.error("无法解析为 JSON，按单条普通文本消息处理:", rawReply);
                     replyMessages.push(rawReply);
                 }
 
                 for (const msg of replyMessages) {
-                    if (msg.trim() === "") continue;
-                    const delay = replyMessages.indexOf(msg) === 0 ? 300 : Math.random() * 800 + 500;
-                    statusText.textContent = '对方正在输入...';
-                    await addMessageWithDelay(msg, delay);
+                    if (typeof msg === 'string' && msg.trim() !== "") {
+                        const delay = replyMessages.indexOf(msg) === 0 ? 300 : Math.random() * 800 + 500;
+                        statusText.textContent = '对方正在输入...';
+                        await addMessageWithDelay(msg, delay);
+                    }
                 }
             } catch (err) {
                 statusText.textContent = '发送失败!';
@@ -1944,7 +518,6 @@ const systemPrompt = `你现在扮演 ${charName}。你正在通过手机短信�
             }
         }
 
-        // API 调用核心 (多条回复的 JSON 版本)
         async function callAiApi() {
             const apiUrl = localStorage.getItem('apiUrl');
             const apiKey = localStorage.getItem('apiKey');
@@ -1972,14 +545,21 @@ ${userPersona ? `[关于 User 的信息]:\n${userPersona}` : ""}
 ${note ? `[备注/强制指令]:\n${note}` : ""}
 
 [回复规则 - 你必须严格遵守]:
-1.  你的回复**必须**是一个 JSON 对象，且只包含一个名为 "replies" 的键。
-2.  "replies" 的值**必须**是一个数组，数组中包含 1 到 8 条字符串。
-3.  数组中的每个字符串就是一条独立的短信内容。
-4.  每条短信内容都必须简短、口语化，就像真人在发短信一样。
+1.  你的回复**必须**是一个纯粹的、不含任何其他字符的 JSON 对象。绝对不能用 Markdown 代码块（\`\`\`json）包裹它。
+2.  该 JSON 对象**必须**只包含一个名为 "replies" 的键。
+3.  "replies" 的值**必须**是一个包含 1 到 8 条字符串的数组。
+4.  数组中的每个字符串就是一条独立的短信内容。内容必须简短、口语化。
 5.  严禁在字符串内使用 Markdown 或任何格式化语法。
 6.  根据聊天上下文，决定回复 1 条还是多条。如果内容简单，就只回 1 条。如果内容复杂或情绪激动，可以回 2-3 条来模拟连续输入。
 
-[回复范例]:
+[错误回复示例 - 绝对禁止]:
+\`\`\`json
+{
+  "replies": ["你好"]
+}
+\`\`\`
+
+[正确回复范例]:
 {
   "replies": [
     "天啊！",
@@ -2047,16 +627,49 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
         };
 
         document.getElementById('bgUploadBtn').onclick = () => {
-            if (confirm('选择上传方式：\n[确定] 本地上传\n[取消] 输入 URL')) {
-                document.getElementById('bgFileInput').click();
-            } else {
-                const url = prompt('请输入图片链接:');
-                if (url) {
-                    chatArea.style.backgroundImage = `url('${url}')`;
-                    saveSettings('bg', url);
-                }
-            }
+            bgOptionsContainer.style.display = 'block';
+            bgUrlInputContainer.style.display = 'none';
+            bgUrlInput.value = '';
+            bgModalOverlay.style.display = 'flex';
+            settingsMenu.style.display = 'none';
         };
+
+        const closeModal = () => {
+            bgModalOverlay.style.display = 'none';
+        };
+        closeBgModal.addEventListener('click', closeModal);
+        bgModalOverlay.addEventListener('click', (e) => {
+            if (e.target === bgModalOverlay) {
+                closeModal();
+            }
+        });
+
+        bgOptionLocal.addEventListener('click', () => {
+            document.getElementById('bgFileInput').click();
+            closeModal();
+        });
+
+        bgOptionUrl.addEventListener('click', () => {
+            bgOptionsContainer.style.display = 'none';
+            bgUrlInputContainer.style.display = 'block';
+        });
+
+        bgUrlCancel.addEventListener('click', () => {
+            bgOptionsContainer.style.display = 'block';
+            bgUrlInputContainer.style.display = 'none';
+        });
+
+        bgUrlConfirm.addEventListener('click', () => {
+            const url = bgUrlInput.value.trim();
+            if (url) {
+                chatArea.style.backgroundImage = `url('${url}')`;
+                saveSettings('bg', url);
+                closeModal();
+            } else {
+                alert('URL不能为空！');
+            }
+        });
+
 
         document.getElementById('bgFileInput').onchange = (e) => {
             const file = e.target.files[0];
@@ -2099,6 +712,7 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
         }
 
         function showContextMenu(event, msgId) {
+            event.preventDefault(); // 阻止默认行为，如文本选择
             contextTargetId = msgId;
             contextMenu.style.display = 'flex';
             let x, y;
@@ -2112,6 +726,7 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
         document.getElementById('ctxCancel').onclick = () => contextMenu.style.display = 'none';
 
         document.getElementById('ctxDelete').onclick = () => {
+            contextMenu.style.display = 'none';
             if (confirm('删除这条消息？')) {
                 const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
                 let msgs = allChats[currentChatId] || [];
@@ -2119,23 +734,26 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
                 allChats[currentChatId] = msgs;
                 localStorage.setItem('chats', JSON.stringify(allChats));
                 renderMessages();
-                contextMenu.style.display = 'none';
             }
         };
 
         document.getElementById('ctxEdit').onclick = () => {
+            contextMenu.style.display = 'none';
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             let msgs = allChats[currentChatId] || [];
             const msg = msgs.find(m => m.id === contextTargetId);
             if (msg) {
                 const newContent = prompt('编辑消息内容:', msg.content);
-                if (newContent !== null) { msg.content = newContent; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); }
+                if (newContent !== null) { 
+                    msg.content = newContent; 
+                    localStorage.setItem('chats', JSON.stringify(allChats)); 
+                    renderMessages(); 
+                }
             }
-            contextMenu.style.display = 'none';
         };
 
         function escapeHtml(text) {
-            if (!text) return '';
+            if (!text || typeof text !== 'string') return '';
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
