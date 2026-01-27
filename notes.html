@@ -49,21 +49,16 @@
             
             /* 防止 iOS 下拉回弹 */
             overscroll-behavior: none;
-            
-            /* 适配刘海屏安全区域 */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .phone-container {
             /* 修改屏幕宽度，留出一点上下边距 */
             width: 98vw; 
             max-width: 520px;
-            
             /* 修改：高度适配，留出一点上下边距 */
             height: 100%;
-            max-height: 95dvh;
-            
+            max-height: 100dvh;
+ 
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
@@ -74,6 +69,9 @@
             flex-direction: column;
             padding: 15px;
             position: relative;
+            /* 适配刘海屏安全区域 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         /* 顶部导航 */
