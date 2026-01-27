@@ -2,15 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 1. 强制禁止缩放，适配刘海屏 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <!-- 2. iOS Safari 专用全屏设置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
-    
-    <!-- 3. Android Chrome 专用全屏设置 -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2a2a2a">
     
@@ -26,14 +21,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            /* 禁止长按选中文本，像App一样 */
             -webkit-user-select: none;
             user-select: none;
-            /* 去除点击高亮 */
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 允许输入框内的文本被选中 */
         input, textarea {
             -webkit-user-select: text;
             user-select: text;
@@ -45,27 +37,19 @@
             justify-content: center;
             align-items: center;
             width: 100vw;
-            height: 100vh;
             height: 100dvh;
             background: #2a2a2a;
             overflow: hidden;
-            
-            /* 之前这里括号闭合早了，导致下面代码失效，现在修好了 */
             overscroll-behavior: none;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* 手机容器 */
         .phone-container {
-            /* 修改屏幕宽度，留出一点上下边距 */
             width: 98vw; 
             max-width: 520px;
-            
-            /* 修改：高度适配，留出一点上下边距 */
             height: 100%;
             max-height: 95dvh;
-            
             background: #1a1a1a;
             border: 6px solid #000;
             border-radius: 20px;
@@ -87,13 +71,13 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 3px solid #444;
-            flex-shrink: 0; /* 防止被压缩 */
+            flex-shrink: 0;
         }
 
         .back-button {
             background: #fff;
             border: 3px solid #000;
-            padding: 10px 12px; /* 稍微加大触摸区域 */
+            padding: 10px 12px;
             font-family: 'Press Start 2P', cursive;
             font-size: 8px;
             cursor: pointer;
@@ -108,45 +92,53 @@
             text-shadow: 2px 2px 0 #000;
         }
 
-        .add-button {
-            background: #4ecdc4;
+        /* 右侧按钮组容器 */
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-button {
             border: 3px solid #000;
             padding: 10px 12px;
             font-family: 'Press Start 2P', cursive;
-            font-size: 10px; /* 加号大一点 */
+            font-size: 10px;
             cursor: pointer;
             box-shadow: 3px 3px 0 #000;
             color: #000;
             line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .back-button:active, .add-button:active {
+        .btn-add { background: #4ecdc4; }
+        .btn-user { background: #ffe66d; } /* U 按钮黄色 */
+
+        .back-button:active, .action-button:active {
             transform: translate(3px, 3px);
             box-shadow: 0 0 0 #000;
         }
 
-        /* 内容滚动区 */
         .content {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
             padding-right: 2px;
             position: relative;
-            /* 增加这个属性让滚动更丝滑 */
             -webkit-overflow-scrolling: touch; 
         }
 
-        /* 滚动条美化 */
         .content::-webkit-scrollbar { width: 6px; }
         .content::-webkit-scrollbar-track { background: transparent; }
         .content::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
 
-        /* --- 列表视图样式 --- */
+        /* --- 列表视图 --- */
         .contact-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            padding-bottom: 20px; /* 底部留白，防止被圆角遮挡 */
+            padding-bottom: 20px;
         }
 
         .contact-item {
@@ -176,31 +168,13 @@
             image-rendering: pixelated;
         }
 
-        .contact-info {
-            flex: 1;
-            overflow: hidden;
-        }
+        .contact-info { flex: 1; overflow: hidden; }
+        .contact-name { font-size: 10px; margin-bottom: 6px; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .contact-desc { font-size: 7px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .contact-name {
-            font-size: 10px; /* 稍微调大 */
-            margin-bottom: 6px;
-            color: #000;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .contact-desc {
-            font-size: 7px;
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* --- 编辑器视图样式 --- */
+        /* --- 编辑器视图 (通用) --- */
         .editor-view {
-            display: none; /* 默认隐藏 */
+            display: none;
             flex-direction: column;
             gap: 15px;
             padding-bottom: 20px;
@@ -226,34 +200,12 @@
             image-rendering: pixelated;
         }
 
-        .avatar-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 5px;
-        }
+        .avatar-buttons { display: flex; gap: 10px; margin-top: 5px; }
+        .mini-btn { font-size: 8px; padding: 8px; background: #eee; border: 2px solid #000; cursor: pointer; font-family: inherit; }
 
-        .mini-btn {
-            font-size: 8px;
-            padding: 8px;
-            background: #eee;
-            border: 2px solid #000;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .label {
-            font-size: 8px;
-            color: #fff;
-            text-shadow: 1px 1px 0 #000;
-        }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .label { font-size: 8px; color: #fff; text-shadow: 1px 1px 0 #000; }
         
-        /* 亮色背景块 */
         .input-block {
             background: #fff;
             border: 3px solid #000;
@@ -266,16 +218,14 @@
             border: none;
             border-bottom: 2px solid #000;
             font-family: inherit;
-            font-size: 10px; /* 字体加大，方便手机点击 */
+            font-size: 10px;
             padding: 8px 0;
             outline: none;
             background: transparent;
-            border-radius: 0; /* iOS圆角去除 */
+            border-radius: 0;
         }
 
-        .input-text:focus {
-            border-bottom-color: #4ecdc4;
-        }
+        .input-text:focus { border-bottom-color: #4ecdc4; }
 
         .input-area {
             width: 100%;
@@ -284,32 +234,18 @@
             font-size: 9px;
             padding: 10px;
             outline: none;
-            resize: none; /* 手机上禁止拖动大小 */
+            resize: none;
             min-height: 120px;
             line-height: 1.5;
             margin-top: 5px;
             background: #f9f9f9;
         }
 
-        .input-area:focus {
-            box-shadow: inset 0 0 0 2px #4ecdc4;
-        }
+        .input-area:focus { box-shadow: inset 0 0 0 2px #4ecdc4; }
 
-        .char-count {
-            text-align: right;
-            font-size: 6px;
-            color: #666;
-            margin-top: 4px;
-        }
+        .char-count { text-align: right; font-size: 6px; color: #666; margin-top: 4px; }
 
-        .action-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-            padding-bottom: 10px;
-        }
-
+        .action-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; padding-bottom: 10px; }
         .btn-large {
             padding: 14px;
             font-family: inherit;
@@ -320,12 +256,7 @@
             text-transform: uppercase;
             font-weight: bold;
         }
-
-        .btn-large:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 #000;
-        }
-
+        .btn-large:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
         .btn-save { background: #4ecdc4; color: #000; }
         .btn-delete { background: #ff6b6b; color: #fff; }
 
@@ -339,7 +270,6 @@
             text-shadow: 1px 1px 0 #000;
         }
 
-        /* 颜色方案 (适配主页) */
         .color-scheme-1 { background: #ff6b9d; }
         .color-scheme-2 { background: #4ecdc4; }
         .color-scheme-3 { background: #ffe66d; }
@@ -352,22 +282,37 @@
     <div class="phone-container" id="phoneContainer">
         <!-- 头部导航 -->
         <div class="header">
-            <!-- 返回按钮：在列表页返回首页，在编辑页返回列表 -->
             <button class="back-button" id="mainBackBtn">← 返回</button>
             <div class="header-title" id="pageTitle">通讯录</div>
-            <button class="add-button" id="addBtn">+</button>
+            
+            <!-- 右侧按钮组 -->
+            <div class="header-actions" id="headerActions">
+                <button class="action-button btn-user" id="userBtn">U</button>
+                <button class="action-button btn-add" id="addBtn">+</button>
+            </div>
         </div>
 
-        <!-- 这里的 Content 会在列表和编辑界面之间切换 -->
         <div class="content">
             
             <!-- 1. 列表视图 -->
             <div id="listView" class="contact-list">
-                <!-- 由 JS 填充 -->
+                <!-- JS 填充 -->
                 <div class="empty-tip">暂无联络人<br>点击右上角 + 添加</div>
             </div>
 
-            <!-- 2. 编辑视图 -->
+            <!-- 2. 用户设定视图 (新增) -->
+            <div id="userView" class="editor-view">
+                <div class="form-group">
+                    <label class="label">User 介绍</label>
+                    <div class="input-block">
+                        <textarea id="userPersonaContent" class="input-area" maxlength="2000" style="height: 300px;" placeholder="在此输入 User 的介绍、外貌、设定..."></textarea>
+                        <div class="char-count"><span id="userPersonaCount">0</span>/2000</div>
+                    </div>
+                </div>
+                <button class="btn-large btn-save" id="saveUserBtn" style="width: 100%;">保存设定</button>
+            </div>
+
+            <!-- 3. 角色编辑视图 -->
             <div id="editorView" class="editor-view">
                 <input type="hidden" id="editId">
 
@@ -411,7 +356,6 @@
                     </div>
                 </div>
 
-                <!-- 新增：发送短信按钮 -->
                 <button class="btn-large" id="smsBtn" style="background:#fff; margin-top:10px; display:none;">✉ 发送短信</button>
 
                 <!-- 操作按钮 -->
@@ -429,15 +373,20 @@
         const phoneContainer = document.getElementById('phoneContainer');
         const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
 
-        // 视图元素
+        // 视图容器
         const listView = document.getElementById('listView');
         const editorView = document.getElementById('editorView');
+        const userView = document.getElementById('userView');
+        
+        // 头部元素
         const mainBackBtn = document.getElementById('mainBackBtn');
+        const headerActions = document.getElementById('headerActions');
         const addBtn = document.getElementById('addBtn');
+        const userBtn = document.getElementById('userBtn');
         const pageTitle = document.getElementById('pageTitle');
-        const smsBtn = document.getElementById('smsBtn'); 
+        const smsBtn = document.getElementById('smsBtn');
 
-        // 表单元素
+        // 编辑器表单元素
         const editIdInput = document.getElementById('editId');
         const avatarPreview = document.getElementById('avatarPreview');
         const contactName = document.getElementById('contactName');
@@ -448,44 +397,66 @@
         const noteCount = document.getElementById('noteCount');
         const deleteBtn = document.getElementById('deleteBtn');
 
-        // --- 1. 页面加载与初始化 ---
+        // User 表单元素
+        const userPersonaContent = document.getElementById('userPersonaContent');
+        const userPersonaCount = document.getElementById('userPersonaCount');
+        const saveUserBtn = document.getElementById('saveUserBtn');
+
+        // --- 1. 页面加载 ---
         window.addEventListener('DOMContentLoaded', () => {
-            // 恢复手机颜色
             const savedColor = localStorage.getItem('phoneColor');
             if (savedColor !== null) {
                 phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)];
             }
-            // 加载列表
             renderContactList();
         });
 
         // --- 2. 视图切换逻辑 ---
+        
+        // 显示列表 (主页)
         function showList() {
             listView.style.display = 'flex';
             editorView.style.display = 'none';
-            addBtn.style.visibility = 'visible'; // 显示添加按钮
+            userView.style.display = 'none';
+            
+            headerActions.style.visibility = 'visible'; // 显示按钮组
             pageTitle.textContent = '通讯录';
             mainBackBtn.textContent = '← 返回';
             mainBackBtn.onclick = () => window.location.href = './index.html';
         }
 
+        // 显示 User 设定 (新增功能)
+        function showUserView() {
+            listView.style.display = 'none';
+            editorView.style.display = 'none';
+            userView.style.display = 'flex';
+
+            headerActions.style.visibility = 'hidden'; // 隐藏按钮组
+            pageTitle.textContent = 'User 设定';
+            mainBackBtn.textContent = '← 取消';
+            mainBackBtn.onclick = showList;
+
+            // 加载数据
+            const savedUserPersona = localStorage.getItem('user_persona') || '';
+            userPersonaContent.value = savedUserPersona;
+            userPersonaCount.textContent = savedUserPersona.length;
+        }
+
+        // 显示角色编辑/新增
         function showEditor(contactId = null) {
             listView.style.display = 'none';
+            userView.style.display = 'none';
             editorView.style.display = 'flex';
-            addBtn.style.visibility = 'hidden'; // 隐藏添加按钮
+            
+            headerActions.style.visibility = 'hidden'; // 隐藏按钮组
             mainBackBtn.textContent = '← 取消';
             mainBackBtn.onclick = showList;
             
-            // 滚动到顶部
             document.querySelector('.content').scrollTop = 0;
 
-            // 重置/填充表单
             if (contactId) {
-                // 编辑模式
                 pageTitle.textContent = '编辑联络人';
                 deleteBtn.style.display = 'block';
-                
-                // 显示短信按钮并绑定跳转
                 smsBtn.style.display = 'block';
                 smsBtn.onclick = () => {
                     localStorage.setItem('currentChatId', contactId);
@@ -504,11 +475,9 @@
                     avatarPreview.src = contact.avatar || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'><rect fill=\'%23ccc\' width=\'16\' height=\'16\'/></svg>';
                 }
             } else {
-                // 新增模式
                 pageTitle.textContent = '新增联络人';
                 deleteBtn.style.display = 'none';
                 smsBtn.style.display = 'none'; 
-
                 editIdInput.value = '';
                 contactName.value = '';
                 contactNick.value = '';
@@ -516,40 +485,26 @@
                 noteContent.value = '';
                 avatarPreview.src = 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'><rect fill=\'%23ccc\' width=\'16\' height=\'16\'/></svg>';
             }
-            // 更新计数器
             updateCounts();
         }
 
-        // --- 3. 核心功能：渲染列表 ---
-        function renderContactList() {
-            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-            listView.innerHTML = '';
+        // --- 3. 按钮绑定 ---
+        
+        userBtn.addEventListener('click', showUserView);
+        addBtn.addEventListener('click', () => showEditor(null));
+        mainBackBtn.onclick = () => window.location.href = './index.html';
 
-            if (contacts.length === 0) {
-                listView.innerHTML = '<div class="empty-tip">暂无联络人<br>点击右上角 + 添加</div>';
-                return;
-            }
+        // --- 4. 存储逻辑 ---
 
-            contacts.forEach(contact => {
-                const item = document.createElement('div');
-                item.className = 'contact-item';
-                item.onclick = () => showEditor(contact.id);
-                
-                // 默认头像
-                const avatarSrc = contact.avatar || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'><rect fill=\'%23ccc\' width=\'16\' height=\'16\'/></svg>';
+        // User 保存
+        saveUserBtn.addEventListener('click', () => {
+            const content = userPersonaContent.value;
+            localStorage.setItem('user_persona', content);
+            alert('User 设定保存成功！');
+            showList();
+        });
 
-                item.innerHTML = `
-                    <img src="${avatarSrc}" class="contact-avatar-small">
-                    <div class="contact-info">
-                        <div class="contact-name">${escapeHtml(contact.nick || contact.name)}</div>
-                        <div class="contact-desc">${escapeHtml(contact.name)}</div>
-                    </div>
-                `;
-                listView.appendChild(item);
-            });
-        }
-
-        // --- 4. 保存与删除逻辑 ---
+        // 角色保存
         document.getElementById('saveBtn').addEventListener('click', () => {
             const name = contactName.value.trim();
             if (!name) {
@@ -590,7 +545,7 @@
             }
         });
 
-        // 删除功能
+        // 角色删除
         deleteBtn.addEventListener('click', () => {
             if (confirm('确定要删除这个角色吗？')) {
                 const id = editIdInput.value;
@@ -602,12 +557,35 @@
             }
         });
 
-        // 添加按钮
-        addBtn.addEventListener('click', () => showEditor(null));
-        // 初始绑定主返回按钮逻辑
-        mainBackBtn.onclick = () => window.location.href = './index.html';
+        // --- 5. 渲染列表 ---
+        function renderContactList() {
+            const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+            listView.innerHTML = '';
 
-        // --- 5. 头像上传逻辑 ---
+            if (contacts.length === 0) {
+                listView.innerHTML = '<div class="empty-tip">暂无联络人<br>点击右上角 + 添加</div>';
+                return;
+            }
+
+            contacts.forEach(contact => {
+                const item = document.createElement('div');
+                item.className = 'contact-item';
+                item.onclick = () => showEditor(contact.id);
+                
+                const avatarSrc = contact.avatar || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'><rect fill=\'%23ccc\' width=\'16\' height=\'16\'/></svg>';
+
+                item.innerHTML = `
+                    <img src="${avatarSrc}" class="contact-avatar-small">
+                    <div class="contact-info">
+                        <div class="contact-name">${escapeHtml(contact.nick || contact.name)}</div>
+                        <div class="contact-desc">${escapeHtml(contact.name)}</div>
+                    </div>
+                `;
+                listView.appendChild(item);
+            });
+        }
+
+        // --- 6. 图片上传 ---
         const fileInput = document.getElementById('fileInput');
 
         document.getElementById('uploadLocalBtn').addEventListener('click', () => fileInput.click());
@@ -615,9 +593,7 @@
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
-                if (file.size > 1024 * 1024) {
-                    alert('图片过大，建议使用 < 1MB 的图片');
-                }
+                if (file.size > 1024 * 1024) alert('图片过大，建议使用 < 1MB 的图片');
                 const reader = new FileReader();
                 reader.onload = (e) => avatarPreview.src = e.target.result;
                 reader.readAsDataURL(file);
@@ -626,18 +602,20 @@
 
         document.getElementById('uploadUrlBtn').addEventListener('click', () => {
             const url = prompt('请输入图片 URL:');
-            if (url) {
-                avatarPreview.src = url;
-            }
+            if (url) avatarPreview.src = url;
         });
 
-        // --- 6. 辅助功能 ---
+        // --- 7. 计数器 ---
         function updateCounts() {
             personaCount.textContent = personaContent.value.length;
             noteCount.textContent = noteContent.value.length;
         }
         personaContent.addEventListener('input', updateCounts);
         noteContent.addEventListener('input', updateCounts);
+
+        userPersonaContent.addEventListener('input', () => {
+            userPersonaCount.textContent = userPersonaContent.value.length;
+        });
 
         function escapeHtml(text) {
             if (!text) return '';
