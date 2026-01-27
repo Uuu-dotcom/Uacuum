@@ -1,27 +1,40 @@
+/* base.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+/* --- 全局重置和基础设置 --- */
 * {  
-    margin: 0; padding: 0; box-sizing: border-box;  
-    -webkit-user-select: none; user-select: none;  
-    -webkit-tap-highlight-color: transparent;  
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;  
+    -webkit-user-select: none; /* 禁止文本选中 */
+    user-select: none;  
+    -webkit-tap-highlight-color: transparent; /* 去除点击高光 */
 }  
+
+/* 设定 HTML 和 Body 为全屏基础 */
+html, body {
+    width: 100%;
+    /* 使用 100dvh 确保在移动端动态填满可视高度 */
+    height: 100%; 
+    height: 100dvh;  
+    overflow: hidden; /* 禁止页面滚动 */
+    overscroll-behavior: none; /* 禁止下拉刷新等效果 */
+}
 
 body {  
     font-family: 'Press Start 2P', cursive;  
-    display: flex; justify-content: center; align-items: center;  
-    /* 使用 100dvh 确保在移动端填满可视高度 */
-    width: 100vw; 
-    height: 100vh; 
-    height: 100dvh;  
+    display: flex; 
+    justify-content: center; 
+    align-items: center;  
     background: #2a2a2a;  
-    overflow: hidden; /* 禁止 body 滚动 */
-    overscroll-behavior: none;  
 }  
 
+/* --- 核心手机容器布局 --- */
 .phone-container {  
-    width: 98vw; max-width: 520px;  
-    /* 修改：高度设为 100% 跟随 body，避免因 border 溢出屏幕 */
-    height: 100%; 
+    width: 98vw; 
+    max-width: 520px;  
+    height: 100%; /* 高度跟随 body，自动适应 100dvh */
     
     background: #1a1a1a;  
     border: 6px solid #000;  
@@ -31,22 +44,17 @@ body {
     display: flex;   
     flex-direction: column;  
     justify-content: space-between;  
-    
     position: relative;  
     transition: background 0.3s ease;  
 
-     /* --- 解决遮挡的核心代码 --- */
-    
-    /* 顶部：基础 15px + 顶部状态栏高度 */
-    padding-top: calc(15px + env(safe-area-inset-top));
-    
-    /* 左右：基础 15px */
+    /* --- 关键：为刘海和底部导航条留出安全空间 --- */
     padding-left: 15px;
     padding-right: 15px;
-
-    /* 底部：基础 20px (稍微加大一点) + 安卓底部导航条高度 */
+    /* 顶部：基础 15px + 系统状态栏高度 */
+    padding-top: calc(15px + env(safe-area-inset-top));
+    /* 底部：基础 20px + 系统导航条高度 */
     padding-bottom: calc(20px + env(safe-area-inset-bottom));
-    
-    /* 兼容老版本安卓 */
+    /* 兼容老版本浏览器的写法 */
     padding-bottom: calc(20px + constant(safe-area-inset-bottom));
 }
+
