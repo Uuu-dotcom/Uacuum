@@ -68,12 +68,15 @@
         }
 
         .screen img {
-            width: 100%; 
-            height: 90%;
-            margin-top: 10%; 
-            object-fit: cover;
-            image-rendering: pixelated;
-        }
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    
+    /* 核心修改：使用 top 对齐 */
+    object-position: top center; 
+}
+
 
         .button-area {
             flex: 1; display: grid;
