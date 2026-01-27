@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- (head 部分内容不变) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,130 +11,308 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="app-icon.png">
     <link rel="icon" type="image/png" href="app-icon.png">
-    <title>notes - Uacuum</title>
+    
+    <title>Settings - UacuumMobile</title>
     <link rel="stylesheet" href="base.css">
-    <style>
-        /* (CSS样式保持不变, 此处省略) */
-        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; } .back-button { background: #fff; border: 3px solid #000; padding: 8px 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; } .back-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; } .page-title { font-size: 10px; color: #fff; text-shadow: 2px 2px 0 #000; } .action-btn { width: 40px; visibility: hidden; } .content { flex: 1; overflow-y: auto; padding-right: 5px; position: relative; -webkit-overflow-scrolling: touch; } .content::-webkit-scrollbar { width: 6px; } .content::-webkit-scrollbar-track { background: #000; border: 1px solid #444; } .content::-webkit-scrollbar-thumb { background: #fff; border: 1px solid #000; } .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px; padding: 10px 0; } .char-card { background: #fff; border: 3px solid #000; padding: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: transform 0.1s; } .char-card:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; } .char-avatar { width: 50px; height: 50px; border: 2px solid #000; margin-bottom: 8px; object-fit: cover; image-rendering: pixelated; background: #ddd; } .char-name { font-size: 8px; text-align: center; line-height: 1.2; word-break: break-all; } .memory-view { display: none; flex-direction: column; gap: 10px; } .toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; } .tool-btn { background: #ffe66d; border: 3px solid #000; padding: 10px 5px; font-family: inherit; font-size: 7px; cursor: pointer; box-shadow: 3px 3px 0 #000; text-align: center; } .tool-btn.batch { background: #a8e6cf; } .tool-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; } .timeline-container { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; } .year-header { font-size: 10px; color: #fff; background: #000; padding: 5px 10px; display: inline-block; margin-bottom: 5px; border-radius: 4px; align-self: flex-start; } .month-header { font-size: 9px; color: #fff; text-shadow: 1px 1px 0 #000; margin: 5px 0 5px 10px; font-weight: bold; text-decoration: underline; } .memory-card { background: #fff; border: 2px solid #000; padding: 10px; margin-left: 5px; margin-bottom: 10px; position: relative; box-shadow: 2px 2px 0 #666; border-left: 6px solid #4ecdc4; } .memory-date { font-size: 6px; color: #666; margin-bottom: 5px; border-bottom: 1px dashed #ccc; padding-bottom: 3px; } .memory-content { font-size: 8px; line-height: 1.6; white-space: pre-wrap; font-family: "SimSun", "Songti SC", serif; font-weight: bold; -webkit-user-select: text; user-select: text; } .memory-actions { display: flex; justify-content: flex-end; gap: 5px; margin-top: 8px; padding-top: 5px; border-top: 1px solid #eee; } .mini-btn { font-size: 6px; padding: 4px 6px; background: #eee; border: 1px solid #000; cursor: pointer; font-family: 'Press Start 2P', cursive; } .mini-btn.del { background: #ff6b6b; color: #fff; } .mini-btn.edit { background: #fff; } .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; } .modal-box { background: #fff; border: 4px solid #000; padding: 15px; width: 100%; box-shadow: 5px 5px 0 #444; } .modal-title { font-size: 8px; margin-bottom: 10px; text-align: center; } .modal-input { width: 100%; height: 150px; margin-bottom: 10px; padding: 8px; font-size: 8px; border: 2px solid #000; font-family: inherit; resize: none; -webkit-user-select: text; user-select: text; } .modal-input:focus { outline: none; background: #f0f0f0; } .loading-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: #fff; z-index: 200; justify-content: center; align-items: center; text-align: center; font-size: 8px; line-height: 2; } .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
+
+    <style>   
+        /* (您的 CSS 样式保持不变，此处省略以节省空间) */
+        /* 顶部导航 */
+        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; }
+        .back-button { background: #fff; border: 3px solid #000; padding: 8px 12px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; text-decoration: none; color: #000; display: inline-block; }
+        .back-button:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
+        .back-button:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
+        .title { font-size: 12px; color: #fff; flex: 1; text-align: center; text-shadow: 2px 2px 0 #000; }
+        .content { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        .content::-webkit-scrollbar { width: 8px; }
+        .content::-webkit-scrollbar-track { background: #000; border: 2px solid #444; }
+        .content::-webkit-scrollbar-thumb { background: #fff; border: 2px solid #000; }
+        .settings-section { background: #fff; border: 3px solid #000; padding: 12px; margin-bottom: 15px; box-shadow: 4px 4px 0 #000; }
+        .section-title { font-size: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #000; color: #000; }
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; font-size: 8px; margin-bottom: 6px; color: #000; font-weight: bold; }
+        .form-input { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 10px; background: #eee; line-height: 1.4; -webkit-user-select: text; user-select: text; box-sizing: border-box; }
+        .form-input:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #4ecdc4; }
+        .button-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .btn { background: #fff; border: 3px solid #000; padding: 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: all 0.1s; flex: 1; min-width: 80px; text-align: center; }
+        .btn:hover { transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 #000; }
+        .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
+        .btn.primary { background: #4ecdc4; color: #000; }
+        .btn.success { background: #a8e6cf; color: #000; }
+        .btn.warning { background: #ffe66d; color: #000; }
+        .btn.danger { background: #ff6b6b; color: #fff; }
+        .btn:disabled { background: #ccc; color: #666; cursor: not-allowed; }
+        .btn-full { width: 100%; margin-top: 8px; }
+        .slider-container { margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+        .slider { flex: 1; height: 20px; -webkit-appearance: none; background: #eee; border: 3px solid #000; outline: none; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #000; cursor: pointer; border: 2px solid #fff; box-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+        .slider-value { font-size: 8px; color: #000; padding: 6px; background: #ffe66d; border: 3px solid #000; min-width: 45px; text-align: center; }
+        .model-select { width: 100%; border: 3px solid #000; padding: 8px; font-family: 'Press Start 2P', cursive; font-size: 9px; background: #eee; box-sizing: border-box; }
+        .toggle-container { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .toggle { position: relative; width: 50px; height: 24px; background: #ccc; border: 3px solid #000; cursor: pointer; transition: background 0.2s; }
+        .toggle.active { background: #a8e6cf; }
+        .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #000; transition: left 0.2s; }
+        .toggle.active .toggle-thumb { left: 28px; }
+        .status-text { font-size: 7px; color: #666; }
+        .info-text { font-size: 6px; color: #666; margin-top: 6px; line-height: 1.4; }
+        .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
     </style>
 </head>
 <body>
     <div class="phone-container" id="phoneContainer">
-        <!-- (HTML结构不变) -->
-        <div class="header"> <button class="back-button" id="backBtn">← 返回</button> <div class="page-title" id="pageTitle">笔记本</div> <div class="action-btn"></div> </div> <div class="content"> <div id="charListView" class="char-grid"></div> <div id="memoryView" class="memory-view"> <div class="toolbar"> <button class="tool-btn" id="summaryBtn">✨ 记忆总结</button> <button class="tool-btn batch" id="batchBtn">📚 批量总结</button> </div> <div id="timelineContainer" class="timeline-container"></div> <div style="text-align:center; padding: 20px; font-size: 6px; color:#aaa;" id="emptyMemTip"> 暂无记忆，去聊天或手动记录吧 </div> </div> </div> <div class="modal-overlay" id="editModal"> <div class="modal-box"> <div class="modal-title" id="modalTitle">编辑记忆</div> <input type="hidden" id="editMemId"> <textarea class="modal-input" id="editMemContent"></textarea> <div style="display:flex; gap:10px;"> <button class="tool-btn" style="flex:1; background:#ddd;" id="cancelEdit">取消</button> <button class="tool-btn" style="flex:1; background:#4ecdc4;" id="saveEdit">保存</button> </div> </div> </div> <div class="modal-overlay" id="batchModal"> <div class="modal-box"> <div class="modal-title">批量总结设置</div> <div style="font-size:6px; margin-bottom:5px;">指定需要精简的记忆范围:</div> <input type="date" id="batchStart" class="modal-input" style="height:30px; margin-bottom:5px;"> <input type="date" id="batchEnd" class="modal-input" style="height:30px;"> <div style="display:flex; gap:10px; margin-top:10px;"> <button class="tool-btn" style="flex:1; background:#ddd;" id="cancelBatch">取消</button> <button class="tool-btn" style="flex:1; background:#a8e6cf;" id="runBatch">开始处理</button> </div> </div> </div> <div class="loading-overlay" id="loadingOverlay"> AI 正在整理回忆...<br>请稍候... </div>
+        <div class="header">
+            <a href="./index.html" class="back-button">← 返回</a>
+            <div class="title">设置</div>
+        </div>
+
+        <div class="content">
+            <div class="settings-section">
+                <div class="section-title">API 连接</div>
+                <div class="form-group">
+                    <label class="form-label">API URL (Base URL)</label>
+                    <input type="text" id="apiUrl" class="form-input" placeholder="例如: https://api.openai.com/v1">
+                    <div class="info-text">不要带 /chat/completions</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">API Key</label>
+                    <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">模型选择</label>
+                    <select id="modelSelect" class="model-select">
+                        <option value="">请先填写API并刷新</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button class="btn primary" id="refreshModels">刷新模型</button>
+                    <button class="btn success" id="saveApi">保存配置</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="section-title">对话参数</div>
+                <div class="form-group">
+                    <label class="form-label">随机性 (Temperature)</label>
+                    <div class="slider-container">
+                        <input type="range" id="temperature" class="slider" min="0" max="20" value="9" step="1">
+                        <div class="slider-value" id="tempValue">0.9</div>
+                    </div>
+                    <div class="info-text">低=精确/严谨，高=创意/随机</div>
+                </div>
+
+                <!-- 【新增】上下文长度滑块 -->
+                <div class="form-group">
+                    <label class="form-label">上下文长度 (Context Length)</label>
+                    <div class="slider-container">
+                        <input type="range" id="contextLength" class="slider" min="10" max="100" value="30" step="1">
+                        <div class="slider-value" id="contextLengthValue">30</div>
+                    </div>
+                    <div class="info-text">AI能看到最近的N条消息。数值越大记性越好，但消耗也越多。</div>
+                </div>
+                
+                <button class="btn success btn-full" id="saveParams">保存参数</button>
+            </div>
+
+            <div class="settings-section">
+                <div class="section-title">消息通知</div>
+                <div class="form-group">
+                    <label class="form-label">系统推送</label>
+                    <div class="toggle-container">
+                        <div class="toggle" id="notificationToggle">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                        <span class="status-text" id="notificationStatus">已关闭</span>
+                    </div>
+                    <div class="info-text">允许 AI 主动向你发送消息时弹窗通知</div>
+                </div>
+                <button class="btn warning btn-full" id="testNotification">发送测试通知</button>
+            </div>
+
+            <div class="settings-section">
+                <div class="section-title">数据备份</div>
+                <div class="button-group">
+                    <button class="btn success" id="exportData">导出数据</button>
+                    <button class="btn primary" id="importData">导入数据</button>
+                </div>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <div class="info-text" style="margin-top: 10px; border-top: 2px dashed #ccc; padding-top: 5px;">
+                    危险操作区
+                </div>
+                <button class="btn danger btn-full" id="clearData">清除所有数据 (重置)</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- (大部分JS代码不变, 直到 callAiApi 函数) ---
-        const SYSTEM_PROMPT = `<总结规则> 禁止私自编造不存在的内容! 禁止私自编造不存在的内容! 禁止私自编造不存在的内容! 如果遇到复杂的请如实直述，禁止去编造、改动! ## 【系统总结最高协议】：进行summary时，绝对必须正确按照<总结规则>生成！！！ **【内容核心 (最高优先级)】**: 你的summary【必须】专注于以下几点，请直接输出(不需要回答我好的）： 总结规则： 进行summary时，必须精准提取内容，不遗漏任何锚点的重要细节，完美判断{{char}}和{{user}}的关系发展，必须直白且如实总结时间节点和故事发展，每件事的叙述控制在最多80字左右，此外再包含重要日期+时间节点即可。 char的长期记忆summary格式为： 当前年份日期星期时间/具体地点，{{char}}的第一人称总结与{{user}}发生的事件，禁止太过于主观! ## 示例：“线上(线下）/2025年4月2日8:30，星期三，我和user聊了关于早餐的话题。” ## 精炼记忆时禁止偷懒输出token count，必须进行正确的精炼 ##图片禁止总结为“发了一张图片/个人照片”，必须说明是什么图片，如果只是表情包则禁止总结在其中!! </总结规则>`;
-        const phoneContainer = document.getElementById('phoneContainer'); const charListView = document.getElementById('charListView'); const memoryView = document.getElementById('memoryView'); const timelineContainer = document.getElementById('timelineContainer'); const pageTitle = document.getElementById('pageTitle'); const backBtn = document.getElementById('backBtn'); const emptyMemTip = document.getElementById('emptyMemTip'); const loadingOverlay = document.getElementById('loadingOverlay'); const editModal = document.getElementById('editModal'); const batchModal = document.getElementById('batchModal'); let currentContactId = null; const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
-        window.addEventListener('DOMContentLoaded', () => { const savedColor = localStorage.getItem('phoneColor'); if (savedColor !== null) { phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)]; } showCharList(); });
-        function showCharList() { currentContactId = null; charListView.style.display = 'grid'; memoryView.style.display = 'none'; pageTitle.textContent = '笔记本'; backBtn.textContent = '← 返回'; backBtn.onclick = () => window.location.href = './index.html'; renderCharList(); }
-        function showMemoryTimeline(contactId, contactName) { currentContactId = contactId; charListView.style.display = 'none'; memoryView.style.display = 'flex'; pageTitle.textContent = contactName; backBtn.textContent = '← 用户'; backBtn.onclick = showCharList; renderTimeline(); }
-        function renderCharList() { const contacts = JSON.parse(localStorage.getItem('contacts') || '[]'); charListView.innerHTML = ''; if (contacts.length === 0) { charListView.innerHTML = '<div style="grid-column:1/-1; text-align:center; font-size:8px; color:#fff; padding:20px;">通讯录为空<br>请先添加联络人</div>'; return; } contacts.forEach(c => { const card = document.createElement('div'); card.className = 'char-card'; card.onclick = () => showMemoryTimeline(c.id, c.nick || c.name); const avatarSrc = c.avatar || 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'><rect fill=\'%23ccc\' width=\'16\' height=\'16\'/></svg>'; card.innerHTML = ` <img src="${avatarSrc}" class="char-avatar"> <div class="char-name">${c.nick || c.name}</div> `; charListView.appendChild(card); }); }
-        function renderTimeline() { const memories = JSON.parse(localStorage.getItem('memories') || '{}'); const charMemories = memories[currentContactId] || []; timelineContainer.innerHTML = ''; if (charMemories.length === 0) { emptyMemTip.style.display = 'block'; return; } else { emptyMemTip.style.display = 'none'; } charMemories.sort((a, b) => b.timestamp - a.timestamp); let lastYear = null; let lastMonth = null; charMemories.forEach(mem => { const dateObj = new Date(mem.timestamp); const year = dateObj.getFullYear(); const month = dateObj.getMonth() + 1; if (year !== lastYear) { const yearHeader = document.createElement('div'); yearHeader.className = 'year-header'; yearHeader.textContent = `${year}年`; timelineContainer.appendChild(yearHeader); lastYear = year; lastMonth = null; } if (month !== lastMonth) { const monthHeader = document.createElement('div'); monthHeader.className = 'month-header'; monthHeader.textContent = `${month}月`; timelineContainer.appendChild(monthHeader); lastMonth = month; } const div = document.createElement('div'); div.className = 'memory-card'; div.innerHTML = ` <div class="memory-date">${mem.dateStr || dateObj.toLocaleString()}</div> <div class="memory-content">${escapeHtml(mem.content)}</div> <div class="memory-actions"> <button class="mini-btn edit" onclick="openEdit(${mem.id})">编辑</button> <button class="mini-btn del" onclick="deleteMemory(${mem.id})">删除</button> </div> `; timelineContainer.appendChild(div); }); }
-        function saveMemoryToStorage(content, timestamp, isUpdateId = null) { const memories = JSON.parse(localStorage.getItem('memories') || '{}'); if (!memories[currentContactId]) memories[currentContactId] = []; if (isUpdateId) { const idx = memories[currentContactId].findIndex(m => m.id === isUpdateId); if (idx !== -1) { memories[currentContactId][idx].content = content; } } else { const dateObj = new Date(timestamp); memories[currentContactId].push({ id: Date.now(), timestamp: timestamp, dateStr: dateObj.toLocaleString(), content: content }); } localStorage.setItem('memories', JSON.stringify(memories)); renderTimeline(); }
-        window.deleteMemory = function(id) { if(!confirm('确定删除这条记忆吗？')) return; const memories = JSON.parse(localStorage.getItem('memories') || '{}'); if (memories[currentContactId]) { memories[currentContactId] = memories[currentContactId].filter(m => m.id !== id); localStorage.setItem('memories', JSON.stringify(memories)); renderTimeline(); } };
-        window.openEdit = function(id) { const memories = JSON.parse(localStorage.getItem('memories') || '{}'); const list = memories[currentContactId] || []; const mem = list.find(m => m.id === id); if (mem) { document.getElementById('editMemId').value = id; document.getElementById('editMemContent').value = mem.content; document.getElementById('modalTitle').textContent = '编辑记忆'; editModal.style.display = 'flex'; } };
-        document.getElementById('cancelEdit').onclick = () => editModal.style.display = 'none'; document.getElementById('saveEdit').onclick = () => { const id = parseInt(document.getElementById('editMemId').value); const content = document.getElementById('editMemContent').value; if (content.trim()) { saveMemoryToStorage(content, null, id); editModal.style.display = 'none'; } };
-        document.getElementById('summaryBtn').onclick = async () => { if (!checkApiConfig()) return; const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); const thisChat = allChats[currentContactId] || []; if (thisChat.length === 0) { alert('该角色没有聊天记录，无法生成总结。'); return; } const recentChats = thisChat.slice(-20); const chatText = recentChats.map(c => `${c.role}: ${c.content}`).join('\n'); loadingOverlay.style.display = 'flex'; try { const summary = await callAiApi(chatText, "normal"); saveMemoryToStorage(summary, Date.now()); alert('记忆总结成功！已添加至笔记本。'); } catch (err) { /* 错误处理已移至 callAiApi 内部 */ } finally { loadingOverlay.style.display = 'none'; } };
-        document.getElementById('batchBtn').onclick = () => { batchModal.style.display = 'flex'; }; document.getElementById('cancelBatch').onclick = () => batchModal.style.display = 'none';
-        document.getElementById('runBatch').onclick = async () => { const start = document.getElementById('batchStart').value; const end = document.getElementById('batchEnd').value; if (!start || !end) { alert('请选择开始和结束日期'); return; } batchModal.style.display = 'none'; if (!checkApiConfig()) return; loadingOverlay.style.display = 'flex'; const memories = JSON.parse(localStorage.getItem('memories') || '{}'); const list = memories[currentContactId] || []; const startDate = new Date(start).getTime(); const endDate = new Date(end).getTime() + 86400000; const targetMemories = list.filter(m => m.timestamp >= startDate && m.timestamp < endDate); if (targetMemories.length === 0) { loadingOverlay.style.display = 'none'; alert('该日期范围内没有可总结的记忆。'); return; } const memoryText = targetMemories.map(m => `[${m.dateStr}] ${m.content}`).join('\n\n'); try { const summary = await callAiApi(memoryText, "batch"); if (summary && confirm('AI 总结完成，内容如下：\n\n' + summary.substring(0, 100) + '...\n\n是否保存为新的一条精简记忆？(这将保留原始记忆)')) { saveMemoryToStorage(summary, Date.now()); } } catch (err) { /* 错误处理已移至 callAiApi 内部 */ } finally { loadingOverlay.style.display = 'none'; } };
+        // DOM 元素
+        const phoneContainer = document.getElementById('phoneContainer');
+        const apiUrlInput = document.getElementById('apiUrl');
+        const apiKeyInput = document.getElementById('apiKey');
+        const modelSelect = document.getElementById('modelSelect');
+        const tempSlider = document.getElementById('temperature');
+        const tempValueDisplay = document.getElementById('tempValue');
+        const notifToggle = document.getElementById('notificationToggle');
+        const notifStatus = document.getElementById('notificationStatus');
         
-        // =============================================================
-        // ============  调试加强版的 callAiApi 函数  ====================
-        // =============================================================
-        async function callAiApi(inputText, type) {
-            let requestBody = {}; // 将请求体定义在 try 块外部，以便 catch 中也能访问
+        // 【新增】获取上下文滑块元素
+        const contextSlider = document.getElementById('contextLength');
+        const contextValueDisplay = document.getElementById('contextLengthValue');
 
-            try {
-                const apiUrl = localStorage.getItem('apiUrl');
-                const apiKey = localStorage.getItem('apiKey');
-                const model = localStorage.getItem('selectedModel');
+        const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
 
-                if (!apiUrl || !apiKey) throw new Error("API URL 或 API Key 未在设置中配置！");
-                if (!model) throw new Error("模型未在设置中选择！");
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAllSettings();
+        });
 
-                const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-                const currentContact = contacts.find(c => c.id === currentContactId);
-                const charName = currentContact ? currentContact.name : "未知角色";
+        function loadAllSettings() {
+            const savedColor = localStorage.getItem('phoneColor');
+            if (savedColor !== null) {
+                phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)];
+            }
+            apiUrlInput.value = localStorage.getItem('apiUrl') || '';
+            apiKeyInput.value = localStorage.getItem('apiKey') || '';
+            
+            const savedModels = localStorage.getItem('modelList');
+            const savedSelectedModel = localStorage.getItem('selectedModel');
+            if (savedModels) {
+                try {
+                    const models = JSON.parse(savedModels);
+                    updateModelSelectUI(models, savedSelectedModel);
+                } catch (e) { console.error('模型列表解析失败', e); }
+            }
 
-                let finalSystemPrompt = SYSTEM_PROMPT.replace(/{{char}}/g, charName).replace(/{{user}}/g, "User");
-                const userPersona = localStorage.getItem('user_persona');
-                if (userPersona && userPersona.trim() !== "") {
-                    finalSystemPrompt += `\n\n[User Info / User Persona]:\n${userPersona}\n`;
-                }
+            const savedTemp = localStorage.getItem('temperature') || '9';
+            tempSlider.value = savedTemp;
+            tempValueDisplay.textContent = (parseInt(savedTemp) / 10).toFixed(1);
 
-                let userPromptContent = "";
-                if (type === 'normal') {
-                    userPromptContent = `请根据以下最近的聊天记录生成总结：\n\n${inputText}`;
-                } else {
-                    userPromptContent = `请根据以下多个日期的记忆片段，进行批量精简总结，去除重复信息：\n\n${inputText}`;
-                }
+            // 【新增】加载已保存的上下文长度
+            const savedContext = localStorage.getItem('contextLength') || '30'; // 默认30
+            contextSlider.value = savedContext;
+            contextValueDisplay.textContent = savedContext;
 
-                let fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
-
-                requestBody = {
-                    model: model,
-                    messages: [
-                        { role: "system", content: finalSystemPrompt },
-                        { role: "user", content: userPromptContent }
-                    ],
-                    temperature: parseFloat((localStorage.getItem('temperature') || '9')) / 10.0
-                };
-                
-                // 【调试日志】在控制台打印所有准备发送的数据
-                console.log("---------- API 请求详情 ----------");
-                console.log("请求URL:", fullUrl);
-                console.log("模型:", model);
-                console.log("温度:", requestBody.temperature);
-                console.log("系统提示 (System Prompt):", finalSystemPrompt);
-                console.log("用户输入 (User Input):", userPromptContent);
-                console.log("完整的请求体 (Request Body):", JSON.stringify(requestBody, null, 2));
-                console.log("---------------------------------");
-
-
-                const response = await fetch(fullUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({ error: { message: `HTTP 状态码: ${response.status} ${response.statusText}` } }));
-                    throw new Error(errData.error?.message || `API 请求失败，但未返回具体错误信息。`);
-                }
-
-                const data = await response.json();
-                if (!data.choices || data.choices.length === 0) {
-                     throw new Error("API成功返回，但响应中不包含 'choices' 字段。");
-                }
-                return data.choices[0].message.content;
-
-            } catch (err) {
-                // 【调试弹窗】显示详细错误信息和完整的请求体
-                const requestBodyString = JSON.stringify(requestBody, null, 2); // 将请求体格式化为字符串
-                const alertMessage = `
-生成失败! 错误原因:
-${err.message}
-
--------------------
-请检查以下发送内容是否有误 (可复制):
-
-${requestBodyString}
-                `;
-                
-                // 将格式化后的信息显示在弹窗中
-                alert(alertMessage);
-                
-                // 同时在控制台也打印错误，方便开发者调试
-                console.error("API调用捕获到错误:", err);
-                throw err; // 重新抛出错误，以便上层函数能捕获到
+            const notifEnabled = localStorage.getItem('notificationEnabled') === 'true';
+            if (notifEnabled) {
+                notifToggle.classList.add('active');
+                notifStatus.textContent = '已开启';
             }
         }
 
-        function checkApiConfig() { const apiUrl = localStorage.getItem('apiUrl'); const apiKey = localStorage.getItem('apiKey'); if (!apiUrl || !apiKey) { alert('请先在设置中配置 API URL 和 Key！'); return false; } return true; }
-        function escapeHtml(text) { if (!text) return ''; return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+        // 滑块交互
+        tempSlider.addEventListener('input', (e) => {
+            tempValueDisplay.textContent = (parseInt(e.target.value) / 10).toFixed(1);
+        });
+        
+        // 【新增】上下文滑块交互
+        contextSlider.addEventListener('input', (e) => {
+            contextValueDisplay.textContent = e.target.value;
+        });
+
+        document.getElementById('saveParams').addEventListener('click', () => {
+            localStorage.setItem('temperature', tempSlider.value);
+            // 【新增】保存上下文长度
+            localStorage.setItem('contextLength', contextSlider.value);
+            alert('参数已保存！');
+        });
+
+        // --- 其他JS代码保持不变 ---
+        function updateModelSelectUI(models, selected = '') {
+            modelSelect.innerHTML = '';
+            if (!models || models.length === 0) {
+                modelSelect.innerHTML = '<option value="">暂无模型</option>';
+                return;
+            }
+            models.forEach(modelId => {
+                const opt = document.createElement('option');
+                opt.value = modelId;
+                opt.textContent = modelId;
+                if (modelId === selected) opt.selected = true;
+                modelSelect.appendChild(opt);
+            });
+        }
+        document.getElementById('refreshModels').addEventListener('click', async () => {
+            const url = apiUrlInput.value.trim();
+            const key = apiKeyInput.value.trim();
+            if (!url || !key) { alert('请先填写完整的 URL 和 Key'); return; }
+            const btn = document.getElementById('refreshModels');
+            btn.disabled = true;
+            btn.textContent = '连接中...';
+            try {
+                let baseUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+                const requestUrl = `${baseUrl}/models`;
+                const res = await fetch(requestUrl, { method: 'GET', headers: { 'Authorization': `Bearer ${key}` } });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const list = data.data || data;
+                if (Array.isArray(list)) {
+                    const models = list.map(m => m.id);
+                    localStorage.setItem('modelList', JSON.stringify(models));
+                    updateModelSelectUI(models, modelSelect.value);
+                    alert(`成功获取 ${models.length} 个模型`);
+                } else { alert('返回数据格式不正确'); }
+            } catch (err) { alert('获取失败: ' + err.message + '\n请检查URL末尾是否需要加 /v1'); } 
+            finally { btn.disabled = false; btn.textContent = '刷新模型'; }
+        });
+        document.getElementById('saveApi').addEventListener('click', () => {
+            localStorage.setItem('apiUrl', apiUrlInput.value.trim());
+            localStorage.setItem('apiKey', apiKeyInput.value.trim());
+            localStorage.setItem('selectedModel', modelSelect.value);
+            alert('API 配置已保存');
+        });
+        notifToggle.addEventListener('click', async () => {
+            const isActive = notifToggle.classList.contains('active');
+            if (!isActive) {
+                if (!('Notification' in window)) { alert('此浏览器不支持通知功能'); return; }
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    notifToggle.classList.add('active');
+                    notifStatus.textContent = '已开启';
+                    localStorage.setItem('notificationEnabled', 'true');
+                } else { alert('通知权限被拒绝，请在浏览器设置中允许'); }
+            } else {
+                notifToggle.classList.remove('active');
+                notifStatus.textContent = '已关闭';
+                localStorage.setItem('notificationEnabled', 'false');
+            }
+        });
+        document.getElementById('testNotification').addEventListener('click', () => {
+            if (localStorage.getItem('notificationEnabled') !== 'true') { alert('请先开启上方开关'); return; }
+            new Notification('像素手机通知测试', { body: '如果你看到这条消息，说明通知功能正常！📱', icon: 'app-icon.png' });
+        });
+        document.getElementById('exportData').addEventListener('click', () => {
+            const allData = {};
+            for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); allData[key] = localStorage.getItem(key); }
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pixel-phone-backup-${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        document.getElementById('importData').addEventListener('click', () => { document.getElementById('importFile').click(); });
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (confirm('这将覆盖当前的设置和记录，确定吗？')) {
+                        Object.keys(importedData).forEach(key => { localStorage.setItem(key, importedData[key]); });
+                        alert('数据导入成功！页面将刷新...');
+                        location.reload();
+                    }
+                } catch (err) { alert('文件格式错误！必须是 json 文件'); }
+            };
+            reader.readAsText(file);
+        });
+        document.getElementById('clearData').addEventListener('click', () => {
+            if (confirm('⚠️ 警告：这将删除所有聊天记录、联系人和设置！\n此操作无法撤销！')) {
+                localStorage.clear();
+                alert('手机已重置为出厂设置。');
+                location.href = './index.html';
+            }
+        });
     </script>
 </body>
 </html>
