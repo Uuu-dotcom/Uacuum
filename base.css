@@ -1,40 +1,36 @@
-/* base.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-user-select: none; user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-/* --- 全局重置和基础设置 --- */
-* {  
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box;  
-    -webkit-user-select: none; /* 禁止文本选中 */
-    user-select: none;  
-    -webkit-tap-highlight-color: transparent; /* 去除点击高光 */
-}  
+        body {
+            font-family: 'Press Start 2P', cursive;
+            display: flex; justify-content: center; align-items: center;
+            width: 100vw; height: 100vh; height: 100dvh;
+            background: #2a2a2a;
+            overflow: hidden;
+            overscroll-behavior: none;
+        }
 
-/* 设定 HTML 和 Body 为全屏基础 */
-html, body {
-    width: 100%;
-    /* 使用 100dvh 确保在移动端动态填满可视高度 */
-    height: 100%; 
-    overflow: hidden; /* 禁止页面滚动 */
-    overscroll-behavior: none; /* 禁止下拉刷新等效果 */
-}
-
-body {  
-    font-family: 'Press Start 2P', cursive;  
-    display: flex; 
-    justify-content: center; 
-    align-items: center;  
-    background: #2a2a2a;  
-}  
-
-/* --- 核心手机容器布局 --- */
-.phone-container {  
-    width: 98vw; 
-    max-width: 520px;  
-    height: 100%; /* 高度跟随 body，自动适应 100dvh */
-    max-height: 100dvh;
+        .phone-container {
+            width: 98vw; max-width: 520px;
+            height: 100%; max-height: 100dvh;
+            background: #1a1a1a;
+            border: 6px solid #000;
+            border-radius: 20px;
+            box-shadow: 0 0 0 3px #444, 0 15px 30px rgba(0,0,0,0.8);
+            display: flex; 
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            position: relative;
+            transition: background 0.3s ease;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }    max-height: 100dvh;
     background: #1a1a1a;  
     border: 6px solid #000;  
     border-radius: 20px;  
