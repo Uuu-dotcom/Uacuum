@@ -716,7 +716,7 @@ char的长期记忆summary格式为：
         };
 
         // --- API 调用模拟 ---
-        async function callAiApi(inputText, type) {
+                async function callAiApi(inputText, type) {
             const apiUrl = localStorage.getItem('apiUrl');
             const apiKey = localStorage.getItem('apiKey');
             const model = localStorage.getItem('selectedModel');
@@ -730,6 +730,13 @@ char的长期记忆summary格式为：
             let finalSystemPrompt = SYSTEM_PROMPT
                 .replace(/{{char}}/g, charName)
                 .replace(/{{user}}/g, "User");
+
+            // --- 新增：读取 User 设定并注入 Prompt ---
+            const userPersona = localStorage.getItem('user_persona');
+            if (userPersona && userPersona.trim() !== "") {
+                finalSystemPrompt += `\n\n[User Info / User Persona]:\n${userPersona}\n`;
+            }
+            // ---------------------------------------
 
             let userPromptContent = "";
             if (type === 'normal') {
@@ -767,6 +774,7 @@ char的长期记忆summary格式为：
             const data = await response.json();
             return data.choices[0].message.content;
         }
+
 
         function checkApiConfig() {
             const apiUrl = localStorage.getItem('apiUrl');
