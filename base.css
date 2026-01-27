@@ -35,18 +35,18 @@ body {
     position: relative;  
     transition: background 0.3s ease;  
 
-    /* --- 核心修复区域 --- */
+     /* --- 解决遮挡的核心代码 --- */
     
-    /* 1. 先设置左右基础内边距 (上下会被后面覆盖) */
-    padding: 15px; 
+    /* 顶部：基础 15px + 顶部状态栏高度 */
+    padding-top: calc(15px + env(safe-area-inset-top));
+    
+    /* 左右：基础 15px */
+    padding-left: 15px;
+    padding-right: 15px;
 
-    /* 2. 顶部：基础 15px + 顶部刘海安全距离 */
-    padding-top: calc(15px + env(safe-area-inset-top)); 
+    /* 底部：基础 20px (稍微加大一点) + 安卓底部导航条高度 */
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
     
-    /* 3. 底部：基础 15px + 底部黑条安全距离 */
-    /* calc 自动计算，保证内容不被挡住 */
-    padding-bottom: calc(15px + env(safe-area-inset-bottom));  
-    
-    /* 4. 安卓兼容写法 (以防万一) */
-    padding-bottom: calc(15px + constant(safe-area-inset-bottom)); 
+    /* 兼容老版本安卓 */
+    padding-bottom: calc(20px + constant(safe-area-inset-bottom));
 }
