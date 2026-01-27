@@ -137,8 +137,9 @@
             align-items: flex-end;
             gap: 8px;
             flex-shrink: 0;
-            padding-bottom: max(10px, env(safe-area-inset-bottom));
-        }
+            padding: 10px; /* 先给一个基础的四边内边距 */
+            padding-bottom: calc(10px + env(safe-area-inset-bottom)); /* 再单独把安全区距离加到底部 */
+       }
 
         .input-box {
             flex: 1;
