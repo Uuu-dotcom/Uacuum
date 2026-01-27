@@ -35,7 +35,7 @@
             margin-right: 10px;
             object-fit: cover;
             background: #444;
-            display: none;
+            display: none; /* 默认隐藏 */
             flex-shrink: 0;
         }
 
@@ -96,18 +96,14 @@
 
         .chat-area::-webkit-scrollbar { width: 4px; }
         .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
-
-        .message-row { 
-            display: flex; 
-            flex-direction: column; 
-            max-width: 85%; /* 在这里调节气泡最大宽度 */
-            position: relative; 
-        }
+        
+        /* 气泡宽度的主要控制点 */
+        .message-row { display: flex; flex-direction: column; max-width: 85%; position: relative; }
         .message-row.char { align-self: flex-start; }
         .message-row.user { align-self: flex-end; align-items: flex-end; }
 
         .bubble {
-            padding: 12px 10px; /* 在这里调节气泡的“胖瘦” */
+            padding: 10px 12px; /* 内边距，可调整气泡“胖瘦” */
             font-size: 12px;
             line-height: 1.5;
             border: 3px solid #000;
@@ -129,7 +125,6 @@
             background: rgba(255,255,255,0.8);
             border-radius: 4px;
             align-self: flex-start;
-            font-family: 'Press Start 2P', cursive;
         }
         .message-row.user .time-tag { align-self: flex-end; }
 
@@ -209,7 +204,7 @@
             width: 140px;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-
+        
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -217,7 +212,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.6);
-            display: none;
+            display: none; /* 默认隐藏 */
             justify-content: center;
             align-items: center;
             z-index: 300;
@@ -262,12 +257,7 @@
         .modal-btn:last-child { margin-bottom: 0; }
         .modal-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 
-        #bgUrlInputContainer .input-box {
-             margin-bottom: 10px;
-        }
-        #bgUrlInputContainer .action-btn {
-            flex: 1;
-        }
+        #bgUrlInputContainer .action-btn { flex: 1; }
         
         .context-btn { padding: 15px; font-family: 'Press Start 2P', cursive; font-size: 10px; border-bottom: 1px solid #444; cursor: pointer; text-align: center; }
         .context-btn:hover { background: #444; }
@@ -320,24 +310,23 @@
             <div class="context-btn" id="ctxCancel">取消</div>
         </div>
 
-    </div>
-
-    <div class="modal-overlay" id="bgModalOverlay">
-        <div class="modal-content" id="bgModal">
-            <div class="modal-header">
-                <h4>更换背景</h4>
-                <span class="modal-close" id="closeBgModal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div id="bgOptionsContainer">
-                    <div class="modal-btn" id="bgOptionLocal">从本地上传</div>
-                    <div class="modal-btn" id="bgOptionUrl">使用网络链接 (URL)</div>
+        <div class="modal-overlay" id="bgModalOverlay">
+            <div class="modal-content" id="bgModal">
+                <div class="modal-header">
+                    <h4>更换背景</h4>
+                    <span class="modal-close" id="closeBgModal">&times;</span>
                 </div>
-                <div id="bgUrlInputContainer" style="display: none;">
-                    <textarea id="bgUrlInput" class="input-box" rows="2" placeholder="在此粘贴图片URL..."></textarea>
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button class="action-btn" id="bgUrlCancel">返回</button>
-                        <button class="action-btn btn-send" id="bgUrlConfirm">确定</button>
+                <div class="modal-body">
+                    <div id="bgOptionsContainer">
+                        <div class="modal-btn" id="bgOptionLocal">从本地上传</div>
+                        <div class="modal-btn" id="bgOptionUrl">使用网络链接 (URL)</div>
+                    </div>
+                    <div id="bgUrlInputContainer" style="display: none;">
+                        <textarea id="bgUrlInput" class="input-box" rows="2" placeholder="在此粘贴图片URL..."></textarea>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button class="action-btn" id="bgUrlCancel">返回</button>
+                            <button class="action-btn btn-send" id="bgUrlConfirm">确定</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -345,7 +334,7 @@
     </div>
 
     <script>
-    
+        // --- 全局变量定义 ---
         const currentChatId = localStorage.getItem('currentChatId');
         const chatArea = document.getElementById('chatArea');
         const msgInput = document.getElementById('msgInput');
@@ -354,7 +343,6 @@
         const settingsMenu = document.getElementById('settingsMenu');
         const contextMenu = document.getElementById('contextMenu');
         const phoneContainer = document.getElementById('phoneContainer');
-
         const bgModalOverlay = document.getElementById('bgModalOverlay');
         const bgModal = document.getElementById('bgModal');
         const closeBgModal = document.getElementById('closeBgModal');
@@ -372,10 +360,11 @@
         const savedColor = localStorage.getItem('phoneColor');
         if (savedColor !== null) phoneContainer.classList.add(colorSchemes[parseInt(savedColor)]);
 
+        // --- 页面加载和全局事件 ---
         window.addEventListener('DOMContentLoaded', () => {
             if (!currentChatId) {
                 alert('未选择联系人，即将返回通讯录');
-                window.location.href = './contacts.html';
+                window.location.href = './index.html'; // 注意，此处应指向通讯录页面
                 return;
             }
 
@@ -390,6 +379,7 @@
             if (!e.target.closest('.context-menu')) contextMenu.style.display = 'none';
         });
 
+        // --- 核心功能函数 ---
         function loadContactInfo() {
             const charAvatar = document.getElementById('charAvatar');
             const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
@@ -415,17 +405,21 @@
             updateProactiveUI(settings.proactive);
         }
 
+        function saveSettings(key, value) {
+            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
+            if (!allSettings[currentChatId]) allSettings[currentChatId] = {};
+            allSettings[currentChatId][key] = value;
+            localStorage.setItem('chatSettings', JSON.stringify(allSettings));
+        }
+
         function updateProactiveUI(isActive) {
             const el = document.getElementById('proactiveStatus');
             el.textContent = isActive ? '[ON]' : '[OFF]';
             el.style.color = isActive ? '#4ecdc4' : '#666';
         }
 
-        function saveSettings(key, value) {
-            const allSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            if (!allSettings[currentChatId]) allSettings[currentChatId] = {};
-            allSettings[currentChatId][key] = value;
-            localStorage.setItem('chatSettings', JSON.stringify(allSettings));
+        function scrollToBottom() {
+            chatArea.scrollTop = chatArea.scrollHeight;
         }
 
         function renderMessages() {
@@ -439,20 +433,15 @@
                 addLongPressEvent(row, msg.id);
                 const date = new Date(msg.timestamp);
                 const timeStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
-        
+
                 const isLastMessage = (index === messages.length - 1);
                 const timeTagHTML = isLastMessage ? `<div class="time-tag">${timeStr}</div>` : '';
-        
+
                 row.innerHTML = `<div class="bubble">${escapeHtml(msg.content)}</div>${timeTagHTML}`;
-                
                 chatArea.appendChild(row);
             });
-        
+            
             scrollToBottom();
-        }
-
-        function scrollToBottom() {
-            chatArea.scrollTop = chatArea.scrollHeight;
         }
 
         function addMessage(role, content) {
@@ -463,16 +452,6 @@
             localStorage.setItem('chats', JSON.stringify(allChats));
             renderMessages();
         }
-
-        document.getElementById('sendBtn').addEventListener('click', () => {
-            const text = msgInput.value.trim();
-            if (!text) return;
-            addMessage('user', text);
-            msgInput.value = '';
-            statusText.textContent = '';
-        });
-
-        document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); });
 
         async function triggerAiReply() {
             statusText.textContent = '对方正在输入...';
@@ -491,7 +470,6 @@
                         jsonString = jsonString.substring(startIndex, endIndex + 1);
                     }
                     const parsed = JSON.parse(jsonString);
-
                     if (parsed && Array.isArray(parsed.replies)) {
                         replyMessages = parsed.replies;
                     } else {
@@ -503,11 +481,10 @@
                 }
 
                 for (const msg of replyMessages) {
-                    if (typeof msg === 'string' && msg.trim() !== "") {
-                        const delay = replyMessages.indexOf(msg) === 0 ? 300 : Math.random() * 800 + 500;
-                        statusText.textContent = '对方正在输入...';
-                        await addMessageWithDelay(msg, delay);
-                    }
+                    if (msg.trim() === "") continue;
+                    const delay = replyMessages.indexOf(msg) === 0 ? 300 : Math.random() * 800 + 500;
+                    statusText.textContent = '对方正在输入...';
+                    await addMessageWithDelay(msg, delay);
                 }
             } catch (err) {
                 statusText.textContent = '发送失败!';
@@ -517,7 +494,7 @@
                 statusText.textContent = '';
             }
         }
-
+        
         async function callAiApi() {
             const apiUrl = localStorage.getItem('apiUrl');
             const apiKey = localStorage.getItem('apiKey');
@@ -567,7 +544,6 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
     "快给我看看！"
   ]
 }`;
-
             const msgsToSend = [
                 { role: "system", content: systemPrompt.trim() },
                 ...history.slice(-15).map(m => ({ role: m.role, content: m.content }))
@@ -616,6 +592,17 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
             }, 10000); 
         }
 
+        // --- 事件监听器 ---
+        document.getElementById('sendBtn').addEventListener('click', () => {
+            const text = msgInput.value.trim();
+            if (!text) return;
+            addMessage('user', text);
+            msgInput.value = '';
+            msgInput.style.height = 'auto'; // 发送后恢复高度
+        });
+
+        document.getElementById('starBtn').addEventListener('click', async () => { await triggerAiReply(); });
+
         document.getElementById('menuBtn').onclick = () => { settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block'; };
 
         document.getElementById('proactiveToggleBtn').onclick = () => {
@@ -634,15 +621,9 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
             settingsMenu.style.display = 'none';
         };
 
-        const closeModal = () => {
-            bgModalOverlay.style.display = 'none';
-        };
+        const closeModal = () => { bgModalOverlay.style.display = 'none'; };
         closeBgModal.addEventListener('click', closeModal);
-        bgModalOverlay.addEventListener('click', (e) => {
-            if (e.target === bgModalOverlay) {
-                closeModal();
-            }
-        });
+        bgModalOverlay.addEventListener('click', (e) => { if (e.target === bgModalOverlay) closeModal(); });
 
         bgOptionLocal.addEventListener('click', () => {
             document.getElementById('bgFileInput').click();
@@ -651,7 +632,7 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
 
         bgOptionUrl.addEventListener('click', () => {
             bgOptionsContainer.style.display = 'none';
-            bgUrlInputContainer.style.display = 'block';
+            bgUrlInputContainer.style.display = 'flex';
         });
 
         bgUrlCancel.addEventListener('click', () => {
@@ -669,7 +650,6 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
                 alert('URL不能为空！');
             }
         });
-
 
         document.getElementById('bgFileInput').onchange = (e) => {
             const file = e.target.files[0];
@@ -712,7 +692,6 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
         }
 
         function showContextMenu(event, msgId) {
-            event.preventDefault(); // 阻止默认行为，如文本选择
             contextTargetId = msgId;
             contextMenu.style.display = 'flex';
             let x, y;
@@ -726,7 +705,6 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
         document.getElementById('ctxCancel').onclick = () => contextMenu.style.display = 'none';
 
         document.getElementById('ctxDelete').onclick = () => {
-            contextMenu.style.display = 'none';
             if (confirm('删除这条消息？')) {
                 const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
                 let msgs = allChats[currentChatId] || [];
@@ -734,26 +712,23 @@ ${note ? `[备注/强制指令]:\n${note}` : ""}
                 allChats[currentChatId] = msgs;
                 localStorage.setItem('chats', JSON.stringify(allChats));
                 renderMessages();
+                contextMenu.style.display = 'none';
             }
         };
 
         document.getElementById('ctxEdit').onclick = () => {
-            contextMenu.style.display = 'none';
             const allChats = JSON.parse(localStorage.getItem('chats') || '{}');
             let msgs = allChats[currentChatId] || [];
             const msg = msgs.find(m => m.id === contextTargetId);
             if (msg) {
                 const newContent = prompt('编辑消息内容:', msg.content);
-                if (newContent !== null) { 
-                    msg.content = newContent; 
-                    localStorage.setItem('chats', JSON.stringify(allChats)); 
-                    renderMessages(); 
-                }
+                if (newContent !== null) { msg.content = newContent; localStorage.setItem('chats', JSON.stringify(allChats)); renderMessages(); }
             }
+            contextMenu.style.display = 'none';
         };
 
         function escapeHtml(text) {
-            if (!text || typeof text !== 'string') return '';
+            if (!text) return '';
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
