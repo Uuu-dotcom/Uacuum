@@ -1,40 +1,49 @@
-/* base.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* 1. 确保全局盒模型正确，防止 padding 撑大宽高 */
-* {
-    margin: 0; padding: 0; box-sizing: border-box;
-    -webkit-user-select: none; user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
+* {  
+        margin: 0; padding: 0; box-sizing: border-box;  
+        -webkit-user-select: none; user-select: none;  
+        -webkit-tap-highlight-color: transparent;  
+    }  
 
-body {
-    font-family: 'Press Start 2P', cursive;
-    display: flex; justify-content: center; align-items: center;
-    width: 100vw; 
-    
-    /* --- 关键修改 1：高度和溢出控制 --- */
-    height: 100vh; /* 兼容旧浏览器 */
-    height: 100dvh; /* 使用动态高度 */
-    overflow: hidden; /* 彻底禁止页面滚动，防止拖拽 */
-    position: fixed; /* 强制固定，防止iOS橡皮筋回弹效果 */
-    top: 0; left: 0;
+    body {  
+        font-family: 'Press Start 2P', cursive;  
+        display: flex; justify-content: center; align-items: center;  
+        width: 100vw; height: 100vh; height: 100dvh;  
+        background: #2a2a2a;  
+        overflow: hidden;  
+        overscroll-behavior: none;  
+    }  
 
-    background: #2a2a2a;
-    overscroll-behavior: none;
-
-    /* --- 关键修改 2：给 Body 增加安全区域 padding --- */
-    /* 这样 Body 的内部内容（即手机容器）就会自动避开刘海和小黑条 */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-}
-
-.phone-container {
+    ..phone-container {
     width: 98vw; max-width: 520px;
+    height: 100%; max-height: 100dvh;
+    background: #1a1a1a;
+    border: 6px solid #000;
+    border-radius: 20px;
+    box-shadow: 0 0 0 3px #444, 0 15px 30px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     
-    /* --- 关键修改 3：高度适应 --- */
-    /* 让手机容器的高度填满 Body 的安全区域，但不超过 100% */
+    /* --- 修改开始 --- */
+    
+    /* 保持左右 15px，但上下使用 calc 计算 */
+    padding-left: 15px;
+    padding-right: 15px;
+    
+    /* 顶部：15px + 顶部刘海高度 */
+    padding-top: calc(15px + env(safe-area-inset-top));
+    
+    /* 底部：15px + 底部黑条高度 (关键修改) */
+    padding-bottom: calc(15px + env(safe-area-inset-bottom));
+    
+    /* --- 修改结束 --- */
+
+    position: relative;
+    transition: background 0.3s ease;
+}
+
     height: 100%; 
     max-height: 100%; /* 确保不会被底部顶出去 */
     
