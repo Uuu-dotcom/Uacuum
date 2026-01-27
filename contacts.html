@@ -2,7 +2,25 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 1. 强制禁止缩放，适配刘海屏 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- 2. iOS Safari 专用全屏设置 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Uacuum Phone">
+    
+    <!-- 3. Android Chrome 专用全屏设置 -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#2a2a2a">
+    
+    <!-- 4. 引入 Manifest 文件 (下一步会创建) -->
+    <link rel="manifest" href="manifest.json">
+<!-- 1. 苹果手机专用图标 -->
+    <link rel="apple-touch-icon" href="app-icon.png">
+    
+    <!-- 2. 浏览器标签页图标 -->
+    <link rel="icon" type="image/png" href="app-icon.png">
     <title>contacts - Uacuum</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -23,7 +41,13 @@
             background: #2a2a2a;
             overflow: hidden;
         }
-
+  /* 新增：防止 iOS 下拉回弹 */
+    overscroll-behavior: none;
+    
+    /* 新增：适配刘海屏安全区域 */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+}
         /* 手机容器 */
         .phone-container {
             width: 110vmin;
