@@ -1,8 +1,8 @@
+<!-- 这是已将按钮字体调大3倍的最终版本 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- (head 部分内容不变) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,18 +15,107 @@
     <title>notes - Uacuum</title>
     <link rel="stylesheet" href="base.css">
     <style>
-        /* (CSS样式保持不变, 此处省略) */
-        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; } .back-button { background: #fff; border: 3px solid #000; padding: 8px 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; } .back-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; } .page-title { font-size: 10px; color: #fff; text-shadow: 2px 2px 0 #000; } .action-btn { width: 40px; visibility: hidden; } .content { flex: 1; overflow-y: auto; padding-right: 5px; position: relative; -webkit-overflow-scrolling: touch; } .content::-webkit-scrollbar { width: 6px; } .content::-webkit-scrollbar-track { background: #000; border: 1px solid #444; } .content::-webkit-scrollbar-thumb { background: #fff; border: 1px solid #000; } .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px; padding: 10px 0; } .char-card { background: #fff; border: 3px solid #000; padding: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: transform 0.1s; } .char-card:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; } .char-avatar { width: 50px; height: 50px; border: 2px solid #000; margin-bottom: 8px; object-fit: cover; image-rendering: pixelated; background: #ddd; } .char-name { font-size: 8px; text-align: center; line-height: 1.2; word-break: break-all; } .memory-view { display: none; flex-direction: column; gap: 10px; } .toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; } .tool-btn { background: #ffe66d; border: 3px solid #000; padding: 10px 5px; font-family: inherit; font-size: 7px; cursor: pointer; box-shadow: 3px 3px 0 #000; text-align: center; } .tool-btn.batch { background: #a8e6cf; } .tool-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; } .timeline-container { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; } .year-header { font-size: 10px; color: #fff; background: #000; padding: 5px 10px; display: inline-block; margin-bottom: 5px; border-radius: 4px; align-self: flex-start; } .month-header { font-size: 9px; color: #fff; text-shadow: 1px 1px 0 #000; margin: 5px 0 5px 10px; font-weight: bold; text-decoration: underline; } .memory-card { background: #fff; border: 2px solid #000; padding: 10px; margin-left: 5px; margin-bottom: 10px; position: relative; box-shadow: 2px 2px 0 #666; border-left: 6px solid #4ecdc4; } .memory-date { font-size: 6px; color: #666; margin-bottom: 5px; border-bottom: 1px dashed #ccc; padding-bottom: 3px; } .memory-content { font-size: 8px; line-height: 1.6; white-space: pre-wrap; font-family: "SimSun", "Songti SC", serif; font-weight: bold; -webkit-user-select: text; user-select: text; } .memory-actions { display: flex; justify-content: flex-end; gap: 5px; margin-top: 8px; padding-top: 5px; border-top: 1px solid #eee; } .mini-btn { font-size: 6px; padding: 4px 6px; background: #eee; border: 1px solid #000; cursor: pointer; font-family: 'Press Start 2P', cursive; } .mini-btn.del { background: #ff6b6b; color: #fff; } .mini-btn.edit { background: #fff; } .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; } .modal-box { background: #fff; border: 4px solid #000; padding: 15px; width: 100%; box-shadow: 5px 5px 0 #444; } .modal-title { font-size: 8px; margin-bottom: 10px; text-align: center; } .modal-input { width: 100%; height: 150px; margin-bottom: 10px; padding: 8px; font-size: 8px; border: 2px solid #000; font-family: inherit; resize: none; -webkit-user-select: text; user-select: text; } .modal-input:focus { outline: none; background: #f0f0f0; } .loading-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: #fff; z-index: 200; justify-content: center; align-items: center; text-align: center; font-size: 8px; line-height: 2; } .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 3px solid #444; flex-shrink: 0; }
+        .back-button { background: #fff; border: 3px solid #000; padding: 8px 10px; font-family: 'Press Start 2P', cursive; font-size: 8px; cursor: pointer; box-shadow: 3px 3px 0 #000; }
+        .back-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+        .page-title { font-size: 10px; color: #fff; text-shadow: 2px 2px 0 #000; }
+        .action-btn { width: 40px; visibility: hidden; }
+        .content { flex: 1; overflow-y: auto; padding-right: 5px; position: relative; -webkit-overflow-scrolling: touch; }
+        .content::-webkit-scrollbar { width: 6px; }
+        .content::-webkit-scrollbar-track { background: #000; border: 1px solid #444; }
+        .content::-webkit-scrollbar-thumb { background: #fff; border: 1px solid #000; }
+        .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px; padding: 10px 0; }
+        .char-card { background: #fff; border: 3px solid #000; padding: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 3px 3px 0 #000; transition: transform 0.1s; }
+        .char-card:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #000; }
+        .char-avatar { width: 50px; height: 50px; border: 2px solid #000; margin-bottom: 8px; object-fit: cover; image-rendering: pixelated; background: #ddd; }
+        .char-name { font-size: 8px; text-align: center; line-height: 1.2; word-break: break-all; }
+        .memory-view { display: none; flex-direction: column; gap: 10px; }
+        .toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        
+        /* ==================== 【关键修改】 ==================== */
+        .tool-btn {
+            background: #ffe66d;
+            border: 3px solid #000;
+            padding: 10px 5px;
+            font-family: inherit;
+            font-size: 21px; /* <-- 从 7px 修改为 21px */
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            text-align: center;
+        }
+        /* ======================================================= */
+
+        .tool-btn.batch { background: #a8e6cf; }
+        .tool-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+        .timeline-container { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; }
+        .year-header { font-size: 10px; color: #fff; background: #000; padding: 5px 10px; display: inline-block; margin-bottom: 5px; border-radius: 4px; align-self: flex-start; }
+        .month-header { font-size: 9px; color: #fff; text-shadow: 1px 1px 0 #000; margin: 5px 0 5px 10px; font-weight: bold; text-decoration: underline; }
+        .memory-card { background: #fff; border: 2px solid #000; padding: 10px; margin-left: 5px; margin-bottom: 10px; position: relative; box-shadow: 2px 2px 0 #666; border-left: 6px solid #4ecdc4; }
+        .memory-date { font-size: 6px; color: #666; margin-bottom: 5px; border-bottom: 1px dashed #ccc; padding-bottom: 3px; }
+        .memory-content { font-size: 8px; line-height: 1.6; white-space: pre-wrap; font-family: "SimSun", "Songti SC", serif; font-weight: bold; -webkit-user-select: text; user-select: text; }
+        .memory-actions { display: flex; justify-content: flex-end; gap: 5px; margin-top: 8px; padding-top: 5px; border-top: 1px solid #eee; }
+        .mini-btn { font-size: 6px; padding: 4px 6px; background: #eee; border: 1px solid #000; cursor: pointer; font-family: 'Press Start 2P', cursive; }
+        .mini-btn.del { background: #ff6b6b; color: #fff; }
+        .mini-btn.edit { background: #fff; }
+        .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; }
+        .modal-box { background: #fff; border: 4px solid #000; padding: 15px; width: 100%; box-shadow: 5px 5px 0 #444; }
+        .modal-title { font-size: 8px; margin-bottom: 10px; text-align: center; }
+        .modal-input { width: 100%; height: 150px; margin-bottom: 10px; padding: 8px; font-size: 8px; border: 2px solid #000; font-family: inherit; resize: none; -webkit-user-select: text; user-select: text; }
+        .modal-input:focus { outline: none; background: #f0f0f0; }
+        .loading-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: #fff; z-index: 200; justify-content: center; align-items: center; text-align: center; font-size: 8px; line-height: 2; }
+        .color-scheme-1 { background: #ff6b9d; } .color-scheme-2 { background: #4ecdc4; } .color-scheme-3 { background: #ffe66d; } .color-scheme-4 { background: #a8e6cf; } .color-scheme-5 { background: #ffd3b6; } .color-scheme-6 { background: #c7ceea; }
     </style>
 </head>
 <body>
     <div class="phone-container" id="phoneContainer">
-        <!-- (HTML结构不变) -->
-        <div class="header"> <button class="back-button" id="backBtn">← 返回</button> <div class="page-title" id="pageTitle">笔记本</div> <div class="action-btn"></div> </div> <div class="content"> <div id="charListView" class="char-grid"></div> <div id="memoryView" class="memory-view"> <div class="toolbar"> <button class="tool-btn" id="summaryBtn">✨ 记忆总结</button> <button class="tool-btn batch" id="batchBtn">📚 批量总结</button> </div> <div id="timelineContainer" class="timeline-container"></div> <div style="text-align:center; padding: 20px; font-size: 6px; color:#aaa;" id="emptyMemTip"> 暂无记忆，去聊天或手动记录吧 </div> </div> </div> <div class="modal-overlay" id="editModal"> <div class="modal-box"> <div class="modal-title" id="modalTitle">编辑记忆</div> <input type="hidden" id="editMemId"> <textarea class="modal-input" id="editMemContent"></textarea> <div style="display:flex; gap:10px;"> <button class="tool-btn" style="flex:1; background:#ddd;" id="cancelEdit">取消</button> <button class="tool-btn" style="flex:1; background:#4ecdc4;" id="saveEdit">保存</button> </div> </div> </div> <div class="modal-overlay" id="batchModal"> <div class="modal-box"> <div class="modal-title">批量总结设置</div> <div style="font-size:6px; margin-bottom:5px;">指定需要精简的记忆范围:</div> <input type="date" id="batchStart" class="modal-input" style="height:30px; margin-bottom:5px;"> <input type="date" id="batchEnd" class="modal-input" style="height:30px;"> <div style="display:flex; gap:10px; margin-top:10px;"> <button class="tool-btn" style="flex:1; background:#ddd;" id="cancelBatch">取消</button> <button class="tool-btn" style="flex:1; background:#a8e6cf;" id="runBatch">开始处理</button> </div> </div> </div> <div class="loading-overlay" id="loadingOverlay"> AI 正在整理回忆...<br>请稍候... </div>
+        <div class="header">
+            <button class="back-button" id="backBtn">← 返回</button>
+            <div class="page-title" id="pageTitle">笔记本</div>
+            <div class="action-btn"></div>
+        </div>
+        <div class="content">
+            <div id="charListView" class="char-grid"></div>
+            <div id="memoryView" class="memory-view">
+                <div class="toolbar">
+                    <button class="tool-btn" id="summaryBtn">✨ 记忆总结</button>
+                    <button class="tool-btn batch" id="batchBtn">📚 批量总结</button>
+                </div>
+                <div id="timelineContainer" class="timeline-container"></div>
+                <div style="text-align:center; padding: 20px; font-size: 6px; color:#aaa;" id="emptyMemTip">
+                    暂无记忆，去聊天或手动记录吧
+                </div>
+            </div>
+        </div>
+        <div class="modal-overlay" id="editModal">
+            <div class="modal-box">
+                <div class="modal-title" id="modalTitle">编辑记忆</div>
+                <input type="hidden" id="editMemId">
+                <textarea class="modal-input" id="editMemContent"></textarea>
+                <div style="display:flex; gap:10px;">
+                    <button class="tool-btn" style="flex:1; background:#ddd;" id="cancelEdit">取消</button>
+                    <button class="tool-btn" style="flex:1; background:#4ecdc4;" id="saveEdit">保存</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-overlay" id="batchModal">
+            <div class="modal-box">
+                <div class="modal-title">批量总结设置</div>
+                <div style="font-size:6px; margin-bottom:5px;">指定需要精简的记忆范围:</div>
+                <input type="date" id="batchStart" class="modal-input" style="height:30px; margin-bottom:5px;">
+                <input type="date" id="batchEnd" class="modal-input" style="height:30px;">
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="tool-btn" style="flex:1; background:#ddd;" id="cancelBatch">取消</button>
+                    <button class="tool-btn" style="flex:1; background:#a8e6cf;" id="runBatch">开始处理</button>
+                </div>
+            </div>
+        </div>
+        <div class="loading-overlay" id="loadingOverlay">
+            AI 正在整理回忆...<br>请稍候...
+        </div>
     </div>
 
     <script>
-        // --- (大部分JS代码不变, 直到 callAiApi 函数) ---
+        // --- (JavaScript部分保持不变，此处省略以保持清晰) ---
         const SYSTEM_PROMPT = `<总结规则> 禁止私自编造不存在的内容! 禁止私自编造不存在的内容! 禁止私自编造不存在的内容! 如果遇到复杂的请如实直述，禁止去编造、改动! ## 【系统总结最高协议】：进行summary时，绝对必须正确按照<总结规则>生成！！！ **【内容核心 (最高优先级)】**: 你的summary【必须】专注于以下几点，请直接输出(不需要回答我好的）： 总结规则： 进行summary时，必须精准提取内容，不遗漏任何锚点的重要细节，完美判断{{char}}和{{user}}的关系发展，必须直白且如实总结时间节点和故事发展，每件事的叙述控制在最多80字左右，此外再包含重要日期+时间节点即可。 char的长期记忆summary格式为： 当前年份日期星期时间/具体地点，{{char}}的第一人称总结与{{user}}发生的事件，禁止太过于主观! ## 示例：“线上(线下）/2025年4月2日8:30，星期三，我和user聊了关于早餐的话题。” ## 精炼记忆时禁止偷懒输出token count，必须进行正确的精炼 ##图片禁止总结为“发了一张图片/个人照片”，必须说明是什么图片，如果只是表情包则禁止总结在其中!! </总结规则>`;
         const phoneContainer = document.getElementById('phoneContainer'); const charListView = document.getElementById('charListView'); const memoryView = document.getElementById('memoryView'); const timelineContainer = document.getElementById('timelineContainer'); const pageTitle = document.getElementById('pageTitle'); const backBtn = document.getElementById('backBtn'); const emptyMemTip = document.getElementById('emptyMemTip'); const loadingOverlay = document.getElementById('loadingOverlay'); const editModal = document.getElementById('editModal'); const batchModal = document.getElementById('batchModal'); let currentContactId = null; const colorSchemes = ['color-scheme-1', 'color-scheme-2', 'color-scheme-3', 'color-scheme-4', 'color-scheme-5', 'color-scheme-6'];
         window.addEventListener('DOMContentLoaded', () => { const savedColor = localStorage.getItem('phoneColor'); if (savedColor !== null) { phoneContainer.className = 'phone-container ' + colorSchemes[parseInt(savedColor)]; } showCharList(); });
@@ -41,99 +130,7 @@
         document.getElementById('summaryBtn').onclick = async () => { if (!checkApiConfig()) return; const allChats = JSON.parse(localStorage.getItem('chats') || '{}'); const thisChat = allChats[currentContactId] || []; if (thisChat.length === 0) { alert('该角色没有聊天记录，无法生成总结。'); return; } const recentChats = thisChat.slice(-20); const chatText = recentChats.map(c => `${c.role}: ${c.content}`).join('\n'); loadingOverlay.style.display = 'flex'; try { const summary = await callAiApi(chatText, "normal"); saveMemoryToStorage(summary, Date.now()); alert('记忆总结成功！已添加至笔记本。'); } catch (err) { /* 错误处理已移至 callAiApi 内部 */ } finally { loadingOverlay.style.display = 'none'; } };
         document.getElementById('batchBtn').onclick = () => { batchModal.style.display = 'flex'; }; document.getElementById('cancelBatch').onclick = () => batchModal.style.display = 'none';
         document.getElementById('runBatch').onclick = async () => { const start = document.getElementById('batchStart').value; const end = document.getElementById('batchEnd').value; if (!start || !end) { alert('请选择开始和结束日期'); return; } batchModal.style.display = 'none'; if (!checkApiConfig()) return; loadingOverlay.style.display = 'flex'; const memories = JSON.parse(localStorage.getItem('memories') || '{}'); const list = memories[currentContactId] || []; const startDate = new Date(start).getTime(); const endDate = new Date(end).getTime() + 86400000; const targetMemories = list.filter(m => m.timestamp >= startDate && m.timestamp < endDate); if (targetMemories.length === 0) { loadingOverlay.style.display = 'none'; alert('该日期范围内没有可总结的记忆。'); return; } const memoryText = targetMemories.map(m => `[${m.dateStr}] ${m.content}`).join('\n\n'); try { const summary = await callAiApi(memoryText, "batch"); if (summary && confirm('AI 总结完成，内容如下：\n\n' + summary.substring(0, 100) + '...\n\n是否保存为新的一条精简记忆？(这将保留原始记忆)')) { saveMemoryToStorage(summary, Date.now()); } } catch (err) { /* 错误处理已移至 callAiApi 内部 */ } finally { loadingOverlay.style.display = 'none'; } };
-        
-        // =============================================================
-        // ============  调试加强版的 callAiApi 函数  ====================
-        // =============================================================
-        async function callAiApi(inputText, type) {
-            let requestBody = {}; // 将请求体定义在 try 块外部，以便 catch 中也能访问
-
-            try {
-                const apiUrl = localStorage.getItem('apiUrl');
-                const apiKey = localStorage.getItem('apiKey');
-                const model = localStorage.getItem('selectedModel');
-
-                if (!apiUrl || !apiKey) throw new Error("API URL 或 API Key 未在设置中配置！");
-                if (!model) throw new Error("模型未在设置中选择！");
-
-                const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-                const currentContact = contacts.find(c => c.id === currentContactId);
-                const charName = currentContact ? currentContact.name : "未知角色";
-
-                let finalSystemPrompt = SYSTEM_PROMPT.replace(/{{char}}/g, charName).replace(/{{user}}/g, "User");
-                const userPersona = localStorage.getItem('user_persona');
-                if (userPersona && userPersona.trim() !== "") {
-                    finalSystemPrompt += `\n\n[User Info / User Persona]:\n${userPersona}\n`;
-                }
-
-                let userPromptContent = "";
-                if (type === 'normal') {
-                    userPromptContent = `请根据以下最近的聊天记录生成总结：\n\n${inputText}`;
-                } else {
-                    userPromptContent = `请根据以下多个日期的记忆片段，进行批量精简总结，去除重复信息：\n\n${inputText}`;
-                }
-
-                let fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions';
-
-                requestBody = {
-                    model: model,
-                    messages: [
-                        { role: "system", content: finalSystemPrompt },
-                        { role: "user", content: userPromptContent }
-                    ],
-                    temperature: parseFloat((localStorage.getItem('temperature') || '9')) / 10.0
-                };
-                
-                // 【调试日志】在控制台打印所有准备发送的数据
-                console.log("---------- API 请求详情 ----------");
-                console.log("请求URL:", fullUrl);
-                console.log("模型:", model);
-                console.log("温度:", requestBody.temperature);
-                console.log("系统提示 (System Prompt):", finalSystemPrompt);
-                console.log("用户输入 (User Input):", userPromptContent);
-                console.log("完整的请求体 (Request Body):", JSON.stringify(requestBody, null, 2));
-                console.log("---------------------------------");
-
-
-                const response = await fetch(fullUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({ error: { message: `HTTP 状态码: ${response.status} ${response.statusText}` } }));
-                    throw new Error(errData.error?.message || `API 请求失败，但未返回具体错误信息。`);
-                }
-
-                const data = await response.json();
-                if (!data.choices || data.choices.length === 0) {
-                     throw new Error("API成功返回，但响应中不包含 'choices' 字段。");
-                }
-                return data.choices[0].message.content;
-
-            } catch (err) {
-                // 【调试弹窗】显示详细错误信息和完整的请求体
-                const requestBodyString = JSON.stringify(requestBody, null, 2); // 将请求体格式化为字符串
-                const alertMessage = `
-生成失败! 错误原因:
-${err.message}
-
--------------------
-请检查以下发送内容是否有误 (可复制):
-
-${requestBodyString}
-                `;
-                
-                // 将格式化后的信息显示在弹窗中
-                alert(alertMessage);
-                
-                // 同时在控制台也打印错误，方便开发者调试
-                console.error("API调用捕获到错误:", err);
-                throw err; // 重新抛出错误，以便上层函数能捕获到
-            }
-        }
-
+        async function callAiApi(inputText, type) { let requestBody = {}; try { const apiUrl = localStorage.getItem('apiUrl'); const apiKey = localStorage.getItem('apiKey'); const model = localStorage.getItem('selectedModel'); if (!apiUrl || !apiKey) throw new Error("API URL 或 API Key 未在设置中配置！"); if (!model) throw new Error("模型未在设置中选择！"); const contacts = JSON.parse(localStorage.getItem('contacts') || '[]'); const currentContact = contacts.find(c => c.id === currentContactId); const charName = currentContact ? currentContact.name : "未知角色"; let finalSystemPrompt = SYSTEM_PROMPT.replace(/{{char}}/g, charName).replace(/{{user}}/g, "User"); const userPersona = localStorage.getItem('user_persona'); if (userPersona && userPersona.trim() !== "") { finalSystemPrompt += `\n\n[User Info / User Persona]:\n${userPersona}\n`; } let userPromptContent = ""; if (type === 'normal') { userPromptContent = `请根据以下最近的聊天记录生成总结：\n\n${inputText}`; } else { userPromptContent = `请根据以下多个日期的记忆片段，进行批量精简总结，去除重复信息：\n\n${inputText}`; } let fullUrl = apiUrl.replace(/\/$/, '') + '/chat/completions'; requestBody = { model: model, messages: [ { role: "system", content: finalSystemPrompt }, { role: "user", content: userPromptContent } ], temperature: parseFloat((localStorage.getItem('temperature') || '9')) / 10.0 }; console.log("---------- API 请求详情 ----------"); console.log("请求URL:", fullUrl); console.log("模型:", model); console.log("温度:", requestBody.temperature); console.log("系统提示 (System Prompt):", finalSystemPrompt); console.log("用户输入 (User Input):", userPromptContent); console.log("完整的请求体 (Request Body):", JSON.stringify(requestBody, null, 2)); console.log("---------------------------------"); const response = await fetch(fullUrl, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` }, body: JSON.stringify(requestBody) }); if (!response.ok) { const errData = await response.json().catch(() => ({ error: { message: `HTTP 状态码: ${response.status} ${response.statusText}` } })); throw new Error(errData.error?.message || `API 请求失败，但未返回具体错误信息。`); } const data = await response.json(); if (!data.choices || data.choices.length === 0) { throw new Error("API成功返回，但响应中不包含 'choices' 字段。"); } return data.choices[0].message.content; } catch (err) { const requestBodyString = JSON.stringify(requestBody, null, 2); const alertMessage = `\n生成失败! 错误原因:\n${err.message}\n\n-------------------\n请检查以下发送内容是否有误 (可复制):\n\n${requestBodyString}\n                `; alert(alertMessage); console.error("API调用捕获到错误:", err); throw err; } }
         function checkApiConfig() { const apiUrl = localStorage.getItem('apiUrl'); const apiKey = localStorage.getItem('apiKey'); if (!apiUrl || !apiKey) { alert('请先在设置中配置 API URL 和 Key！'); return false; } return true; }
         function escapeHtml(text) { if (!text) return ''; return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
     </script>
